@@ -7,6 +7,20 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { featured, imagery } from "@/lib/properties";
 
+const homeFacts = [
+  { Icon: BedDouble, value: "3 BHK", label: "Configuration" },
+  { Icon: Ruler, value: "1,840", label: "sq ft built-up" },
+  { Icon: Building2, value: "18 of 24", label: "Floor" },
+  { Icon: ShieldCheck, value: "Dec 2027", label: "Possession" },
+];
+
+const localFacts = [
+  { Icon: Building2, label: "Tenure", value: featured.tenure },
+  { Icon: ShieldCheck, label: "Approval authority", value: featured.approval },
+  { Icon: TrainFront, label: "Nearest metro", value: featured.metro },
+  { Icon: Droplets, label: "Flood-zone assessment", value: featured.floodRisk },
+];
+
 export const Route = createFileRoute("/property/$slug")({
   head: () => ({
     meta: [
@@ -41,11 +55,11 @@ function PropertyPage() {
           <h1 className="mt-5 font-display text-5xl leading-tight md:text-7xl">{language === "en" ? featured.title : "দ্য ভেরান্দা রেসিডেন্সেস"}</h1>
           <p className="mt-3 flex items-center gap-2 text-muted-foreground"><MapPin className="size-4 text-copper" />{featured.location}, Kolkata</p>
           <div className="mt-8 grid grid-cols-2 border-y border-border sm:grid-cols-4">
-            {[[BedDouble, "3 BHK", "Configuration"], [Ruler, "1,840", "sq ft built-up"], [Building2, "18 of 24", "Floor"], [ShieldCheck, "Dec 2027", "Possession"]].map(([Icon, value, label]) => <div key={String(label)} className="border-border p-4 first:pl-0 sm:border-r last:border-r-0"><Icon className="mb-3 size-5 text-copper" /><p className="font-display text-2xl">{value}</p><p className="text-xs text-muted-foreground">{label}</p></div>)}
+            {homeFacts.map(({ Icon, value, label }) => <div key={label} className="border-border p-4 first:pl-0 sm:border-r last:border-r-0"><Icon className="mb-3 size-5 text-copper" /><p className="font-display text-2xl">{value}</p><p className="text-xs text-muted-foreground">{label}</p></div>)}
           </div>
           <div className="mt-12"><p className="text-xs font-bold uppercase tracking-widest text-copper">The home</p><h2 className="mt-3 font-display text-4xl">Light, air, and a verandah that earns its name.</h2><p className="mt-5 max-w-3xl text-base leading-8 text-muted-foreground">A considered three-bedroom residence with two-sided ventilation, a deep shaded balcony, and views toward New Town’s open green corridor. The plan separates the social and private rooms without wasting space on long passages.</p></div>
           <div className="mt-12 grid gap-4 sm:grid-cols-2">
-            {[[Building2, "Tenure", featured.tenure], [ShieldCheck, "Approval authority", featured.approval], [TrainFront, "Nearest metro", featured.metro], [Droplets, "Flood-zone assessment", featured.floodRisk]].map(([Icon, label, value]) => <div key={String(label)} className="border border-border bg-card p-5"><Icon className="size-5 text-copper" /><p className="mt-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</p><p className="mt-1 font-semibold">{value}</p></div>)}
+            {localFacts.map(({ Icon, label, value }) => <div key={label} className="border border-border bg-card p-5"><Icon className="size-5 text-copper" /><p className="mt-4 text-xs font-bold uppercase tracking-wider text-muted-foreground">{label}</p><p className="mt-1 font-semibold">{value}</p></div>)}
           </div>
           <div className="mt-12"><h2 className="font-display text-4xl">Everyday comforts</h2><div className="mt-6 grid gap-3 sm:grid-cols-2 md:grid-cols-3">{["Central garden", "Residents’ lounge", "24-hour security", "EV charging", "Pool & fitness studio", "Power backup"].map((amenity) => <span key={amenity} className="flex items-center gap-2 border-b border-border py-3 text-sm"><Check className="size-4 text-copper" />{amenity}</span>)}</div></div>
         </div>

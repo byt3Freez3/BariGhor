@@ -7,6 +7,12 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { featured, imagery, localities } from "@/lib/properties";
 
+const trustSignals = [
+  { Icon: BadgeCheck, value: "143", label: "WBHIRA-checked homes" },
+  { Icon: ShieldCheck, value: "100%", label: "Listings manually reviewed" },
+  { Icon: Clock3, value: "12 min", label: "Median enquiry response" },
+];
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -58,7 +64,7 @@ function IndexPage() {
 
       <section className="border-b border-border bg-card">
         <div className="mx-auto grid max-w-7xl divide-y divide-border px-5 md:grid-cols-3 md:divide-x md:divide-y-0 lg:px-8">
-          {[[BadgeCheck, "143", "WBHIRA-checked homes"], [ShieldCheck, "100%", "Listings manually reviewed"], [Clock3, "12 min", "Median enquiry response"]].map(([Icon, value, label]) => <div key={String(label)} className="flex items-center gap-4 py-7 md:justify-center"><Icon className="size-6 text-copper" /><div><p className="font-display text-2xl">{value}</p><p className="text-xs text-muted-foreground">{label}</p></div></div>)}
+          {trustSignals.map(({ Icon, value, label }) => <div key={label} className="flex items-center gap-4 py-7 md:justify-center"><Icon className="size-6 text-copper" /><div><p className="font-display text-2xl">{value}</p><p className="text-xs text-muted-foreground">{label}</p></div></div>)}
         </div>
       </section>
 
