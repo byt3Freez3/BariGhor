@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Keep BariGhor as a TanStack Start route-based app with shared static demo content in client-safe modules; this preserves SSR and lets the first release expand without changing frameworks.
