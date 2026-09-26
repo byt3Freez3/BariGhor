@@ -77,8 +77,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
+      { title: "BariGhor | Premium Real Estate in West Bengal" },
+      {
+        name: "description",
+        content:
+          "Discover handpicked residences, verified WBHIRA titles, and honest neighbourhood intelligence across Kolkata and West Bengal.",
+      },
       { name: "author", content: "BariGhor" },
+      { name: "theme-color", content: "#0A3632" },
       { property: "og:type", content: "website" },
+      { property: "og:title", content: "BariGhor | Premium Real Estate in West Bengal" },
+      {
+        property: "og:description",
+        content:
+          "Curated homes, direct title verification, and plain-language neighbourhood dossiers for Kolkata.",
+      },
       { name: "twitter:card", content: "summary_large_image" },
     ],
     links: [
@@ -90,7 +103,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,600;6..72,700&display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400..700;1,9..144,400..700&family=Inter:wght@300;400;500;600;700;800&family=Newsreader:ital,opsz,wght@0,6..72,400..700;1,6..72,400..700&display=swap",
       },
       { rel: "icon", href: "/favicon.svg", type: "image/svg+xml" },
     ],

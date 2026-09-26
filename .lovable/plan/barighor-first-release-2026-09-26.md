@@ -1,9 +1,11 @@
 # BariGhor first release
 
 ## Goal
+
 Build the plan’s recommended design-system proving ground: a polished, responsive home experience and one complete property detail journey for Kolkata buyers.
 
 ## What will be built
+
 - Establish the “old Calcutta meets New Town” identity with warm off-white, terracotta, deep teal, editorial serif typography, and restrained motion.
 - Replace the blank home screen with:
   - full-bleed Kolkata property imagery and search controls
@@ -23,6 +25,7 @@ Build the plan’s recommended design-system proving ground: a polished, respons
 - Add unique search metadata for every public page.
 
 ## Interaction and quality
+
 - Search controls update the visible result context and lead into the featured property journey.
 - Language switching changes key interface copy without reloading.
 - EMI controls recalculate immediately.
@@ -30,6 +33,7 @@ Build the plan’s recommended design-system proving ground: a polished, respons
 - Verify desktop and mobile layouts, interactions, and the final preview.
 
 ## Technical details
+
 - Keep the project’s TanStack Start architecture while delivering the intent of the uploaded plan.
 - Keep all colors, typography, shadows, and motion in the shared design system.
 - Use generated, locally bundled visual assets rather than remote placeholders.

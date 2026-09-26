@@ -10,11 +10,59 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as JournalIndexRouteImport } from './routes/journal.index'
+import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
+import { Route as LocalitiesIndexRouteImport } from './routes/localities.index'
+import { Route as LocalitiesSlugRouteImport } from './routes/localities.$slug'
+import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
+import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
 import { Route as PropertySlugRouteImport } from './routes/property.$slug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignInRoute = SignInRouteImport.update({
+  id: '/sign-in',
+  path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalIndexRoute = JournalIndexRouteImport.update({
+  id: '/journal/',
+  path: '/journal/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const JournalSlugRoute = JournalSlugRouteImport.update({
+  id: '/journal/$slug',
+  path: '/journal/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocalitiesIndexRoute = LocalitiesIndexRouteImport.update({
+  id: '/localities/',
+  path: '/localities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const LocalitiesSlugRoute = LocalitiesSlugRouteImport.update({
+  id: '/localities/$slug',
+  path: '/localities/$slug',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PropertiesIndexRoute = PropertiesIndexRouteImport.update({
+  id: '/properties/',
+  path: '/properties/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PropertiesSlugRoute = PropertiesSlugRouteImport.update({
+  id: '/properties/$slug',
+  path: '/properties/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PropertySlugRoute = PropertySlugRouteImport.update({
@@ -25,28 +73,91 @@ const PropertySlugRoute = PropertySlugRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/sign-in': typeof SignInRoute
+  '/journal/$slug': typeof JournalSlugRoute
+  '/localities/$slug': typeof LocalitiesSlugRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/journal/': typeof JournalIndexRoute
+  '/localities/': typeof LocalitiesIndexRoute
+  '/properties/': typeof PropertiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/sign-in': typeof SignInRoute
+  '/journal/$slug': typeof JournalSlugRoute
+  '/localities/$slug': typeof LocalitiesSlugRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/journal': typeof JournalIndexRoute
+  '/localities': typeof LocalitiesIndexRoute
+  '/properties': typeof PropertiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/search': typeof SearchRoute
+  '/sign-in': typeof SignInRoute
+  '/journal/$slug': typeof JournalSlugRoute
+  '/localities/$slug': typeof LocalitiesSlugRoute
+  '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/journal/': typeof JournalIndexRoute
+  '/localities/': typeof LocalitiesIndexRoute
+  '/properties/': typeof PropertiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/property/$slug'
+  fullPaths:
+    | '/'
+    | '/search'
+    | '/sign-in'
+    | '/journal/$slug'
+    | '/localities/$slug'
+    | '/properties/$slug'
+    | '/property/$slug'
+    | '/journal/'
+    | '/localities/'
+    | '/properties/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/property/$slug'
-  id: '__root__' | '/' | '/property/$slug'
+  to:
+    | '/'
+    | '/search'
+    | '/sign-in'
+    | '/journal/$slug'
+    | '/localities/$slug'
+    | '/properties/$slug'
+    | '/property/$slug'
+    | '/journal'
+    | '/localities'
+    | '/properties'
+  id:
+    | '__root__'
+    | '/'
+    | '/search'
+    | '/sign-in'
+    | '/journal/$slug'
+    | '/localities/$slug'
+    | '/properties/$slug'
+    | '/property/$slug'
+    | '/journal/'
+    | '/localities/'
+    | '/properties/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SearchRoute: typeof SearchRoute
+  SignInRoute: typeof SignInRoute
+  JournalSlugRoute: typeof JournalSlugRoute
+  LocalitiesSlugRoute: typeof LocalitiesSlugRoute
+  PropertiesSlugRoute: typeof PropertiesSlugRoute
   PropertySlugRoute: typeof PropertySlugRoute
+  JournalIndexRoute: typeof JournalIndexRoute
+  LocalitiesIndexRoute: typeof LocalitiesIndexRoute
+  PropertiesIndexRoute: typeof PropertiesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -56,6 +167,62 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/sign-in': {
+      id: '/sign-in'
+      path: '/sign-in'
+      fullPath: '/sign-in'
+      preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal/': {
+      id: '/journal/'
+      path: '/journal'
+      fullPath: '/journal/'
+      preLoaderRoute: typeof JournalIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/journal/$slug': {
+      id: '/journal/$slug'
+      path: '/journal/$slug'
+      fullPath: '/journal/$slug'
+      preLoaderRoute: typeof JournalSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/localities/': {
+      id: '/localities/'
+      path: '/localities'
+      fullPath: '/localities/'
+      preLoaderRoute: typeof LocalitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/localities/$slug': {
+      id: '/localities/$slug'
+      path: '/localities/$slug'
+      fullPath: '/localities/$slug'
+      preLoaderRoute: typeof LocalitiesSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/properties/': {
+      id: '/properties/'
+      path: '/properties'
+      fullPath: '/properties/'
+      preLoaderRoute: typeof PropertiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/properties/$slug': {
+      id: '/properties/$slug'
+      path: '/properties/$slug'
+      fullPath: '/properties/$slug'
+      preLoaderRoute: typeof PropertiesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/property/$slug': {
@@ -70,7 +237,15 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SearchRoute: SearchRoute,
+  SignInRoute: SignInRoute,
+  JournalSlugRoute: JournalSlugRoute,
+  LocalitiesSlugRoute: LocalitiesSlugRoute,
+  PropertiesSlugRoute: PropertiesSlugRoute,
   PropertySlugRoute: PropertySlugRoute,
+  JournalIndexRoute: JournalIndexRoute,
+  LocalitiesIndexRoute: LocalitiesIndexRoute,
+  PropertiesIndexRoute: PropertiesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

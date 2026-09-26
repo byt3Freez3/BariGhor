@@ -6,9 +6,27 @@ import aliporeImage from "@/assets/alipore-home.jpg";
 export const imagery = { heroImage, newTownImage, saltLakeImage, aliporeImage };
 
 export const localities = [
-  { name: "New Town", bengali: "নিউ টাউন", note: "Skyline living, planned around open green corridors.", price: "₹7,800–12,400 / sq ft", image: newTownImage },
-  { name: "Salt Lake", bengali: "সল্ট লেক", note: "Leafy blocks, lived-in calm, and effortless city access.", price: "₹9,500–15,200 / sq ft", image: saltLakeImage },
-  { name: "Alipore", bengali: "আলিপুর", note: "Old-world addresses with a quietly contemporary rhythm.", price: "₹18,000–31,000 / sq ft", image: aliporeImage },
+  {
+    name: "New Town",
+    bengali: "নিউ টাউন",
+    note: "Skyline living, planned around open green corridors.",
+    price: "₹7,800–12,400 / sq ft",
+    image: newTownImage,
+  },
+  {
+    name: "Salt Lake",
+    bengali: "সল্ট লেক",
+    note: "Leafy blocks, lived-in calm, and effortless city access.",
+    price: "₹9,500–15,200 / sq ft",
+    image: saltLakeImage,
+  },
+  {
+    name: "Alipore",
+    bengali: "আলিপুর",
+    note: "Old-world addresses with a quietly contemporary rhythm.",
+    price: "₹18,000–31,000 / sq ft",
+    image: aliporeImage,
+  },
 ];
 
 export const featured = {
