@@ -71,7 +71,7 @@ export function EmiCalculator({
             Know the monthly number
           </p>
           <h2 className="mt-4 font-display text-4xl leading-tight text-foreground md:text-6xl">
-            Clarity before the first site visit.
+            Estimate your EMI.
           </h2>
           <p className="mt-5 max-w-lg text-base leading-7 text-muted-foreground">
             A transparent starting estimate calibrated to Kolkata home loans—without phone numbers,

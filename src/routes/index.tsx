@@ -74,7 +74,7 @@ const trustSignals = [
 const copy = {
   en: {
     eyebrow: "Homes with a Kolkata point of view",
-    title: "Your next address, made simple.",
+    title: "Find your Kolkata home.",
     body: "Verified residences and the neighbourhood detail that national portals leave out—from flood drainage and municipal lease terms to morning light.",
     explore: "Explore curated homes",
   },
@@ -229,7 +229,7 @@ function IndexPage() {
               Neighbourhood notes
             </p>
             <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
-              Choose the para, not just the pin.
+              Pick your para.
             </h2>
           </div>
           <div className="max-w-md">
@@ -316,7 +316,7 @@ function IndexPage() {
                 Handpicked this week
               </p>
               <h2 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-6xl">
-                One home, looked at properly.
+                Featured home.
               </h2>
             </div>
             <p className="max-w-md text-sm leading-relaxed text-primary-foreground/75">
@@ -420,7 +420,7 @@ function IndexPage() {
                 From the BariGhor Journal
               </p>
               <h2 className="mt-3 font-display text-4xl font-bold tracking-tight md:text-5xl">
-                Honest field guides to Kolkata property.
+                Local field guides.
               </h2>
             </div>
             <Button asChild variant="outline">

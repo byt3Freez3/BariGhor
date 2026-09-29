@@ -2,6 +2,7 @@ import { Link } from "@tanstack/react-router";
 import { Menu, X, User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/lib/store";
+import { LocalitySearch } from "@/components/locality-search";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   return (
@@ -75,6 +76,7 @@ export function SiteHeader({
 
         {/* Right CTA Actions */}
         <div className="hidden items-center gap-3 lg:flex">
+          <LocalitySearch inverse={inverse} />
           <Button
             variant={inverse ? "ghost" : "outline"}
             size="sm"
@@ -110,6 +112,7 @@ export function SiteHeader({
 
         {/* Mobile Menu Button */}
         <div className="flex items-center gap-2 lg:hidden">
+          <LocalitySearch inverse={inverse} />
           <Button variant="ghost" size="sm" onClick={toggleLanguage} className={`text-xs ${tone}`}>
             {language === "en" ? "বাংলা" : "EN"}
           </Button>
