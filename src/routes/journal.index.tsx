@@ -12,7 +12,7 @@ export const Route = createFileRoute("/journal/")({
       {
         name: "description",
         content:
-          "Plain-language guides to property laws, WBHIRA, monsoon drainage, and land tenure in Kolkata.",
+          "Plain-language guides to property laws, WBRERA, monsoon drainage, and land tenure in Kolkata.",
       },
     ],
   }),

@@ -12,6 +12,8 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as CitiesIndexRouteImport } from './routes/cities.index'
+import { Route as CitiesSlugRouteImport } from './routes/cities.$slug'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
 import { Route as JournalSlugRouteImport } from './routes/journal.$slug'
 import { Route as LocalitiesIndexRouteImport } from './routes/localities.index'
@@ -33,6 +35,16 @@ const SearchRoute = SearchRouteImport.update({
 const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitiesIndexRoute = CitiesIndexRouteImport.update({
+  id: '/cities/',
+  path: '/cities/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitiesSlugRoute = CitiesSlugRouteImport.update({
+  id: '/cities/$slug',
+  path: '/cities/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const JournalIndexRoute = JournalIndexRouteImport.update({
@@ -75,10 +87,12 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
+  '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/cities/': typeof CitiesIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/localities/': typeof LocalitiesIndexRoute
   '/properties/': typeof PropertiesIndexRoute
@@ -87,10 +101,12 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
+  '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/cities': typeof CitiesIndexRoute
   '/journal': typeof JournalIndexRoute
   '/localities': typeof LocalitiesIndexRoute
   '/properties': typeof PropertiesIndexRoute
@@ -100,10 +116,12 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
+  '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/cities/': typeof CitiesIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/localities/': typeof LocalitiesIndexRoute
   '/properties/': typeof PropertiesIndexRoute
@@ -114,10 +132,12 @@ export interface FileRouteTypes {
     | '/'
     | '/search'
     | '/sign-in'
+    | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/cities/'
     | '/journal/'
     | '/localities/'
     | '/properties/'
@@ -126,10 +146,12 @@ export interface FileRouteTypes {
     | '/'
     | '/search'
     | '/sign-in'
+    | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/cities'
     | '/journal'
     | '/localities'
     | '/properties'
@@ -138,10 +160,12 @@ export interface FileRouteTypes {
     | '/'
     | '/search'
     | '/sign-in'
+    | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/cities/'
     | '/journal/'
     | '/localities/'
     | '/properties/'
@@ -151,10 +175,12 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SearchRoute: typeof SearchRoute
   SignInRoute: typeof SignInRoute
+  CitiesSlugRoute: typeof CitiesSlugRoute
   JournalSlugRoute: typeof JournalSlugRoute
   LocalitiesSlugRoute: typeof LocalitiesSlugRoute
   PropertiesSlugRoute: typeof PropertiesSlugRoute
   PropertySlugRoute: typeof PropertySlugRoute
+  CitiesIndexRoute: typeof CitiesIndexRoute
   JournalIndexRoute: typeof JournalIndexRoute
   LocalitiesIndexRoute: typeof LocalitiesIndexRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
@@ -181,6 +207,20 @@ declare module '@tanstack/react-router' {
       path: '/sign-in'
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cities/': {
+      id: '/cities/'
+      path: '/cities'
+      fullPath: '/cities/'
+      preLoaderRoute: typeof CitiesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cities/$slug': {
+      id: '/cities/$slug'
+      path: '/cities/$slug'
+      fullPath: '/cities/$slug'
+      preLoaderRoute: typeof CitiesSlugRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/journal/': {
@@ -239,10 +279,12 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SearchRoute: SearchRoute,
   SignInRoute: SignInRoute,
+  CitiesSlugRoute: CitiesSlugRoute,
   JournalSlugRoute: JournalSlugRoute,
   LocalitiesSlugRoute: LocalitiesSlugRoute,
   PropertiesSlugRoute: PropertiesSlugRoute,
   PropertySlugRoute: PropertySlugRoute,
+  CitiesIndexRoute: CitiesIndexRoute,
   JournalIndexRoute: JournalIndexRoute,
   LocalitiesIndexRoute: LocalitiesIndexRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,

@@ -1,4 +1,4 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link, notFound, redirect } from "@tanstack/react-router";
 import { ArrowLeft, CheckCircle2, Clock, Share2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
@@ -8,6 +8,14 @@ import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/journal/$slug")({
   loader: ({ params }) => {
+    if (params.slug === "understanding-wbhira-wbrera") {
+      throw redirect({
+        to: "/journal/$slug",
+        params: { slug: "understanding-wbrera" },
+        replace: true,
+      });
+    }
+
     const article = getJournalBySlug(params.slug);
     if (!article) {
       throw notFound();

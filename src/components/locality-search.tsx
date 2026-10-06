@@ -11,20 +11,24 @@ import {
 } from "@/components/ui/command";
 import { Button } from "@/components/ui/button";
 
-const LOCALITIES = [
-  { slug: "new-town", name: "New Town, Rajarhat", region: "Kolkata Metro", count: 14 },
-  { slug: "salt-lake", name: "Salt Lake / Bidhannagar", region: "Kolkata Metro", count: 8 },
-  { slug: "alipore", name: "Alipore", region: "Kolkata Metro", count: 5 },
-  { slug: "ballygunge", name: "Ballygunge", region: "Kolkata Metro", count: 12 },
-  { slug: "garia", name: "Garia", region: "South Kolkata", count: 7 },
-  { slug: "behala", name: "Behala", region: "South West Kolkata", count: 9 },
-  { slug: "howrah", name: "Howrah", region: "Howrah District", count: 11 },
-  { slug: "siliguri", name: "Siliguri", region: "Darjeeling District", count: 3 },
-];
+import { useAppStore } from "@/lib/store";
+import { cities } from "@/lib/regions";
 
 export function LocalitySearch({ inverse = false }: { inverse?: boolean }) {
   const [open, setOpen] = React.useState(false);
   const router = useRouter();
+  const { selectedCity } = useAppStore();
+
+  const LOCALITIES = React.useMemo(() => {
+    return cities.flatMap(c => 
+      c.localities.map(l => ({
+        slug: l.slug,
+        name: l.name,
+        region: c.nameEn,
+        count: 1 // We don't have property count in Locality yet, just a placeholder or we can compute it if we imported properties. But let's just use 1 or remove it.
+      }))
+    );
+  }, []);
 
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
@@ -90,9 +94,6 @@ export function LocalitySearch({ inverse = false }: { inverse?: boolean }) {
                   <MapPin className="size-4 text-muted-foreground" />
                   <span>{loc.name}</span>
                   <span className="text-xs text-muted-foreground hidden sm:inline-block">- {loc.region}</span>
-                </div>
-                <div className="text-xs bg-secondary text-secondary-foreground px-2 py-0.5 rounded-full">
-                  {loc.count} properties
                 </div>
               </CommandItem>
             ))}

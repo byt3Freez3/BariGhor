@@ -2,19 +2,13 @@ import { useState } from "react";
 import { useRouter } from "@tanstack/react-router";
 import { Check, Filter, Search, SlidersHorizontal, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import {
-  Sheet,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "@/components/ui/sheet";
+import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { useAppStore } from "@/lib/store";
+import { cities } from "@/lib/regions";
 
 export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
   const router = useRouter();
-  const { locality, budget, bhk, setLocality, setBudget, setBhk, language } = useAppStore();
+  const { locality, budget, bhk, setLocality, setBudget, setBhk, language, selectedCity, setCity } = useAppStore();
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
 
   const handleSubmit = (e?: React.FormEvent) => {
@@ -34,11 +28,15 @@ export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
     }
   };
 
+  const cityOptions = cities.filter(c => c.status === "live").map(c => ({
+    value: c.slug,
+    label: language === "en" ? c.nameEn : c.nameBn,
+  }));
+
+  const currentCityObj = cities.find(c => c.slug === selectedCity);
   const localitiesOptions = [
     { value: "all", label: language === "en" ? "All Neighbourhoods" : "সব এলাকা" },
-    { value: "New Town", label: "New Town (AA I, II, III)" },
-    { value: "Salt Lake", label: "Salt Lake (Sec I, II, III)" },
-    { value: "Alipore", label: "Alipore & Queens Park" },
+    ...(currentCityObj?.localities.map(l => ({ value: l.slug, label: l.name })) || [])
   ];
 
   const budgetOptions = [
@@ -101,10 +99,34 @@ export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
             </SheetHeader>
 
             <div className="mt-6 space-y-6">
+              {/* City Pills */}
+              <div>
+                <label className="text-xs font-bold uppercase tracking-wider text-accent">
+                  01 / City
+                </label>
+                <div className="mt-2.5 grid grid-cols-2 gap-2">
+                  {cityOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => { setCity(opt.value); setLocality("all"); }}
+                      className={`flex items-center justify-between rounded-xs border px-3 py-2.5 text-xs font-semibold transition-all ${
+                        selectedCity === opt.value
+                          ? "border-primary bg-primary text-primary-foreground shadow-sm"
+                          : "border-border bg-card text-foreground hover:bg-muted"
+                      }`}
+                    >
+                      <span className="truncate">{opt.label}</span>
+                      {selectedCity === opt.value && <Check className="size-3.5 shrink-0 ml-1" />}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               {/* Locality Pills */}
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-accent">
-                  01 / Locality
+                  02 / Locality
                 </label>
                 <div className="mt-2.5 grid grid-cols-2 gap-2">
                   {localitiesOptions.map((opt) => (
@@ -128,7 +150,7 @@ export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
               {/* Budget Pills */}
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-accent">
-                  02 / Budget
+                  03 / Budget
                 </label>
                 <div className="mt-2.5 grid grid-cols-2 gap-2">
                   {budgetOptions.map((opt) => (
@@ -152,7 +174,7 @@ export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
               {/* BHK Pills */}
               <div>
                 <label className="text-xs font-bold uppercase tracking-wider text-accent">
-                  03 / Home Layout
+                  04 / Home Layout
                 </label>
                 <div className="mt-2.5 grid grid-cols-2 gap-2">
                   {bhkOptions.map((opt) => (
@@ -193,28 +215,42 @@ export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
       {/* DESKTOP SEARCH BAR (Hidden on Mobile) */}
       <form
         onSubmit={handleSubmit}
-        className="glass-panel mt-9 hidden max-w-5xl gap-px overflow-hidden rounded-xs border border-hero-foreground/25 md:grid md:grid-cols-[1.3fr_1.1fr_0.9fr_auto]"
+        className="glass-panel mt-9 hidden max-w-[1200px] gap-px overflow-hidden rounded-xs border border-hero-foreground/25 md:grid md:grid-cols-[1.1fr_1.3fr_1.1fr_0.9fr_auto]"
         aria-label="Filter homes"
       >
         <label className="bg-background/85 px-5 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-background">
           <span className="block text-[11px] font-bold text-accent">
-            {language === "en" ? "01 / Locality" : "০১ / এলাকা"}
+            {language === "en" ? "01 / City" : "০১ / শহর"}
+          </span>
+          <select
+            value={selectedCity}
+            onChange={(e) => { setCity(e.target.value); setLocality("all"); }}
+            className="mt-1 block w-full cursor-pointer bg-transparent text-base font-semibold text-foreground outline-none"
+          >
+            {cityOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
+          </select>
+        </label>
+
+        <label className="bg-background/85 px-5 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-background">
+          <span className="block text-[11px] font-bold text-accent">
+            {language === "en" ? "02 / Locality" : "০২ / এলাকা"}
           </span>
           <select
             value={locality}
             onChange={(e) => setLocality(e.target.value)}
             className="mt-1 block w-full cursor-pointer bg-transparent text-base font-semibold text-foreground outline-none"
           >
-            <option value="all">{language === "en" ? "All Neighbourhoods" : "সব এলাকা"}</option>
-            <option value="New Town">New Town (Action Area I, II, III)</option>
-            <option value="Salt Lake">Salt Lake (Sector I, II, III)</option>
-            <option value="Alipore">Alipore & Queens Park</option>
+            {localitiesOptions.map(opt => (
+              <option key={opt.value} value={opt.value}>{opt.label}</option>
+            ))}
           </select>
         </label>
 
         <label className="bg-background/85 px-5 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-background">
           <span className="block text-[11px] font-bold text-accent">
-            {language === "en" ? "02 / Budget" : "০২ / বাজেট"}
+            {language === "en" ? "03 / Budget" : "০৩ / বাজেট"}
           </span>
           <select
             value={budget}
@@ -231,7 +267,7 @@ export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
 
         <label className="bg-background/85 px-5 py-4 text-xs font-semibold uppercase tracking-wider text-muted-foreground transition-colors hover:bg-background">
           <span className="block text-[11px] font-bold text-accent">
-            {language === "en" ? "03 / Configuration" : "০৩ / বিএইচকে"}
+            {language === "en" ? "04 / Configuration" : "০৪ / বিএইচকে"}
           </span>
           <select
             value={bhk}

@@ -181,7 +181,7 @@ function PropertyDetailPage() {
 
             <div className="absolute left-4 top-4 flex flex-wrap gap-2">
               <span className="rounded-xs bg-primary/95 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md backdrop-blur-xs">
-                WBHIRA: {property.wbhira_id}
+                WBRERA: {property.reraProjectNo}
               </span>
               <span className="rounded-xs bg-card/90 px-3 py-1.5 text-xs font-semibold text-foreground shadow-md backdrop-blur-xs">
                 {property.tenure_type || property.tenure}
@@ -228,7 +228,7 @@ function PropertyDetailPage() {
           <div className="flex flex-wrap items-center gap-3">
             <span className="inline-flex items-center gap-1.5 rounded-xs bg-sage/20 px-3 py-1 text-xs font-bold uppercase tracking-wider text-primary">
               <BadgeCheck className="size-4 text-emerald-600" />
-              WBHIRA Verified
+              WBRERA Verified
             </span>
             <span className="text-xs text-muted-foreground">
               Reference: {property.id.toUpperCase()} · Updated September 2026
@@ -434,11 +434,11 @@ function PropertyDetailPage() {
               <div className="rounded-xs border border-sage/40 bg-sage/10 p-6 text-sm">
                 <div className="flex items-center gap-2 font-bold text-primary">
                   <ShieldCheck className="size-5 text-emerald-600" />
-                  <span>WBHIRA Escrow & Sanction Verification</span>
+                  <span>WBRERA Escrow & Sanction Verification</span>
                 </div>
                 <p className="mt-2 text-xs leading-relaxed text-foreground/80">
                   This project has active escrow compliance under WBRERA registration{" "}
-                  <code className="font-mono font-semibold">{property.wbhira_id}</code>. Buyer
+                  <code className="font-mono font-semibold">{property.reraProjectNo}</code>. Buyer
                   advances are strictly deposited to the project-specific escrow account ensuring
                   timely construction milestones.
                 </p>
@@ -461,9 +461,9 @@ function PropertyDetailPage() {
 
             <div className="my-6 space-y-3 border-y border-border py-5 text-sm">
               <div className="flex justify-between">
-                <span className="text-muted-foreground">WBHIRA ID</span>
+                <span className="text-muted-foreground">WBRERA ID</span>
                 <span className="font-mono text-xs font-semibold text-foreground">
-                  {property.wbhira_id}
+                  {property.reraProjectNo}
                 </span>
               </div>
               <div className="flex justify-between">

@@ -13,7 +13,7 @@ export const Route = createFileRoute("/sign-in")({
       {
         name: "description",
         content:
-          "Access your saved properties, WBHIRA due diligence dossiers, and direct advisory appointments.",
+          "Access your saved properties, WBRERA due diligence dossiers, and direct advisory appointments.",
       },
     ],
   }),
@@ -89,7 +89,7 @@ function SignInPage() {
               </div>
               <div className="flex items-center gap-2.5">
                 <CheckCircle2 className="size-4 text-accent" />
-                <span>Direct WBHIRA registration certificate downloads</span>
+                <span>Direct WBRERA registration certificate downloads</span>
               </div>
             </div>
           </div>

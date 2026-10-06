@@ -81,7 +81,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       {
         name: "description",
         content:
-          "Discover handpicked residences, verified WBHIRA titles, and honest neighbourhood intelligence across Kolkata and West Bengal.",
+          "Discover handpicked residences, verified WBRERA titles, and honest neighbourhood intelligence across Kolkata and West Bengal.",
       },
       { name: "author", content: "BariGhor" },
       { name: "theme-color", content: "#0A3632" },

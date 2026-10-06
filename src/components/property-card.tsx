@@ -33,7 +33,7 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           <span className="inline-flex items-center gap-1 rounded-xs bg-primary/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground backdrop-blur-xs">
             <BadgeCheck className="size-3 text-emerald-400" />
-            WBHIRA Verified
+            WBRERA Verified
           </span>
           <span className="rounded-xs bg-card/90 px-2.5 py-1 text-[11px] font-semibold text-foreground backdrop-blur-xs">
             {property.tenure_type || property.tenure}

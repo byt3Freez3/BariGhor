@@ -42,7 +42,7 @@ function PropertiesIndexPage() {
             {language === "en" ? "Handpicked Kolkata Homes" : "বাছাই করা কলকাতার বাড়ি"}
           </h1>
           <p className="mt-4 max-w-2xl text-base text-muted-foreground">
-            Every home in our portfolio has undergone WBHIRA registration validation, physical
+            Every home in our portfolio has undergone WBRERA registration validation, physical
             structural reviews, and municipal land-title verification.
           </p>
         </div>

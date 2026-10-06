@@ -27,6 +27,7 @@ import {
   localities,
   properties,
 } from "@/lib/data";
+import { cities } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/")({
@@ -54,7 +55,7 @@ const trustSignals = [
   {
     Icon: BadgeCheck,
     value: "143",
-    label: "WBHIRA / RERA-checked homes",
+    label: "WBRERA-checked homes",
     sub: "Direct title & sanction verification",
   },
   {
@@ -143,7 +144,7 @@ function IndexPage() {
               Showing {properties.length} hand-curated residences in Kolkata
             </span>
             <span>·</span>
-            <span>WBHIRA Certified</span>
+            <span>WBRERA Certified</span>
             <span>·</span>
             <span>Updated September 2026</span>
           </div>
@@ -221,7 +222,98 @@ function IndexPage() {
         </section>
       )}
 
-      {/* 4. NEIGHBOURHOOD NOTES (LOCALITIES) */}
+      {/* 4. WHERE WE ARE (MULTI-CITY) */}
+      <section id="regions" className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
+        <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+              Our Network
+            </p>
+            <h2 className="mt-3 max-w-2xl font-display text-4xl font-bold leading-tight tracking-tight md:text-6xl">
+              Where we are.
+            </h2>
+          </div>
+          <div className="max-w-md">
+            <p className="text-sm leading-relaxed text-muted-foreground">
+              Expanding our verified portfolio across Bengal, starting from the capital and reaching emerging urban centers.
+            </p>
+            <Link
+              to="/cities"
+              className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-accent hover:underline"
+            >
+              Explore all cities <ArrowRight className="size-3.5" />
+            </Link>
+          </div>
+        </div>
+
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {cities.filter(c => c.tier === 1).map((city, index) => (
+            <Link
+              key={city.slug}
+              to="/cities/$slug"
+              params={{ slug: city.slug }}
+              className="group relative overflow-hidden rounded-xs border border-border bg-card shadow-sm transition-all hover:shadow-xl"
+            >
+              <div className="aspect-[16/10] overflow-hidden bg-muted">
+                {city.heroImage && (
+                  <img
+                    src={city.heroImage}
+                    alt={city.nameEn}
+                    className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                  />
+                )}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90" />
+              </div>
+              <div className="absolute inset-x-0 bottom-0 p-7 text-white">
+                <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-accent">
+                  <MapPin className="size-3.5" />
+                  {city.district}
+                </div>
+                <h3 className="mt-2 font-display text-3xl font-bold">{city.nameEn}</h3>
+                <div className="mt-4 flex items-center justify-between border-t border-white/20 pt-4 text-xs font-semibold">
+                  <span>{city.priceBand}</span>
+                  <ArrowRight className="size-3.5" />
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+
+        <div className="mt-16 border-t border-border pt-10">
+          <div className="mb-6 flex items-center gap-4">
+            <h3 className="font-display text-2xl font-bold">Coming Soon</h3>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+          <div className="flex gap-4 overflow-x-auto pb-6 snap-x snap-mandatory hide-scrollbar">
+            {cities.filter(c => c.tier === 2).map((city) => (
+              <div
+                key={city.slug}
+                className="w-[280px] shrink-0 snap-start flex-col justify-between rounded-xs border border-border bg-secondary/20 p-5"
+              >
+                <div>
+                  <h4 className="font-display text-lg font-bold">{city.nameEn}</h4>
+                  <p className="mt-1 text-[11px] font-medium text-muted-foreground uppercase tracking-widest">{city.district}</p>
+                  <p className="mt-3 text-xs leading-relaxed text-muted-foreground line-clamp-2">
+                    {city.blurbEn}
+                  </p>
+                </div>
+                <div className="mt-5 border-t border-border/50 pt-4">
+                  <a
+                    href={`https://wa.me/919073599355?text=Hi%20BariGhor%2C%20please%20notify%20me%20when%20you%20launch%20in%20${city.nameEn}.`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-accent hover:underline"
+                  >
+                    Notify me <ArrowRight className="size-3" />
+                  </a>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 5. NEIGHBOURHOOD NOTES (LOCALITIES) */}
       <section id="localities" className="mx-auto max-w-7xl px-5 py-20 lg:px-8 lg:py-28">
         <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
           <div>
@@ -340,7 +432,7 @@ function IndexPage() {
                 className="absolute inset-0 size-full object-cover transition-transform duration-700 group-hover:scale-105"
               />
               <span className="absolute left-6 top-6 bg-card px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-card-foreground shadow-md">
-                WBHIRA verified · Ref BG-NT-021
+                WBRERA verified · Ref BG-NT-021
               </span>
             </Link>
 

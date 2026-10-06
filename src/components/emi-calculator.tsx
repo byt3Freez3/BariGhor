@@ -1,5 +1,6 @@
 import { useState, useId, useEffect } from "react";
 import { IndianRupee, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
+import { formatINR } from "@/lib/utils";
 
 function calculateEmi(principal: number, annualRate: number, years: number): number {
   if (principal <= 0 || annualRate <= 0 || years <= 0) return 0;
@@ -11,13 +12,7 @@ function calculateEmi(principal: number, annualRate: number, years: number): num
   return Math.round(emi);
 }
 
-function formatLakhsCr(lakhs: number): string {
-  if (lakhs >= 100) {
-    const cr = (lakhs / 100).toFixed(2).replace(/\.00$/, "");
-    return `₹${cr} Cr`;
-  }
-  return `₹${lakhs} Lakh`;
-}
+
 
 export function EmiCalculator({
   initialLoanLakhs = 105,
@@ -30,9 +25,10 @@ export function EmiCalculator({
 }) {
   const [loanLakhs, setLoanLakhs] = useState(initialLoanLakhs);
   const [years, setYears] = useState(initialYears);
-  const [displayEmi, setDisplayEmi] = useState(0);
 
   const rawEmi = calculateEmi(loanLakhs * 100000, 8.5, years);
+  const [displayEmi, setDisplayEmi] = useState(rawEmi);
+
   const totalPayment = rawEmi * years * 12;
   const totalInterest = Math.max(0, totalPayment - loanLakhs * 100000);
 
@@ -126,7 +122,7 @@ export function EmiCalculator({
                 Loan Amount
               </label>
               <span className="font-mono text-base font-bold text-accent">
-                {formatLakhsCr(loanLakhs)}
+                {formatINR(loanLakhs)}
               </span>
             </div>
             <input
@@ -181,14 +177,14 @@ export function EmiCalculator({
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 Principal Amount
               </p>
-              <p className="mt-1 font-semibold text-foreground">{formatLakhsCr(loanLakhs)}</p>
+              <p className="mt-1 font-semibold text-foreground">{formatINR(loanLakhs)}</p>
             </div>
             <div>
               <p className="text-[11px] uppercase tracking-wider text-muted-foreground">
                 Total Interest Payable
               </p>
               <p className="mt-1 font-semibold text-accent">
-                ₹{Math.round(totalInterest / 100000).toLocaleString("en-IN")} Lakh
+                {formatINR(Math.round(totalInterest / 100000))}
               </p>
             </div>
           </div>

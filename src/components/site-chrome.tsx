@@ -3,6 +3,7 @@ import { Menu, X, User, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/lib/store";
 import { LocalitySearch } from "@/components/locality-search";
+import { CitySelector } from "@/components/city-selector";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   return (
@@ -16,12 +17,7 @@ export function Brand({ inverse = false }: { inverse?: boolean }) {
       <span className="grid size-9 place-items-center rounded-sm border border-current font-display text-xl font-bold leading-none transition-transform group-hover:scale-105">
         ব
       </span>
-      <div className="flex flex-col">
-        <span className="font-display text-2xl font-bold tracking-tight">BariGhor</span>
-        <span className="text-[10px] tracking-widest uppercase opacity-70 -mt-1 font-sans">
-          Kolkata
-        </span>
-      </div>
+      <span className="font-display text-2xl font-bold tracking-tight">BariGhor</span>
     </Link>
   );
 }
@@ -44,7 +40,10 @@ export function SiteHeader({
   return (
     <header className={headerBg}>
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
-        <Brand inverse={inverse} />
+        <div className="flex items-center gap-4">
+          <Brand inverse={inverse} />
+          <CitySelector inverse={inverse} />
+        </div>
 
         {/* Desktop Navigation Links */}
         <nav
@@ -154,7 +153,7 @@ export function SiteHeader({
               onClick={() => setMobileNavOpen(false)}
             >
               <span>{language === "en" ? "Market journal" : "মার্কেট জার্নাল"}</span>
-              <span className="text-xs text-muted-foreground">Field guides & WBHIRA</span>
+              <span className="text-xs text-muted-foreground">Field guides & WBRERA</span>
             </Link>
             <Link
               to="/sign-in"
@@ -181,7 +180,7 @@ export function SiteFooter() {
   const { language } = useAppStore();
   return (
     <footer className="bg-primary text-primary-foreground">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-[1.4fr_1fr_1fr_1fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_0.9fr_0.9fr_1fr_1fr] lg:px-8">
         <div>
           <Brand inverse />
           <p className="mt-5 max-w-sm text-sm leading-6 text-primary-foreground/75">
@@ -190,11 +189,37 @@ export function SiteFooter() {
               : "কলকাতার নির্বাচিত রিয়েল এস্টেট প্ল্যাটফর্ম। যাচাই করা বাড়ি এবং পাড়ার সঠিক তথ্য।"}
           </p>
           <div className="mt-6 flex items-center gap-3 text-xs text-primary-foreground/60">
-            <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">WBHIRA Verified</span>
+            <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">WBRERA Verified</span>
             <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">
               Direct Land Titles
             </span>
           </div>
+        </div>
+
+        <div>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Cities</p>
+          <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/80">
+            <li>
+              <Link to="/cities/$slug" params={{ slug: "kolkata" }} className="hover:text-accent transition-colors">
+                Kolkata
+              </Link>
+            </li>
+            <li>
+              <Link to="/cities/$slug" params={{ slug: "new-town" }} className="hover:text-accent transition-colors">
+                New Town
+              </Link>
+            </li>
+            <li>
+              <Link to="/cities/$slug" params={{ slug: "howrah" }} className="hover:text-accent transition-colors">
+                Howrah
+              </Link>
+            </li>
+            <li>
+              <Link to="/cities" className="text-accent underline underline-offset-4 hover:opacity-80">
+                View All Regions →
+              </Link>
+            </li>
+          </ul>
         </div>
 
         <div>
@@ -255,10 +280,10 @@ export function SiteFooter() {
             <li>
               <Link
                 to="/journal/$slug"
-                params={{ slug: "understanding-wbhira-wbrera" }}
+                params={{ slug: "understanding-wbrera" }}
                 className="hover:text-accent transition-colors"
               >
-                WBRERA & WBHIRA Rules
+                WBRERA Rules
               </Link>
             </li>
             <li>
@@ -319,7 +344,7 @@ export function SiteFooter() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 sm:flex-row">
           <p>
             © {new Date().getFullYear()} BariGhor Real Estate Advisory. All demonstration listings
-            verified against WBHIRA/WBRERA records.
+            verified against WBRERA records.
           </p>
           <p className="text-primary-foreground/45">Built for Kolkata with precision.</p>
         </div>
