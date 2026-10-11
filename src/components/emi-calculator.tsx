@@ -34,7 +34,7 @@ export function EmiCalculator({
 
   const loanSliderId = useId();
   const tenureSliderId = useId();
-  const prevEmiRef = useState({ current: 0 })[0];
+  const prevEmiRef = useState({ current: rawEmi })[0];
 
   // Smooth number transition
   useEffect(() => {

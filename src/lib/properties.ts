@@ -36,7 +36,7 @@ export const featured = {
   price: "₹1.42 Cr onwards",
   configuration: "3 BHK · 1,840 sq ft",
   status: "Possession Dec 2027",
-  wbhira: "WBRERA/P/NOR/2024/001234",
+  reraProjectNo: "WBRERA/P/NOR/2024/001234",
   developer: "Eastern Habitat",
   tenure: "Freehold",
   approval: "HIDCO",

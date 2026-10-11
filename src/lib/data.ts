@@ -656,7 +656,7 @@ export const journalArticles: JournalArticle[] = [
   },
   {
     slug: "understanding-wbrera",
-    title: "Understanding WBRERA & WBHIRA: The Bengal Buyer's Checklist",
+    title: "Understanding WBRERA: The Bengal Buyer's Checklist",
     bengaliTitle: "WBRERA এবং ক্রেতার সুরক্ষা নির্দেশিকা",
     category: "Regulatory & Compliance",
     readTime: "5 min read",

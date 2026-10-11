@@ -95,7 +95,7 @@ export const Route = createFileRoute("/properties/$slug")({
     const prop = loaderData?.property;
     return {
       meta: [
-        { title: `${prop ? prop.title : "Property"} — BariGhor Kolkata` },
+        { title: `${prop ? prop.title : "Property"} — BariGhor` },
         {
           name: "description",
           content: prop ? prop.description : "Verified residence details on BariGhor.",
