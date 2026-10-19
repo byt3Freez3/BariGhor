@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useAppStore } from "@/lib/store";
 import { LocalitySearch } from "@/components/locality-search";
 import { CitySelector } from "@/components/city-selector";
+import { cities } from "@/data/regions";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   const selectedCity = useAppStore((state) => state.selectedCity);
@@ -181,58 +182,97 @@ export function SiteHeader({
 }
 
 export function SiteFooter() {
-  const { language } = useAppStore();
+  const { language, selectedCity } = useAppStore();
+  const tier1Cities = cities.filter((c) => c.tier === 1);
+  const tier2Cities = cities.filter((c) => c.tier === 2);
+
   return (
     <footer className="bg-primary text-primary-foreground">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 lg:grid-cols-[1.4fr_0.9fr_0.9fr_1fr_1fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_1fr] lg:px-8">
         <div>
           <Brand inverse />
           <p className="mt-5 max-w-sm text-sm leading-6 text-primary-foreground/75">
             {language === "en"
-              ? "BariGhor is Kolkata's curated real estate publication and brokerage advisory. Verified properties, honest neighbourhood notes, and zero spam."
-              : "কলকাতার নির্বাচিত রিয়েল এস্টেট প্ল্যাটফর্ম। যাচাই করা বাড়ি এবং পাড়ার সঠিক তথ্য।"}
+              ? "BariGhor is Bengal's boutique real estate publication and single-owner advisory. 100% physically audited properties, direct land titles, and zero portal spam."
+              : "পশ্চিমবঙ্গের নির্বাচিত রিয়েল এস্টেট প্ল্যাটফর্ম। যাচাই করা বাড়ি এবং প্রতিটি শহরের সঠিক তথ্য।"}
           </p>
-          <div className="mt-6 flex items-center gap-3 text-xs text-primary-foreground/60">
+          <div className="mt-6 flex flex-wrap items-center gap-2 text-xs text-primary-foreground/60">
             <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">WBRERA Verified</span>
-            <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">
-              Direct Land Titles
-            </span>
+            <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">Direct Land Titles</span>
+            <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">Physical Site Audits</span>
           </div>
         </div>
 
+        {/* Full Tier-Wise City Sitemap */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Cities</p>
-          <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/80">
-            <li>
-              <Link to="/cities/$slug" params={{ slug: "kolkata" }} className="hover:text-accent transition-colors">
-                Kolkata
-              </Link>
-            </li>
-            <li>
-              <Link to="/cities/$slug" params={{ slug: "new-town" }} className="hover:text-accent transition-colors">
-                New Town
-              </Link>
-            </li>
-            <li>
-              <Link to="/cities/$slug" params={{ slug: "howrah" }} className="hover:text-accent transition-colors">
-                Howrah
-              </Link>
-            </li>
-            <li>
-              <Link to="/cities" className="text-accent underline underline-offset-4 hover:opacity-80">
-                View All Regions →
-              </Link>
-            </li>
-          </ul>
+          <div className="flex items-center justify-between">
+            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+              West Bengal City Sitemap
+            </p>
+            <Link
+              to="/cities"
+              className="text-[11px] text-accent underline underline-offset-4 hover:opacity-80"
+            >
+              Full Rollout Map →
+            </Link>
+          </div>
+
+          <div className="mt-4 space-y-4">
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-primary-foreground/50">
+                Tier 1 Metropolises
+              </p>
+              <ul className="mt-2 space-y-1.5 text-xs text-primary-foreground/80">
+                {tier1Cities.map((city) => (
+                  <li key={city.slug} className="flex items-center justify-between pr-2">
+                    <Link
+                      to="/$citySlug"
+                      params={{ citySlug: city.slug }}
+                      className="hover:text-accent transition-colors font-medium"
+                    >
+                      {city.nameEn} ({city.nameBn})
+                    </Link>
+                    <span className="text-[10px] text-primary-foreground/50 font-mono">
+                      ₹{city.avgPricePerSqft.toLocaleString("en-IN")}/sq ft
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-wider text-primary-foreground/50">
+                Tier 2 Growth Corridors
+              </p>
+              <div className="mt-2 grid grid-cols-2 gap-x-2 gap-y-1.5 text-xs text-primary-foreground/80">
+                {tier2Cities.map((city) => (
+                  <Link
+                    key={city.slug}
+                    to="/$citySlug"
+                    params={{ citySlug: city.slug }}
+                    className="hover:text-accent transition-colors truncate"
+                  >
+                    {city.nameEn}{" "}
+                    <span className="text-[10px] opacity-60">
+                      · ₹{city.avgPricePerSqft.toLocaleString("en-IN")}
+                    </span>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
 
+        {/* Localities & Neighbourhoods */}
         <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Localities</p>
-          <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/80">
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+            Neighbourhoods
+          </p>
+          <ul className="mt-4 space-y-2 text-xs text-primary-foreground/80">
             <li>
               <Link
-                to="/localities/$slug"
-                params={{ slug: "new-town" }}
+                to="/$citySlug/localities/$localitySlug"
+                params={{ citySlug: "new-town", localitySlug: "new-town" }}
                 className="hover:text-accent transition-colors"
               >
                 New Town & Rajarhat
@@ -240,8 +280,8 @@ export function SiteFooter() {
             </li>
             <li>
               <Link
-                to="/localities/$slug"
-                params={{ slug: "salt-lake" }}
+                to="/$citySlug/localities/$localitySlug"
+                params={{ citySlug: "kolkata", localitySlug: "salt-lake" }}
                 className="hover:text-accent transition-colors"
               >
                 Salt Lake (Bidhannagar)
@@ -249,8 +289,8 @@ export function SiteFooter() {
             </li>
             <li>
               <Link
-                to="/localities/$slug"
-                params={{ slug: "alipore" }}
+                to="/$citySlug/localities/$localitySlug"
+                params={{ citySlug: "kolkata", localitySlug: "alipore" }}
                 className="hover:text-accent transition-colors"
               >
                 Alipore & Queens Park
@@ -258,20 +298,35 @@ export function SiteFooter() {
             </li>
             <li>
               <Link
-                to="/localities"
-                className="text-accent underline underline-offset-4 hover:opacity-80"
+                to="/$citySlug/localities/$localitySlug"
+                params={{ citySlug: "howrah", localitySlug: "shibpur" }}
+                className="hover:text-accent transition-colors"
               >
-                View All Neighbourhoods →
+                Shibpur Riverfront, Howrah
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/$citySlug/localities"
+                params={{ citySlug: selectedCity }}
+                className="text-accent underline underline-offset-4 hover:opacity-80 block pt-1"
+              >
+                View{" "}
+                {selectedCity
+                  ? selectedCity.charAt(0).toUpperCase() + selectedCity.slice(1)
+                  : "All"}{" "}
+                Neighbourhoods →
               </Link>
             </li>
           </ul>
         </div>
 
+        {/* Journal & Direct Desk */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-            Market Journal
+            Journal & Direct Desk
           </p>
-          <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/80">
+          <ul className="mt-4 space-y-2 text-xs text-primary-foreground/80">
             <li>
               <Link
                 to="/journal/$slug"
@@ -287,7 +342,7 @@ export function SiteFooter() {
                 params={{ slug: "understanding-wbrera" }}
                 className="hover:text-accent transition-colors"
               >
-                WBRERA Rules
+                WBRERA Buyer Protection
               </Link>
             </li>
             <li>
@@ -299,45 +354,14 @@ export function SiteFooter() {
                 Monsoon Drainage Guide
               </Link>
             </li>
-            <li>
-              <Link
-                to="/journal"
-                className="text-accent underline underline-offset-4 hover:opacity-80"
-              >
-                Read All Articles →
-              </Link>
-            </li>
-          </ul>
-        </div>
-
-        <div>
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
-            Quick Links
-          </p>
-          <ul className="mt-4 space-y-2.5 text-sm text-primary-foreground/80">
-            <li>
-              <Link to="/properties" className="hover:text-accent transition-colors">
-                All Properties
-              </Link>
-            </li>
-            <li>
-              <Link to="/search" className="hover:text-accent transition-colors">
-                Interactive Search
-              </Link>
-            </li>
-            <li>
-              <Link to="/sign-in" className="hover:text-accent transition-colors">
-                Sign in / Register
-              </Link>
-            </li>
-            <li>
+            <li className="pt-2">
               <a
-                href="https://wa.me/919073599355?text=Hi%20BariGhor%2C%20I%20am%20looking%20for%20properties%20in%20Kolkata."
+                href="https://wa.me/919073599355?text=Hi%20BariGhor%2C%20I%20am%20looking%20for%20verified%20properties%20in%20West%20Bengal."
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-emerald-400 hover:underline"
+                className="inline-flex items-center gap-1.5 font-semibold text-emerald-400 hover:underline"
               >
-                Direct WhatsApp Desk
+                Direct WhatsApp Advisory (+91 90735 99355)
               </a>
             </li>
           </ul>
@@ -347,12 +371,13 @@ export function SiteFooter() {
       <div className="border-t border-primary-foreground/15 px-5 py-6 text-center text-xs text-primary-foreground/60">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 sm:flex-row">
           <p>
-            © {new Date().getFullYear()} BariGhor Real Estate Advisory. All demonstration listings
-            verified against WBRERA records.
+            © {new Date().getFullYear()} BariGhor Real Estate Advisory. West Bengal RERA Registered
+            Agent: WBRERA/A/KOL/2024/000189.
           </p>
-          <p className="text-primary-foreground/45">Built for Kolkata with precision.</p>
+          <p className="text-primary-foreground/45">Boutique Bengal Real Estate Publication & Advisory.</p>
         </div>
       </div>
     </footer>
   );
 }
+
