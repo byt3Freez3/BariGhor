@@ -179,7 +179,16 @@ const POSSESSION_BANDS = [
 
 function CityHomePage() {
   const { city } = Route.useLoaderData();
-  const { language, locality, budget, bhk, listingType, propertyType } = useAppStore();
+  const {
+    language,
+    locality,
+    budget,
+    bhk,
+    listingType,
+    propertyType,
+    recentlyViewed,
+    clearRecentlyViewed,
+  } = useAppStore();
 
   // If city is coming_soon, show the editorial expansion view
   if (city.status === "coming_soon") {
@@ -247,6 +256,13 @@ function CityHomePage() {
       propertyType,
     });
   }, [city.slug, locality, budget, bhk, listingType, propertyType]);
+
+  const recentlyViewedProperties = useMemo(() => {
+    if (!recentlyViewed || recentlyViewed.length === 0) return [];
+    return recentlyViewed
+      .map((id) => properties.find((p) => p.id === id))
+      .filter((p): p is (typeof properties)[0] => Boolean(p));
+  }, [recentlyViewed]);
 
   const handleHeroExplore = () => {
     const el = document.getElementById("curated-results");
@@ -619,6 +635,40 @@ function CityHomePage() {
                   </Link>
                 </div>
               </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* QUIET BAND: RECENTLY VIEWED HOMES (Stored locally, zero login required) */}
+      {recentlyViewedProperties.length > 0 && (
+        <section className="border-t border-border bg-card/40 py-16">
+          <div className="mx-auto max-w-7xl px-5 lg:px-8">
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+                  Private Session History
+                </p>
+                <h2 className="mt-1 font-display text-2xl font-bold tracking-tight">
+                  Recently Viewed by You
+                </h2>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Saved privately on your device. Zero login required.
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={clearRecentlyViewed}
+                className="text-xs font-medium text-muted-foreground hover:text-accent underline underline-offset-4 transition-colors"
+              >
+                Clear history
+              </button>
+            </div>
+
+            <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {recentlyViewedProperties.map((prop, idx) => (
+                <PropertyCard key={prop.id} property={prop} index={idx} />
+              ))}
             </div>
           </div>
         </section>

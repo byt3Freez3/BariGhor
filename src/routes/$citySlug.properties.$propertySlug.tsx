@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import {
   ArrowLeft,
@@ -116,11 +116,17 @@ export const Route = createFileRoute("/$citySlug/properties/$propertySlug")({
 
 function PropertyDetailPage() {
   const { city, property } = Route.useLoaderData();
-  const { language, isShortlisted, toggleShortlist } = useAppStore();
+  const { language, isShortlisted, toggleShortlist, addRecentlyViewed } = useAppStore();
   const saved = isShortlisted(property.id);
   const gallery = property.gallery_images || property.galleryImages || [property.image_url];
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<"overview" | "floorplan" | "specs">("overview");
+
+  useEffect(() => {
+    if (property?.id) {
+      addRecentlyViewed(property.id);
+    }
+  }, [property?.id, addRecentlyViewed]);
 
   const homeFacts = [
     { Icon: BedDouble, value: property.bhk, label: "Configuration" },
