@@ -6,6 +6,8 @@ import { Property } from "@/lib/data";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 
 export function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
+  const citySlug = property.citySlug || (property.localitySlug === "new-town" ? "new-town" : "kolkata");
+
   return (
     <motion.article
       initial={{ opacity: 0, y: 20 }}
@@ -48,8 +50,8 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
         <div className="flex items-center gap-1.5 text-xs font-semibold uppercase tracking-wider text-accent">
           <MapPin className="size-3.5" />
           <Link
-            to="/localities/$slug"
-            params={{ slug: property.localitySlug }}
+            to="/$citySlug/localities/$localitySlug"
+            params={{ citySlug, localitySlug: property.localitySlug }}
             className="hover:underline"
           >
             {property.locality}
@@ -61,7 +63,7 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
         </div>
 
         <h3 className="mt-2.5 font-display text-2xl font-bold tracking-tight text-foreground transition-colors group-hover:text-primary">
-          <Link to="/properties/$slug" params={{ slug: property.slug }}>
+          <Link to="/$citySlug/properties/$propertySlug" params={{ citySlug, propertySlug: property.slug }}>
             {property.title}
           </Link>
         </h3>
@@ -87,7 +89,7 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
 
         <div className="mt-6 flex items-center gap-2 pt-2">
           <Button asChild variant="outline" size="sm" className="flex-1">
-            <Link to="/properties/$slug" params={{ slug: property.slug }}>
+            <Link to="/$citySlug/properties/$propertySlug" params={{ citySlug, propertySlug: property.slug }}>
               Details
             </Link>
           </Button>

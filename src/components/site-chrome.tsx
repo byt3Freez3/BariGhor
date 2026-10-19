@@ -6,9 +6,11 @@ import { LocalitySearch } from "@/components/locality-search";
 import { CitySelector } from "@/components/city-selector";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
+  const selectedCity = useAppStore((state) => state.selectedCity);
   return (
     <Link
-      to="/"
+      to="/$citySlug"
+      params={{ citySlug: selectedCity }}
       className={`group inline-flex items-center gap-2.5 ${
         inverse ? "text-hero-foreground" : "text-primary"
       }`}
@@ -29,16 +31,16 @@ export function SiteHeader({
   inverse?: boolean;
   sticky?: boolean;
 }) {
-  const { language, toggleLanguage, mobileNavOpen, setMobileNavOpen } = useAppStore();
+  const { language, toggleLanguage, mobileNavOpen, setMobileNavOpen, selectedCity } = useAppStore();
   const tone = inverse ? "text-hero-foreground" : "text-foreground";
   const headerBg = sticky
-    ? "sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border shadow-xs"
+    ? "sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border shadow-xs site-header"
     : inverse
-      ? "absolute inset-x-0 top-0 z-40 border-b border-hero-foreground/15"
-      : "relative border-b border-border bg-background";
+      ? "absolute inset-x-0 top-0 z-40 border-b border-hero-foreground/15 site-header"
+      : "relative border-b border-border bg-background site-header";
 
   return (
-    <header className={headerBg}>
+    <header className={headerBg} data-tone={inverse ? "inverse" : undefined} data-site-header="true">
       <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
         <div className="flex items-center gap-4">
           <Brand inverse={inverse} />
@@ -51,14 +53,16 @@ export function SiteHeader({
           aria-label="Primary navigation"
         >
           <Link
-            to="/localities"
+            to="/$citySlug/localities"
+            params={{ citySlug: selectedCity }}
             className="transition-colors hover:text-accent"
             activeProps={{ className: "text-accent font-semibold" }}
           >
             {language === "en" ? "Localities" : "পাড়া ও এলাকা"}
           </Link>
           <Link
-            to="/properties"
+            to="/$citySlug/properties"
+            params={{ citySlug: selectedCity }}
             className="transition-colors hover:text-accent"
             activeProps={{ className: "text-accent font-semibold" }}
           >

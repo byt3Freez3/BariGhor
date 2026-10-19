@@ -53,7 +53,7 @@ export const cities: City[] = [
     priceBand: "₹45 Lakh – ₹2.5 Cr",
     blurbEn: "The twin city connecting heritage with rapid infrastructure growth across the Hooghly.",
     blurbBn: "গঙ্গার ওপারে ঐতিহ্য ও আধুনিক পরিকাঠামোর এক মেলবন্ধন।",
-    localities: []
+    localities: localities.filter(l => l.slug === "shibpur" || l.citySlug === "howrah")
   },
   {
     slug: "asansol",

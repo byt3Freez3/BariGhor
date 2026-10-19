@@ -10,8 +10,11 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as CitySlugRouteImport } from './routes/$citySlug'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as SignInRouteImport } from './routes/sign-in'
+import { Route as CitySlugIndexRouteImport } from './routes/$citySlug.index'
+import { Route as CitySlugSearchRouteImport } from './routes/$citySlug.search'
 import { Route as CitiesIndexRouteImport } from './routes/cities.index'
 import { Route as CitiesSlugRouteImport } from './routes/cities.$slug'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
@@ -21,10 +24,19 @@ import { Route as LocalitiesSlugRouteImport } from './routes/localities.$slug'
 import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
 import { Route as PropertySlugRouteImport } from './routes/property.$slug'
+import { Route as CitySlugLocalitiesIndexRouteImport } from './routes/$citySlug.localities.index'
+import { Route as CitySlugLocalitiesLocalitySlugRouteImport } from './routes/$citySlug.localities.$localitySlug'
+import { Route as CitySlugPropertiesIndexRouteImport } from './routes/$citySlug.properties.index'
+import { Route as CitySlugPropertiesPropertySlugRouteImport } from './routes/$citySlug.properties.$propertySlug'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CitySlugRoute = CitySlugRouteImport.update({
+  id: '/$citySlug',
+  path: '/$citySlug',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SearchRoute = SearchRouteImport.update({
@@ -36,6 +48,16 @@ const SignInRoute = SignInRouteImport.update({
   id: '/sign-in',
   path: '/sign-in',
   getParentRoute: () => rootRouteImport,
+} as any)
+const CitySlugIndexRoute = CitySlugIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => CitySlugRoute,
+} as any)
+const CitySlugSearchRoute = CitySlugSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => CitySlugRoute,
 } as any)
 const CitiesIndexRoute = CitiesIndexRouteImport.update({
   id: '/cities/',
@@ -82,97 +104,160 @@ const PropertySlugRoute = PropertySlugRouteImport.update({
   path: '/property/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CitySlugLocalitiesIndexRoute = CitySlugLocalitiesIndexRouteImport.update({
+  id: '/localities/',
+  path: '/localities/',
+  getParentRoute: () => CitySlugRoute,
+} as any)
+const CitySlugLocalitiesLocalitySlugRoute =
+  CitySlugLocalitiesLocalitySlugRouteImport.update({
+    id: '/localities/$localitySlug',
+    path: '/localities/$localitySlug',
+    getParentRoute: () => CitySlugRoute,
+  } as any)
+const CitySlugPropertiesIndexRoute = CitySlugPropertiesIndexRouteImport.update({
+  id: '/properties/',
+  path: '/properties/',
+  getParentRoute: () => CitySlugRoute,
+} as any)
+const CitySlugPropertiesPropertySlugRoute =
+  CitySlugPropertiesPropertySlugRouteImport.update({
+    id: '/properties/$propertySlug',
+    path: '/properties/$propertySlug',
+    getParentRoute: () => CitySlugRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/$citySlug': typeof CitySlugRouteWithChildren
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
+  '/$citySlug/search': typeof CitySlugSearchRoute
   '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/$citySlug/': typeof CitySlugIndexRoute
   '/cities/': typeof CitiesIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/localities/': typeof LocalitiesIndexRoute
   '/properties/': typeof PropertiesIndexRoute
+  '/$citySlug/localities/$localitySlug': typeof CitySlugLocalitiesLocalitySlugRoute
+  '/$citySlug/properties/$propertySlug': typeof CitySlugPropertiesPropertySlugRoute
+  '/$citySlug/localities/': typeof CitySlugLocalitiesIndexRoute
+  '/$citySlug/properties/': typeof CitySlugPropertiesIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
+  '/$citySlug/search': typeof CitySlugSearchRoute
   '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/$citySlug': typeof CitySlugIndexRoute
   '/cities': typeof CitiesIndexRoute
   '/journal': typeof JournalIndexRoute
   '/localities': typeof LocalitiesIndexRoute
   '/properties': typeof PropertiesIndexRoute
+  '/$citySlug/localities/$localitySlug': typeof CitySlugLocalitiesLocalitySlugRoute
+  '/$citySlug/properties/$propertySlug': typeof CitySlugPropertiesPropertySlugRoute
+  '/$citySlug/localities': typeof CitySlugLocalitiesIndexRoute
+  '/$citySlug/properties': typeof CitySlugPropertiesIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/$citySlug': typeof CitySlugRouteWithChildren
   '/search': typeof SearchRoute
   '/sign-in': typeof SignInRoute
+  '/$citySlug/search': typeof CitySlugSearchRoute
   '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/$citySlug/': typeof CitySlugIndexRoute
   '/cities/': typeof CitiesIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/localities/': typeof LocalitiesIndexRoute
   '/properties/': typeof PropertiesIndexRoute
+  '/$citySlug/localities/$localitySlug': typeof CitySlugLocalitiesLocalitySlugRoute
+  '/$citySlug/properties/$propertySlug': typeof CitySlugPropertiesPropertySlugRoute
+  '/$citySlug/localities/': typeof CitySlugLocalitiesIndexRoute
+  '/$citySlug/properties/': typeof CitySlugPropertiesIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/$citySlug'
     | '/search'
     | '/sign-in'
+    | '/$citySlug/search'
     | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/$citySlug/'
     | '/cities/'
     | '/journal/'
     | '/localities/'
     | '/properties/'
+    | '/$citySlug/localities/$localitySlug'
+    | '/$citySlug/properties/$propertySlug'
+    | '/$citySlug/localities/'
+    | '/$citySlug/properties/'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/search'
     | '/sign-in'
+    | '/$citySlug/search'
     | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/$citySlug'
     | '/cities'
     | '/journal'
     | '/localities'
     | '/properties'
+    | '/$citySlug/localities/$localitySlug'
+    | '/$citySlug/properties/$propertySlug'
+    | '/$citySlug/localities'
+    | '/$citySlug/properties'
   id:
     | '__root__'
     | '/'
+    | '/$citySlug'
     | '/search'
     | '/sign-in'
+    | '/$citySlug/search'
     | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/$citySlug/'
     | '/cities/'
     | '/journal/'
     | '/localities/'
     | '/properties/'
+    | '/$citySlug/localities/$localitySlug'
+    | '/$citySlug/properties/$propertySlug'
+    | '/$citySlug/localities/'
+    | '/$citySlug/properties/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CitySlugRoute: typeof CitySlugRouteWithChildren
   SearchRoute: typeof SearchRoute
   SignInRoute: typeof SignInRoute
   CitiesSlugRoute: typeof CitiesSlugRoute
@@ -195,6 +280,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$citySlug': {
+      id: '/$citySlug'
+      path: '/$citySlug'
+      fullPath: '/$citySlug'
+      preLoaderRoute: typeof CitySlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -208,6 +300,20 @@ declare module '@tanstack/react-router' {
       fullPath: '/sign-in'
       preLoaderRoute: typeof SignInRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/$citySlug/': {
+      id: '/$citySlug/'
+      path: '/'
+      fullPath: '/$citySlug/'
+      preLoaderRoute: typeof CitySlugIndexRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
+    '/$citySlug/search': {
+      id: '/$citySlug/search'
+      path: '/search'
+      fullPath: '/$citySlug/search'
+      preLoaderRoute: typeof CitySlugSearchRouteImport
+      parentRoute: typeof CitySlugRoute
     }
     '/cities/': {
       id: '/cities/'
@@ -272,11 +378,62 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/$citySlug/localities/': {
+      id: '/$citySlug/localities/'
+      path: '/localities'
+      fullPath: '/$citySlug/localities/'
+      preLoaderRoute: typeof CitySlugLocalitiesIndexRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
+    '/$citySlug/localities/$localitySlug': {
+      id: '/$citySlug/localities/$localitySlug'
+      path: '/localities/$localitySlug'
+      fullPath: '/$citySlug/localities/$localitySlug'
+      preLoaderRoute: typeof CitySlugLocalitiesLocalitySlugRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
+    '/$citySlug/properties/': {
+      id: '/$citySlug/properties/'
+      path: '/properties'
+      fullPath: '/$citySlug/properties/'
+      preLoaderRoute: typeof CitySlugPropertiesIndexRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
+    '/$citySlug/properties/$propertySlug': {
+      id: '/$citySlug/properties/$propertySlug'
+      path: '/properties/$propertySlug'
+      fullPath: '/$citySlug/properties/$propertySlug'
+      preLoaderRoute: typeof CitySlugPropertiesPropertySlugRouteImport
+      parentRoute: typeof CitySlugRoute
+    }
   }
 }
 
+interface CitySlugRouteChildren {
+  CitySlugSearchRoute: typeof CitySlugSearchRoute
+  CitySlugIndexRoute: typeof CitySlugIndexRoute
+  CitySlugLocalitiesLocalitySlugRoute: typeof CitySlugLocalitiesLocalitySlugRoute
+  CitySlugPropertiesPropertySlugRoute: typeof CitySlugPropertiesPropertySlugRoute
+  CitySlugLocalitiesIndexRoute: typeof CitySlugLocalitiesIndexRoute
+  CitySlugPropertiesIndexRoute: typeof CitySlugPropertiesIndexRoute
+}
+
+const CitySlugRouteChildren: CitySlugRouteChildren = {
+  CitySlugSearchRoute: CitySlugSearchRoute,
+  CitySlugIndexRoute: CitySlugIndexRoute,
+  CitySlugLocalitiesLocalitySlugRoute: CitySlugLocalitiesLocalitySlugRoute,
+  CitySlugPropertiesPropertySlugRoute: CitySlugPropertiesPropertySlugRoute,
+  CitySlugLocalitiesIndexRoute: CitySlugLocalitiesIndexRoute,
+  CitySlugPropertiesIndexRoute: CitySlugPropertiesIndexRoute,
+}
+
+const CitySlugRouteWithChildren = CitySlugRoute._addFileChildren(
+  CitySlugRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CitySlugRoute: CitySlugRouteWithChildren,
   SearchRoute: SearchRoute,
   SignInRoute: SignInRoute,
   CitiesSlugRoute: CitiesSlugRoute,

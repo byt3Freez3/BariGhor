@@ -7,6 +7,7 @@ import { formatINR } from "@/lib/utils";
 export interface Property {
   id: string;
   slug: string;
+  citySlug?: string;
   title: string;
   bengaliTitle: string;
   locality: string;
@@ -50,6 +51,7 @@ export interface Locality {
   slug: string;
   name: string;
   bengali: string;
+  citySlug?: string;
   tagline: string;
   description: string;
   priceRange: string;
@@ -97,6 +99,7 @@ export const localities: Locality[] = [
     slug: "new-town",
     name: "New Town",
     bengali: "নিউ টাউন",
+    citySlug: "new-town",
     tagline: "Planned green corridors, smart-city infrastructure & modern high-rises.",
     description:
       "Kolkata's most modern planned satellite city, designed with broad arterial boulevards, extensive green parks (Eco Park), top IT parks, educational hubs, and modern gated condominiums.",
@@ -134,6 +137,7 @@ export const localities: Locality[] = [
     slug: "salt-lake",
     name: "Salt Lake",
     bengali: "সল্ট লেক",
+    citySlug: "kolkata",
     tagline: "Leafy blocks, lived-in calm, quiet lanes, and central Kolkata proximity.",
     description:
       "Bidhannagar (Salt Lake) remains the gold standard for serene community living in Kolkata. Divided into quiet residential sectors with local parks in every block, bustling local bazaars, and deep cultural heritage.",
@@ -171,6 +175,7 @@ export const localities: Locality[] = [
     slug: "alipore",
     name: "Alipore",
     bengali: "আলিপুর",
+    citySlug: "kolkata",
     tagline: "Old-world aristocratic addresses with quiet heritage avenues.",
     description:
       "Kolkata's most prestigious postal code. Stately tree-lined roads, heritage bungalows, private estates, and boutique ultra-luxury developments near the National Library and Kolkata Zoo.",
@@ -204,6 +209,44 @@ export const localities: Locality[] = [
     editorialNote:
       "True freehold title in Alipore is scarce and represents legacy wealth preservation.",
   },
+  {
+    slug: "shibpur",
+    name: "Shibpur & Mandirtala",
+    bengali: "শিবপুর ও মন্দিরতলা",
+    citySlug: "howrah",
+    tagline: "Heritage riverfront addresses, Vidyasagar Setu connectivity & quiet residential avenues.",
+    description:
+      "Howrah's most established residential neighborhood facing the Hooghly riverfront. Direct 10-minute access to Rabindra Sadan via Second Hooghly Bridge, century-old botanical gardens, and modern river-facing gated developments.",
+    priceRange: "₹45 Lakh – ₹2.2 Cr",
+    price_trend: {
+      yoyGrowth: "+10.2% YoY",
+      historicalRates: [
+        { year: "2023", avgRate: 4800 },
+        { year: "2024", avgRate: 5300 },
+        { year: "2025", avgRate: 5900 },
+        { year: "2026", avgRate: 6500 },
+      ],
+      rentalYield: "3.5% – 3.8%",
+      demandRating: "High (Rapid flyover connectivity to South Kolkata)",
+    },
+    avgPriceSqFt: "₹5,200 – ₹8,400 / sq ft",
+    verifiedHomesCount: 28,
+    connectivity_score: "8.6 / 10",
+    connectivityScore: "8.6 / 10",
+    airportTime: "45 min",
+    metroConnectivity: "Green Line Howrah Maidan Metro & Vidyasagar Setu",
+    floodRiskNote: "Low (Natural elevated river bank & upgraded municipal sluices)",
+    hero_image: heroImage,
+    image: heroImage,
+    keyHighlights: [
+      "Immediate access to Vidyasagar Setu (Second Hooghly Bridge)",
+      "Minutes to AJC Bose Indian Botanic Garden (largest in India)",
+      "Green Line underwater metro connecting directly to Esplanade & Salt Lake",
+      "Panoramic Hooghly river vistas and fresh river breezes",
+    ],
+    editorialNote:
+      "Vidyasagar Setu proximity makes Shibpur functionally closer to South Kolkata CBD than many southern suburbs.",
+  },
 ];
 
 export const properties: Property[] = [
@@ -212,6 +255,7 @@ export const properties: Property[] = [
     slug: "the-verandah-residences",
     title: "The Verandah Residences",
     bengaliTitle: "দ্য ভেরান্দা রেসিডেন্সেস",
+    citySlug: "new-town",
     locality: "New Town",
     localitySlug: "new-town",
     locationDetails: "Action Area II, Near Eco Park West Gate",
@@ -266,6 +310,7 @@ export const properties: Property[] = [
     slug: "the-saltlake-manor",
     title: "The Salt Lake Manor",
     bengaliTitle: "সল্ট লেক ম্যানর",
+    citySlug: "kolkata",
     locality: "Salt Lake",
     localitySlug: "salt-lake",
     locationDetails: "Sector III, Near GD Block Island",
@@ -319,6 +364,7 @@ export const properties: Property[] = [
     slug: "alipore-palms-penthouse",
     title: "Alipore Palms Penthouse",
     bengaliTitle: "আলিপুর পামস পেন্টহাউস",
+    citySlug: "kolkata",
     locality: "Alipore",
     localitySlug: "alipore",
     locationDetails: "Queens Park Road, Alipore",
@@ -372,6 +418,7 @@ export const properties: Property[] = [
     slug: "ecopark-greens-villa",
     title: "Eco Park Greens Garden Villa",
     bengaliTitle: "ইকোপার্ক গ্রিন্স ভিলা",
+    citySlug: "new-town",
     locality: "New Town",
     localitySlug: "new-town",
     locationDetails: "Action Area I, Opposite Deer Park Enclave",
@@ -424,6 +471,7 @@ export const properties: Property[] = [
     slug: "baisakhi-terraces-saltlake",
     title: "Baisakhi Terraces",
     bengaliTitle: "বৈশাখী টেরেস",
+    citySlug: "kolkata",
     locality: "Salt Lake",
     localitySlug: "salt-lake",
     locationDetails: "Sector II, Near Baisakhi Island",
@@ -476,6 +524,7 @@ export const properties: Property[] = [
     slug: "queens-court-manor-alipore",
     title: "Queens Court Manor",
     bengaliTitle: "কুইনস কোর্ট ম্যানর",
+    citySlug: "kolkata",
     locality: "Alipore",
     localitySlug: "alipore",
     locationDetails: "Alipore Park Road, Near Horticultural Gardens",
@@ -528,6 +577,7 @@ export const properties: Property[] = [
     slug: "canopy-greens-rajarhat",
     title: "Canopy Greens Residence",
     bengaliTitle: "ক্যানোপি গ্রিন্স",
+    citySlug: "new-town",
     locality: "New Town",
     localitySlug: "new-town",
     locationDetails: "Rajarhat Main Road, Near Chinar Park Crossing",
@@ -580,6 +630,7 @@ export const properties: Property[] = [
     slug: "horizon-heights-action-area-3",
     title: "Horizon Heights Sky Residences",
     bengaliTitle: "হরাইজন হাইটস",
+    citySlug: "new-town",
     locality: "New Town",
     localitySlug: "new-town",
     locationDetails: "Action Area III, Near Downtown Mall & IT SEZ",
@@ -626,6 +677,59 @@ export const properties: Property[] = [
     facing: "East Facing",
     possessionDate: "November 2026",
     isFeatured: false,
+  },
+  {
+    id: "prop-9",
+    slug: "the-grand-hooghly-residences",
+    title: "The Grand Hooghly Residences",
+    bengaliTitle: "দ্য গ্র্যান্ড হুগলি রেসিডেন্সেস",
+    citySlug: "howrah",
+    locality: "Shibpur & Mandirtala",
+    localitySlug: "shibpur",
+    locationDetails: "Foreshore Road, Near Botanic Garden Gate",
+    price: formatINR(92),
+    priceNumericLakhs: 92,
+    bhk: "3 BHK",
+    bhkCount: 3,
+    sqft: 1540,
+    pricePerSqFt: 5974,
+    status: "Under Construction · Possession Dec 2026",
+    reraProjectNo: "WBRERA/P/HOW/2024/000412",
+    developer: "Hooghly Riverfront Infra",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "HMC & WBRERA Registered",
+    metro: "2.4 km from Howrah Maidan Green Line Metro",
+    floodRisk: "Low",
+    image_url: heroImage,
+    gallery_images: [heroImage, saltLakeImage, newTownImage],
+    galleryImages: [heroImage, saltLakeImage, newTownImage],
+    floor_plan_url: "/assets/floorplans/hooghly-3bhk.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 1240,
+      balconyAreaSqFt: 160,
+      livingDiningSqFt: "23'0\" x 14'0\"",
+      masterBedroomSqFt: "15'6\" x 12'6\"",
+      kitchenSqFt: "11'0\" x 8'6\"",
+    },
+    description:
+      "A river-facing three-bedroom condominium offering unobstructed panoramic vistas of the Hooghly river, Vidyasagar Setu, and the Princep Ghat skyline across the water. Designed with dual cross-ventilation, double-height lobby, and direct access to Foreshore Road.",
+    highlights: [
+      "Unobstructed panoramic Hooghly river & Vidyasagar Setu vistas",
+      "10 minutes drive to Kolkata CBD via Second Hooghly Bridge",
+      "Generous 7-foot deep river-facing balcony",
+      "100% Vastu-compliant layout",
+    ],
+    amenities: [
+      "Riverfront promenade and gazebo",
+      "Rooftop clubhouse and gymnasium",
+      "Automated covered car parking",
+      "24/7 security with RFID gate access",
+    ],
+    floor: "12th of 18 Floors",
+    facing: "East Facing (Sunrise & River View)",
+    possessionDate: "December 2026",
+    isFeatured: true,
   },
 ];
 
@@ -712,15 +816,23 @@ export function getJournalBySlug(slug: string): JournalArticle | undefined {
 }
 
 export function filterProperties({
+  citySlug,
   locality,
   budget,
   bhk,
 }: {
+  citySlug?: string;
   locality?: string;
   budget?: string;
   bhk?: string;
 }): Property[] {
   return properties.filter((p) => {
+    // City check
+    if (citySlug && citySlug !== "all") {
+      const pCity = p.citySlug || (p.localitySlug === "new-town" ? "new-town" : "kolkata");
+      if (pCity !== citySlug) return false;
+    }
+
     // Locality check
     if (locality && locality !== "all" && locality !== "All Localities") {
       const locNorm = locality.toLowerCase().replace(/\s+/g, "-");

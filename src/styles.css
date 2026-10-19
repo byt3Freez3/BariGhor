@@ -24,6 +24,7 @@
   --color-muted-foreground: var(--muted-foreground);
   --color-accent: var(--accent);
   --color-accent-foreground: var(--accent-foreground);
+  --color-accent-text: var(--accent-text);
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-border: var(--border);
@@ -42,7 +43,7 @@
   --color-glass: var(--glass);
   --color-glass-foreground: var(--glass-foreground);
   --shadow-editorial: 0 20px 50px -25px rgba(10, 54, 50, 0.25);
-  --shadow-lift: 0 15px 35px -20px rgba(196, 90, 61, 0.35);
+  --shadow-lift: 0 15px 35px -20px rgba(161, 98, 7, 0.35);
   --shadow-card: 0 2px 8px -2px rgba(0, 0, 0, 0.05);
   --font-display: "Outfit", "Lora", "Newsreader", Georgia, serif;
   --font-sans: "DM Sans", "Work Sans", ui-sans-serif, system-ui, sans-serif;
@@ -63,8 +64,9 @@
   --secondary-foreground: #0a3632;
   --muted: #eae6dc;
   --muted-foreground: #666666;
-  --accent: #c45a3d;
+  --accent: #a16207;
   --accent-foreground: #ffffff;
+  --accent-text: #a16207;
   --destructive: #be123c;
   --destructive-foreground: #ffffff;
   --border: rgba(0, 0, 0, 0.07);
@@ -72,7 +74,7 @@
   --ring: #0a3632;
   --hero: #0a3632;
   --hero-foreground: #f9f7f1;
-  --copper: #c45a3d;
+  --copper: #a16207;
   --copper-foreground: #ffffff;
   --sage: #52796f;
   --sage-foreground: #ffffff;
@@ -97,8 +99,9 @@
   --secondary-foreground: #f8fafc;
   --muted: #173834;
   --muted-foreground: #9ca3af;
-  --accent: #e07a5f;
-  --accent-foreground: #ffffff;
+  --accent: #c5933a;
+  --accent-foreground: #0a1c1a;
+  --accent-text: #c5933a;
   --destructive: #f87171;
   --destructive-foreground: #ffffff;
   --border: rgba(255, 255, 255, 0.1);
@@ -106,7 +109,7 @@
   --ring: #34d399;
   --hero: #081615;
   --hero-foreground: #f8fafc;
-  --copper: #e07a5f;
+  --copper: #c5933a;
   --copper-foreground: #ffffff;
   --sage: #6b9080;
   --sage-foreground: #ffffff;
@@ -116,6 +119,17 @@
   --whatsapp-foreground: #ffffff;
   --glass: rgba(15, 40, 37, 0.88);
   --glass-foreground: #f8fafc;
+}
+
+/* Contextual override for deep teal surfaces to guarantee WCAG AA contrast (4.80:1) */
+.bg-primary,
+.bg-hero,
+header.absolute,
+header[data-tone="inverse"],
+[data-tone="inverse"] {
+  --accent: #c5933a;
+  --accent-text: #c5933a;
+  --copper: #c5933a;
 }
 
 @utility glass-panel {
@@ -196,3 +210,16 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* View Transitions API soft cross-fade (<300ms) */
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+header.site-header,
+header[data-site-header="true"] {
+  view-transition-name: site-header;
+}
+

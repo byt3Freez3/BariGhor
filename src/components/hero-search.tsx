@@ -6,7 +6,13 @@ import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTr
 import { useAppStore } from "@/lib/store";
 import { cities } from "@/lib/regions";
 
-export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
+export function HeroSearch({
+  onExplore,
+  onSearchAction,
+}: {
+  onExplore?: () => void;
+  onSearchAction?: () => void;
+}) {
   const router = useRouter();
   const { locality, budget, bhk, setLocality, setBudget, setBhk, language, selectedCity, setCity } = useAppStore();
   const [bottomSheetOpen, setBottomSheetOpen] = useState(false);
@@ -14,11 +20,13 @@ export function HeroSearch({ onExplore }: { onExplore?: () => void }) {
   const handleSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     setBottomSheetOpen(false);
-    if (onExplore) {
-      onExplore();
+    const callback = onSearchAction || onExplore;
+    if (callback) {
+      callback();
     } else {
       router.navigate({
-        to: "/search",
+        to: "/$citySlug/search",
+        params: { citySlug: selectedCity },
         search: {
           locality: locality !== "all" ? locality : undefined,
           budget: budget !== "all" ? budget : undefined,
