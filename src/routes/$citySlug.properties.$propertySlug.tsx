@@ -108,6 +108,39 @@ export const Route = createFileRoute("/$citySlug/properties/$propertySlug")({
             },
           }),
         },
+        {
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "BreadcrumbList",
+            itemListElement: [
+              {
+                "@type": "ListItem",
+                position: 1,
+                name: city?.nameEn || "City",
+                item: `https://build-it-better-five.vercel.app/${city?.slug}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 2,
+                name: "Properties",
+                item: `https://build-it-better-five.vercel.app/${city?.slug}/properties`,
+              },
+              {
+                "@type": "ListItem",
+                position: 3,
+                name: prop?.locality || "Neighbourhood",
+                item: `https://build-it-better-five.vercel.app/${city?.slug}/localities/${prop?.localitySlug}`,
+              },
+              {
+                "@type": "ListItem",
+                position: 4,
+                name: prop?.title || "Property",
+                item: canonical,
+              },
+            ],
+          }),
+        },
       ],
     };
   },
@@ -188,6 +221,9 @@ function PropertyDetailPage() {
             <img
               src={gallery[activeImageIndex]}
               alt={`${property.title} - view ${activeImageIndex + 1}`}
+              width={1200}
+              height={600}
+              decoding="async"
               className="size-full object-cover transition-all duration-500"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 pointer-events-none" />
@@ -267,7 +303,7 @@ function PropertyDetailPage() {
                 {property.title}
               </h1>
               <p className="mt-1 text-sm font-sans text-muted-foreground">
-                {property.bengaliTitle} · {property.locationDetails}
+                <span lang="bn">{property.bengaliTitle}</span> · {property.locationDetails}
               </p>
             </div>
             <div className="text-left sm:text-right">

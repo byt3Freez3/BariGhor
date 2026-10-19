@@ -69,13 +69,21 @@ export const Route = createFileRoute("/$citySlug/localities/$localitySlug")({
     const desc = loc?.description || `In-depth neighbourhood guide for ${loc?.name}, ${city?.nameEn}.`;
     const canonical = `https://build-it-better-five.vercel.app/${city?.slug}/localities/${loc?.slug}`;
 
+    const ogImage = locality.image || "https://build-it-better-five.vercel.app/og-image.jpg";
+
     return {
       meta: [
         { title },
         { name: "description", content: desc },
         { property: "og:title", content: title },
-        { property: "og:description", content: loc?.tagline },
+        { property: "og:description", content: loc?.tagline || desc },
         { property: "og:url", content: canonical },
+        { property: "og:image", content: ogImage },
+        { property: "og:type", content: "website" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: desc },
+        { name: "twitter:image", content: ogImage },
       ],
       links: [{ rel: "canonical", href: canonical }],
       scripts: [

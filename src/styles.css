@@ -223,3 +223,8 @@ header[data-site-header="true"] {
   view-transition-name: site-header;
 }
 
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+

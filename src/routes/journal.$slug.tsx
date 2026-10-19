@@ -24,12 +24,52 @@ export const Route = createFileRoute("/journal/$slug")({
   },
   head: ({ loaderData }) => {
     const art = loaderData?.article;
+    const title = `${art ? art.title : "Journal Article"} — BariGhor Legal & Field Advisory`;
+    const desc = art ? art.excerpt : "Real estate legal and field advice in West Bengal.";
+    const canonical = `https://build-it-better-five.vercel.app/journal/${art?.slug}`;
+    const ogImage = "https://build-it-better-five.vercel.app/og-image.jpg";
+
     return {
       meta: [
-        { title: `${art ? art.title : "Journal Article"} — BariGhor` },
+        { title },
+        { name: "description", content: desc },
+        { property: "og:title", content: title },
+        { property: "og:description", content: desc },
+        { property: "og:url", content: canonical },
+        { property: "og:image", content: ogImage },
+        { property: "og:type", content: "article" },
+        { name: "twitter:card", content: "summary_large_image" },
+        { name: "twitter:title", content: title },
+        { name: "twitter:description", content: desc },
+        { name: "twitter:image", content: ogImage },
+      ],
+      links: [{ rel: "canonical", href: canonical }],
+      scripts: [
         {
-          name: "description",
-          content: art ? art.excerpt : "Real estate legal and field advice in Kolkata.",
+          type: "application/ld+json",
+          children: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Article",
+            headline: art?.title,
+            description: art?.excerpt,
+            author: {
+              "@type": "Person",
+              name: art?.author || "BariGhor Editorial Desk",
+            },
+            publisher: {
+              "@type": "Organization",
+              name: "BariGhor Real Estate Advisory",
+              logo: {
+                "@type": "ImageObject",
+                url: "https://build-it-better-five.vercel.app/favicon.svg",
+              },
+            },
+            datePublished: art?.date || "2026-10-01",
+            mainEntityOfPage: {
+              "@type": "WebPage",
+              "@id": canonical,
+            },
+          }),
         },
       ],
     };

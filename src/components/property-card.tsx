@@ -31,6 +31,7 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
           width={800}
           height={500}
           loading="lazy"
+          decoding="async"
           className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
@@ -100,6 +101,11 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
           <Link to="/$citySlug/properties/$propertySlug" params={{ citySlug, propertySlug: property.slug }}>
             {property.title}
           </Link>
+          {property.bengaliTitle && (
+            <span lang="bn" className="block text-xs font-normal text-muted-foreground font-sans mt-0.5">
+              {property.bengaliTitle}
+            </span>
+          )}
         </h3>
 
         <div className="mt-4 grid grid-cols-3 gap-2 border-y border-border py-3 text-xs text-muted-foreground">
