@@ -1,10 +1,31 @@
-import { Link } from "@tanstack/react-router";
-import { Menu, X, User, ArrowRight } from "lucide-react";
+import { Link, useRouter } from "@tanstack/react-router";
+import {
+  ArrowRight,
+  ChevronDown,
+  Compass,
+  FileText,
+  Heart,
+  Home,
+  Menu,
+  Search,
+  ShieldCheck,
+  Sparkles,
+  X,
+} from "lucide-react";
+import * as React from "react";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { useAppStore } from "@/lib/store";
-import { LocalitySearch } from "@/components/locality-search";
 import { CitySelector } from "@/components/city-selector";
-import { cities } from "@/data/regions";
+import { CommandPalette } from "@/components/command-palette";
+import { cities, getCityBySlug } from "@/lib/regions";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   const selectedCity = useAppStore((state) => state.selectedCity);
@@ -32,152 +53,478 @@ export function SiteHeader({
   inverse?: boolean;
   sticky?: boolean;
 }) {
-  const { language, toggleLanguage, mobileNavOpen, setMobileNavOpen, selectedCity } = useAppStore();
-  const tone = inverse ? "text-hero-foreground" : "text-foreground";
-  const headerBg = sticky
-    ? "sticky top-0 z-40 bg-background/95 backdrop-blur-md border-b border-border shadow-xs site-header"
-    : inverse
-      ? "absolute inset-x-0 top-0 z-40 border-b border-hero-foreground/15 site-header"
-      : "relative border-b border-border bg-background site-header";
+  const router = useRouter();
+  const {
+    language,
+    setLanguage,
+    mobileNavOpen,
+    setMobileNavOpen,
+    selectedCity,
+    shortlist,
+  } = useAppStore();
+
+  const [cmdOpen, setCmdOpen] = React.useState(false);
+  const [scrolled, setScrolled] = React.useState(false);
+
+  React.useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 80);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const currentCityObj = React.useMemo(() => {
+    return getCityBySlug(selectedCity) || cities[0];
+  }, [selectedCity]);
+
+  // Header background logic:
+  // When over hero (inverse): transparent at scrollY 0, transitioning to solid deep teal (#0A3632) after 80px scroll.
+  // When sticky or inner page: solid background with border.
+  const isSolid = sticky || !inverse || scrolled;
+  const headerClasses = isSolid
+    ? inverse
+      ? "sticky top-0 z-40 bg-[#0A3632] text-white border-b border-white/10 shadow-md backdrop-blur-md site-header transition-all duration-200"
+      : "sticky top-0 z-40 bg-background/95 text-foreground border-b border-border shadow-xs backdrop-blur-md site-header transition-all duration-200"
+    : "absolute inset-x-0 top-0 z-40 bg-transparent text-hero-foreground border-b border-hero-foreground/15 site-header transition-all duration-200";
+
+  const isDarkTone = inverse || (isSolid && inverse);
 
   return (
-    <header className={headerBg} data-tone={inverse ? "inverse" : undefined} data-site-header="true">
-      <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
-        <div className="flex items-center gap-4">
-          <Brand inverse={inverse} />
-          <CitySelector inverse={inverse} />
-        </div>
+    <>
+      <header
+        className={headerClasses}
+        data-tone={isDarkTone ? "inverse" : undefined}
+        data-site-header="true"
+      >
+        <div className="mx-auto flex h-20 max-w-7xl items-center justify-between px-5 lg:px-8">
+          {/* Left: Brand + City Pill */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            <Brand inverse={isDarkTone} />
+            <CitySelector inverse={isDarkTone} />
+          </div>
 
-        {/* Desktop Navigation Links */}
-        <nav
-          className={`hidden items-center gap-8 text-sm font-medium lg:flex ${tone}`}
-          aria-label="Primary navigation"
-        >
-          <Link
-            to="/$citySlug/localities"
-            params={{ citySlug: selectedCity }}
-            className="transition-colors hover:text-accent"
-            activeProps={{ className: "text-accent font-semibold" }}
+          {/* Desktop Nav: Buy ▾ | Neighbourhoods ▾ | Journal | About ▾ */}
+          <nav
+            className="hidden items-center gap-7 text-sm font-medium lg:flex"
+            aria-label="Primary navigation"
           >
-            {language === "en" ? "Localities" : "পাড়া ও এলাকা"}
-          </Link>
-          <Link
-            to="/$citySlug/properties"
-            params={{ citySlug: selectedCity }}
-            className="transition-colors hover:text-accent"
-            activeProps={{ className: "text-accent font-semibold" }}
-          >
-            {language === "en" ? "Handpicked homes" : "বাছাই করা বাড়ি"}
-          </Link>
-          <Link
-            to="/journal"
-            className="transition-colors hover:text-accent"
-            activeProps={{ className: "text-accent font-semibold" }}
-          >
-            {language === "en" ? "Market journal" : "মার্কেট জার্নাল"}
-          </Link>
-        </nav>
+            {/* Buy Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={`flex items-center gap-1.5 transition-colors hover:text-accent font-medium outline-none ${
+                  isDarkTone ? "text-hero-foreground" : "text-foreground"
+                }`}
+              >
+                <span>{language === "en" ? "Buy" : "ক্রয়"}</span>
+                <ChevronDown className="size-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64 p-2 shadow-xl">
+                <DropdownMenuLabel className="text-[11px] font-bold uppercase tracking-wider text-accent">
+                  {currentCityObj.nameEn} Residences
+                </DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/$citySlug/properties"
+                    params={{ citySlug: selectedCity }}
+                    className="flex items-center gap-2 cursor-pointer font-medium"
+                  >
+                    <Home className="size-4 text-accent" />
+                    <span>All Handpicked Homes</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/$citySlug/search"
+                    params={{ citySlug: selectedCity }}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <Search className="size-4 text-muted-foreground" />
+                    <span>Search & Filters</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/$citySlug/properties/$propertySlug"
+                    params={{ citySlug: "new-town", propertySlug: "the-verandah-residences" }}
+                    className="flex items-center gap-2 cursor-pointer"
+                  >
+                    <Sparkles className="size-4 text-accent" />
+                    <span>Featured Home: The Verandah</span>
+                  </Link>
+                </DropdownMenuItem>
 
-        {/* Right CTA Actions */}
-        <div className="hidden items-center gap-3 lg:flex">
-          <LocalitySearch inverse={inverse} />
-          <Button
-            variant={inverse ? "ghost" : "outline"}
-            size="sm"
-            onClick={toggleLanguage}
-            className={`border-border/60 ${
-              inverse ? "text-hero-foreground hover:bg-hero-foreground/15" : ""
-            }`}
-            aria-label="Switch language"
-          >
-            {language === "en" ? "বাংলা" : "English"}
-          </Button>
+                <DropdownMenuSeparator />
 
-          <Link
-            to="/sign-in"
-            className={`inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold transition-colors hover:text-accent ${tone}`}
-          >
-            <User className="size-3.5" />
-            {language === "en" ? "Sign in" : "লগইন"}
-          </Link>
+                <DropdownMenuLabel className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Browse by Budget
+                </DropdownMenuLabel>
+                <div className="grid grid-cols-2 gap-1 p-1 text-xs">
+                  <Link
+                    to="/$citySlug/properties"
+                    params={{ citySlug: selectedCity }}
+                    search={{ budget: "under-25l" }}
+                    className="rounded-xs px-2 py-1.5 text-muted-foreground hover:bg-accent/15 hover:text-foreground font-medium transition-colors"
+                  >
+                    Under ₹25L
+                  </Link>
+                  <Link
+                    to="/$citySlug/properties"
+                    params={{ citySlug: selectedCity }}
+                    search={{ budget: "25l-50l" }}
+                    className="rounded-xs px-2 py-1.5 text-muted-foreground hover:bg-accent/15 hover:text-foreground font-medium transition-colors"
+                  >
+                    ₹25 – 50L
+                  </Link>
+                  <Link
+                    to="/$citySlug/properties"
+                    params={{ citySlug: selectedCity }}
+                    search={{ budget: "50l-1cr" }}
+                    className="rounded-xs px-2 py-1.5 text-muted-foreground hover:bg-accent/15 hover:text-foreground font-medium transition-colors"
+                  >
+                    ₹50L – 1Cr
+                  </Link>
+                  <Link
+                    to="/$citySlug/properties"
+                    params={{ citySlug: selectedCity }}
+                    search={{ budget: "1cr-3cr" }}
+                    className="rounded-xs px-2 py-1.5 text-muted-foreground hover:bg-accent/15 hover:text-foreground font-medium transition-colors"
+                  >
+                    ₹1 – 3Cr
+                  </Link>
+                  <Link
+                    to="/$citySlug/properties"
+                    params={{ citySlug: selectedCity }}
+                    search={{ budget: "3cr-plus" }}
+                    className="col-span-2 rounded-xs px-2 py-1.5 text-muted-foreground hover:bg-accent/15 hover:text-foreground font-medium transition-colors"
+                  >
+                    ₹3Cr+ Ultra Luxury
+                  </Link>
+                </div>
 
-          <Button
-            asChild
-            variant={inverse ? "secondary" : "default"}
-            size="sm"
-            className="font-medium"
-          >
-            <Link to="/properties/$slug" params={{ slug: "the-verandah-residences" }}>
-              Featured Home
-              <ArrowRight className="ml-1 size-3.5" />
-            </Link>
-          </Button>
-        </div>
+                <DropdownMenuSeparator />
 
-        {/* Mobile Menu Button */}
-        <div className="flex items-center gap-2 lg:hidden">
-          <LocalitySearch inverse={inverse} />
-          <Button variant="ghost" size="sm" onClick={toggleLanguage} className={`text-xs ${tone}`}>
-            {language === "en" ? "বাংলা" : "EN"}
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className={tone}
-            onClick={() => setMobileNavOpen(!mobileNavOpen)}
-            aria-label={mobileNavOpen ? "Close navigation menu" : "Open navigation menu"}
-          >
-            {mobileNavOpen ? <X className="size-6" /> : <Menu className="size-6" />}
-          </Button>
-        </div>
-      </div>
+                <DropdownMenuLabel className="text-[11px] font-bold uppercase tracking-wider text-muted-foreground">
+                  Browse by Layout
+                </DropdownMenuLabel>
+                <div className="flex gap-1.5 p-1 text-xs">
+                  {["1 BHK", "2 BHK", "3 BHK", "4 BHK+"].map((bhkVal) => (
+                    <Link
+                      key={bhkVal}
+                      to="/$citySlug/properties"
+                      params={{ citySlug: selectedCity }}
+                      search={{ bhk: bhkVal }}
+                      className="flex-1 rounded-xs border border-border py-1 text-center font-medium text-foreground hover:border-accent hover:text-accent transition-colors"
+                    >
+                      {bhkVal}
+                    </Link>
+                  ))}
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
 
-      {/* Mobile Navigation Drawer */}
-      {mobileNavOpen && (
-        <div className="border-t border-border bg-background px-6 py-6 text-foreground shadow-xl lg:hidden">
-          <nav className="grid gap-2 text-base font-medium">
-            <Link
-              to="/localities"
-              className="flex items-center justify-between border-b border-border/50 py-3 transition-colors hover:text-accent"
-              onClick={() => setMobileNavOpen(false)}
-            >
-              <span>{language === "en" ? "Localities" : "পাড়া ও এলাকা"}</span>
-              <span className="text-xs text-muted-foreground">New Town · Salt Lake · Alipore</span>
-            </Link>
-            <Link
-              to="/properties"
-              className="flex items-center justify-between border-b border-border/50 py-3 transition-colors hover:text-accent"
-              onClick={() => setMobileNavOpen(false)}
-            >
-              <span>{language === "en" ? "Handpicked homes" : "বাছাই করা বাড়ি"}</span>
-              <span className="text-xs text-muted-foreground">8 verified residences</span>
-            </Link>
+            {/* Neighbourhoods Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={`flex items-center gap-1.5 transition-colors hover:text-accent font-medium outline-none ${
+                  isDarkTone ? "text-hero-foreground" : "text-foreground"
+                }`}
+              >
+                <span>{language === "en" ? "Neighbourhoods" : "পাড়া ও এলাকা"}</span>
+                <ChevronDown className="size-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64 p-2 shadow-xl">
+                <DropdownMenuLabel className="text-[11px] font-bold uppercase tracking-wider text-accent">
+                  {currentCityObj.nameEn} ({currentCityObj.nameBn})
+                </DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/$citySlug/localities"
+                    params={{ citySlug: selectedCity }}
+                    className="flex items-center gap-2 cursor-pointer font-medium"
+                  >
+                    <span>All {currentCityObj.nameEn} Localities</span>
+                  </Link>
+                </DropdownMenuItem>
+
+                {currentCityObj.localities.slice(0, 4).map((loc) => (
+                  <DropdownMenuItem key={loc.slug} asChild>
+                    <Link
+                      to="/$citySlug/localities/$localitySlug"
+                      params={{ citySlug: selectedCity, localitySlug: loc.slug }}
+                      className="flex items-center justify-between cursor-pointer text-xs"
+                    >
+                      <span>{loc.name}</span>
+                      <span className="text-[11px] text-muted-foreground font-mono">
+                        {loc.avgPriceSqFt}
+                      </span>
+                    </Link>
+                  </DropdownMenuItem>
+                ))}
+
+                <DropdownMenuSeparator />
+
+                <DropdownMenuItem asChild>
+                  <Link to="/cities" className="flex items-center gap-2 cursor-pointer font-medium">
+                    <Compass className="size-4 text-accent" />
+                    <span>West Bengal Cities Map</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
+            {/* Journal */}
             <Link
               to="/journal"
-              className="flex items-center justify-between border-b border-border/50 py-3 transition-colors hover:text-accent"
-              onClick={() => setMobileNavOpen(false)}
+              className={`transition-colors hover:text-accent font-medium ${
+                isDarkTone ? "text-hero-foreground" : "text-foreground"
+              }`}
+              activeProps={{ className: "text-accent font-semibold" }}
             >
-              <span>{language === "en" ? "Market journal" : "মার্কেট জার্নাল"}</span>
-              <span className="text-xs text-muted-foreground">Field guides & WBRERA</span>
-            </Link>
-            <Link
-              to="/sign-in"
-              className="flex items-center justify-between border-b border-border/50 py-3 transition-colors hover:text-accent"
-              onClick={() => setMobileNavOpen(false)}
-            >
-              <span>{language === "en" ? "Sign in to Account" : "একাউন্টে লগইন করুন"}</span>
-              <User className="size-4 text-muted-foreground" />
+              {language === "en" ? "Journal" : "মার্কেট জার্নাল"}
             </Link>
 
-            <div className="mt-4 flex gap-2 pt-2">
-              <Button asChild className="w-full" onClick={() => setMobileNavOpen(false)}>
-                <Link to="/search">Explore All Homes</Link>
-              </Button>
-            </div>
+            {/* About Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={`flex items-center gap-1.5 transition-colors hover:text-accent font-medium outline-none ${
+                  isDarkTone ? "text-hero-foreground" : "text-foreground"
+                }`}
+              >
+                <span>{language === "en" ? "About" : "আমাদের কথা"}</span>
+                <ChevronDown className="size-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-56 p-2 shadow-xl">
+                <DropdownMenuItem asChild>
+                  <Link to="/about" hash="story" className="cursor-pointer font-medium">
+                    Our Story & Advisory
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/about" hash="verification" className="cursor-pointer font-medium">
+                    <ShieldCheck className="mr-2 size-3.5 text-accent" />
+                    4-Pillar Verification
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/about" hash="licence" className="cursor-pointer font-medium">
+                    WBRERA Agent Licence
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/about" hash="accolades" className="cursor-pointer font-medium">
+                    Accolades & Citations
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/about" hash="seminars" className="cursor-pointer font-medium">
+                    Free Buyer Seminars
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
+
+          {/* Right Actions: [🔍] [EN | বাং] [♡ Shortlist (n)] */}
+          <div className="flex items-center gap-2.5 sm:gap-3.5">
+            {/* Search Icon Trigger */}
+            <button
+              type="button"
+              onClick={() => setCmdOpen(true)}
+              className={`group flex size-9 items-center justify-center rounded-full border transition-all ${
+                isDarkTone
+                  ? "border-hero-foreground/20 text-hero-foreground hover:bg-hero-foreground/15 hover:border-hero-foreground/40"
+                  : "border-border text-foreground hover:bg-muted hover:border-foreground/30"
+              }`}
+              aria-label="Open search command palette (Ctrl+K or ⌘K)"
+              title="Search (⌘K)"
+            >
+              <Search className="size-4 transition-transform group-hover:scale-110" />
+            </button>
+
+            {/* Compact Segmented Control: [EN | বাং] */}
+            <div
+              className={`inline-flex items-center rounded-full border p-0.5 text-xs font-medium ${
+                isDarkTone
+                  ? "border-hero-foreground/20 bg-hero-foreground/10 text-hero-foreground/75"
+                  : "border-border bg-muted/60 text-muted-foreground"
+              }`}
+              role="radiogroup"
+              aria-label="Language selection"
+            >
+              <button
+                type="button"
+                onClick={() => setLanguage("en")}
+                className={`rounded-full px-2.5 py-1 transition-all ${
+                  language === "en"
+                    ? isDarkTone
+                      ? "bg-accent text-primary font-bold shadow-xs"
+                      : "bg-background text-foreground font-bold shadow-xs"
+                    : "hover:text-foreground"
+                }`}
+                aria-checked={language === "en"}
+                role="radio"
+              >
+                EN
+              </button>
+              <button
+                type="button"
+                onClick={() => setLanguage("bn")}
+                className={`rounded-full px-2.5 py-1 font-bengali transition-all ${
+                  language === "bn"
+                    ? isDarkTone
+                      ? "bg-accent text-primary font-bold shadow-xs"
+                      : "bg-background text-foreground font-bold shadow-xs"
+                    : "hover:text-foreground"
+                }`}
+                aria-checked={language === "bn"}
+                role="radio"
+              >
+                বাং
+              </button>
+            </div>
+
+            {/* Shortlist Link */}
+            <Link
+              to="/shortlist"
+              className={`inline-flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-semibold transition-all ${
+                shortlist.length > 0
+                  ? isDarkTone
+                    ? "border-accent/40 bg-accent/15 text-accent hover:bg-accent/25"
+                    : "border-accent/40 bg-accent/10 text-accent hover:bg-accent/20"
+                  : isDarkTone
+                    ? "border-hero-foreground/20 text-hero-foreground/80 hover:bg-hero-foreground/15"
+                    : "border-border text-foreground hover:bg-muted"
+              }`}
+              aria-label={`View shortlisted residences (${shortlist.length} saved)`}
+            >
+              <Heart
+                className={`size-3.5 transition-transform group-hover:scale-110 ${
+                  shortlist.length > 0 ? "fill-accent text-accent" : ""
+                }`}
+              />
+              <span className="hidden sm:inline">
+                {language === "en" ? "Shortlist" : "শর্টলিস্ট"}
+              </span>
+              {shortlist.length > 0 && (
+                <span className="font-mono text-[11px] font-bold">({shortlist.length})</span>
+              )}
+            </Link>
+
+            {/* Mobile Menu Trigger */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className={`lg:hidden ${isDarkTone ? "text-hero-foreground" : "text-foreground"}`}
+              onClick={() => setMobileNavOpen(!mobileNavOpen)}
+              aria-label={mobileNavOpen ? "Close menu" : "Open menu"}
+            >
+              {mobileNavOpen ? <X className="size-6" /> : <Menu className="size-6" />}
+            </Button>
+          </div>
         </div>
-      )}
-    </header>
+
+        {/* Mobile Navigation Drawer */}
+        {mobileNavOpen && (
+          <div className="border-t border-border bg-background px-6 py-6 text-foreground shadow-2xl lg:hidden max-h-[85vh] overflow-y-auto animate-in slide-in-from-top-2 duration-200">
+            <nav className="grid gap-2 text-base font-medium">
+              <Link
+                to="/$citySlug/properties"
+                params={{ citySlug: selectedCity }}
+                className="flex items-center justify-between border-b border-border/50 py-3.5 transition-colors hover:text-accent"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                <div>
+                  <p className="font-display text-lg font-bold">Handpicked Homes</p>
+                  <p className="text-xs text-muted-foreground">বাছাই করা বাড়ি ও নতুন প্রজেক্ট</p>
+                </div>
+                <ArrowRight className="size-4 text-accent" />
+              </Link>
+
+              <Link
+                to="/$citySlug/localities"
+                params={{ citySlug: selectedCity }}
+                className="flex items-center justify-between border-b border-border/50 py-3.5 transition-colors hover:text-accent"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                <div>
+                  <p className="font-display text-lg font-bold">Neighbourhoods & Paras</p>
+                  <p className="text-xs text-muted-foreground">পাড়া, ডসিয়ার ও সংযোগ স্কোর</p>
+                </div>
+                <ArrowRight className="size-4 text-accent" />
+              </Link>
+
+              <Link
+                to="/cities"
+                className="flex items-center justify-between border-b border-border/50 py-3.5 transition-colors hover:text-accent"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                <div>
+                  <p className="font-display text-lg font-bold">West Bengal Price Map</p>
+                  <p className="text-xs text-muted-foreground">১১টি শহরের রোলআউট ও স্কোয়ারফুট দর</p>
+                </div>
+                <ArrowRight className="size-4 text-accent" />
+              </Link>
+
+              <Link
+                to="/journal"
+                className="flex items-center justify-between border-b border-border/50 py-3.5 transition-colors hover:text-accent"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                <div>
+                  <p className="font-display text-lg font-bold">Market Journal</p>
+                  <p className="text-xs text-muted-foreground">ফিল্ড গাইড, WBRERA ও আইনি তথ্য</p>
+                </div>
+                <ArrowRight className="size-4 text-accent" />
+              </Link>
+
+              <Link
+                to="/about"
+                className="flex items-center justify-between border-b border-border/50 py-3.5 transition-colors hover:text-accent"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                <div>
+                  <p className="font-display text-lg font-bold">About BariGhor</p>
+                  <p className="text-xs text-muted-foreground">একক মালিকানা ও ৪-স্তরের ভেরিফিকেশন</p>
+                </div>
+                <ArrowRight className="size-4 text-accent" />
+              </Link>
+
+              <Link
+                to="/shortlist"
+                className="flex items-center justify-between border-b border-border/50 py-3.5 transition-colors hover:text-accent"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                <div>
+                  <p className="font-display text-lg font-bold">
+                    My Shortlist {shortlist.length > 0 && `(${shortlist.length})`}
+                  </p>
+                  <p className="text-xs text-muted-foreground">সংরক্ষিত বাড়ি ও হোয়াটসঅ্যাপ শেয়ার</p>
+                </div>
+                <Heart className="size-4 text-accent" />
+              </Link>
+
+              <div className="mt-4 pt-2">
+                <Button
+                  type="button"
+                  onClick={() => {
+                    setMobileNavOpen(false);
+                    setCmdOpen(true);
+                  }}
+                  className="w-full flex items-center justify-center gap-2 bg-primary text-primary-foreground font-semibold"
+                >
+                  <Search className="size-4" /> Quick Search & Jump (⌘K)
+                </Button>
+              </div>
+            </nav>
+          </div>
+        )}
+      </header>
+
+      {/* Global Command Palette */}
+      <CommandPalette open={cmdOpen} onOpenChange={setCmdOpen} />
+    </>
   );
 }
 
@@ -321,7 +668,7 @@ export function SiteFooter() {
           </ul>
         </div>
 
-        {/* Journal & Direct Desk */}
+        {/* Journal & Legal */}
         <div>
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Journal & Direct Desk
@@ -354,6 +701,11 @@ export function SiteFooter() {
                 Monsoon Drainage Guide
               </Link>
             </li>
+            <li>
+              <Link to="/about" className="hover:text-accent transition-colors">
+                Our Story & Verification
+              </Link>
+            </li>
             <li className="pt-2">
               <a
                 href="https://wa.me/919073599355?text=Hi%20BariGhor%2C%20I%20am%20looking%20for%20verified%20properties%20in%20West%20Bengal."
@@ -372,7 +724,7 @@ export function SiteFooter() {
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 sm:flex-row">
           <p>
             © {new Date().getFullYear()} BariGhor Real Estate Advisory. West Bengal RERA Registered
-            Agent: WBRERA/A/KOL/2024/000189.
+            Agent: WBRERA/A/KOL/2023/000184.
           </p>
           <p className="text-primary-foreground/45">Boutique Bengal Real Estate Publication & Advisory.</p>
         </div>
@@ -380,4 +732,3 @@ export function SiteFooter() {
     </footer>
   );
 }
-

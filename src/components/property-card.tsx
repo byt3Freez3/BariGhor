@@ -1,12 +1,15 @@
 import { Link } from "@tanstack/react-router";
-import { BadgeCheck, BedDouble, Building2, MapPin, Ruler } from "lucide-react";
+import { BadgeCheck, BedDouble, Building2, Heart, MapPin, Ruler } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Property } from "@/lib/data";
 import { WhatsAppAction } from "@/components/whatsapp-action";
+import { useAppStore } from "@/lib/store";
 
 export function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const citySlug = property.citySlug || (property.localitySlug === "new-town" ? "new-town" : "kolkata");
+  const { isShortlisted, toggleShortlist } = useAppStore();
+  const saved = isShortlisted(property.id);
 
   return (
     <motion.article
@@ -41,6 +44,26 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
             {property.tenure_type || property.tenure}
           </span>
         </div>
+
+        {/* Shortlist Heart Button */}
+        <button
+          type="button"
+          onClick={(e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleShortlist(property.id);
+          }}
+          className={`absolute right-3 top-3 z-10 grid size-8 place-items-center rounded-full transition-transform active:scale-90 ${
+            saved
+              ? "bg-rose-500 text-white shadow-md"
+              : "bg-black/40 text-white hover:bg-black/60 backdrop-blur-xs"
+          }`}
+          aria-label={saved ? "Remove from shortlist" : "Add to shortlist"}
+          title={saved ? "Remove from shortlist" : "Save to shortlist"}
+        >
+          <Heart className={`size-4 ${saved ? "fill-white" : ""}`} />
+        </button>
+
         <div className="absolute bottom-3 right-3 rounded-xs bg-primary/95 px-3 py-1 font-display text-base font-bold text-primary-foreground shadow-md backdrop-blur-xs">
           {property.price}
         </div>

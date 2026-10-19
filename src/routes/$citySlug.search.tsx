@@ -1,8 +1,16 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
-import { Filter, MapPin, RotateCcw, Search as SearchIcon } from "lucide-react";
+import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
+import { Filter, MapPin, RotateCcw, Search as SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "@/components/ui/sheet";
 import { PropertyCard } from "@/components/property-card";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
@@ -11,16 +19,21 @@ import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
 
 const searchSchema = z.object({
+  q: z.string().optional(),
+  listing: z.string().optional(),
+  type: z.string().optional(),
   locality: z.string().optional(),
   budget: z.string().optional(),
   bhk: z.string().optional(),
-  q: z.string().optional(),
-  type: z.string().optional(),
+  possession: z.string().optional(),
+  sortBy: z.enum(["featured", "price-asc", "price-desc", "sqft-desc"]).optional(),
   note: z.string().optional(),
 });
 
+type SearchParams = z.infer<typeof searchSchema>;
+
 export const Route = createFileRoute("/$citySlug/search")({
-  validateSearch: (search) => searchSchema.parse(search),
+  validateSearch: (search): SearchParams => searchSchema.parse(search),
   loader: ({ params }) => {
     const city = getCityBySlug(params.citySlug);
     if (!city) {
@@ -48,19 +61,71 @@ export const Route = createFileRoute("/$citySlug/search")({
   component: CitySearchPage,
 });
 
+const PROPERTY_TYPES = [
+  { value: "all", label: "All Types" },
+  { value: "Apartment", label: "Apartment" },
+  { value: "Independent House", label: "Independent House" },
+  { value: "Villa", label: "Villa" },
+  { value: "Plot", label: "Plot" },
+  { value: "Commercial", label: "Commercial" },
+];
+
+const BUDGET_OPTIONS = [
+  { value: "all", label: "All Budgets" },
+  { value: "under-25l", label: "Under ₹25L" },
+  { value: "25l-50l", label: "₹25 – 50L" },
+  { value: "50l-1cr", label: "₹50L – 1.0 Cr" },
+  { value: "1cr-3cr", label: "₹1.0 – 3.0 Cr" },
+  { value: "3cr-plus", label: "₹3.0 Cr & Above" },
+];
+
+const BHK_OPTIONS = [
+  { value: "all", label: "All Layouts" },
+  { value: "1 BHK", label: "1 BHK" },
+  { value: "2 BHK", label: "2 BHK" },
+  { value: "3 BHK", label: "3 BHK" },
+  { value: "4 BHK+", label: "4 BHK+ / Villa" },
+];
+
+const POSSESSION_OPTIONS = [
+  { value: "all", label: "All Timelines" },
+  { value: "ready", label: "Ready to Move" },
+  { value: "2027", label: "Possession 2027" },
+  { value: "2028+", label: "Possession 2028+" },
+];
+
 function CitySearchPage() {
+  const router = useRouter();
   const { city } = Route.useLoaderData();
   const searchParams = Route.useSearch();
-  const { locality, budget, bhk, setLocality, setBudget, setBhk, resetFilters } = useAppStore();
+  const { language } = useAppStore();
 
   const [textQuery, setTextQuery] = useState(searchParams.q || "");
-  const [sortBy, setSortBy] = useState<"featured" | "price-asc" | "price-desc" | "sqft-desc">(
-    "featured",
-  );
+  const [mobileSheetOpen, setMobileSheetOpen] = useState(false);
+  const [localFilters, setLocalFilters] = useState<SearchParams>(searchParams);
 
-  const activeLocality = locality !== "all" ? locality : searchParams.locality || "all";
-  const activeBudget = budget !== "all" ? budget : searchParams.budget || "all";
-  const activeBhk = bhk !== "all" ? bhk : searchParams.bhk || "all";
+  const activeListing = searchParams.listing || "all";
+  const activeType = searchParams.type || "all";
+  const activeLocality = searchParams.locality || "all";
+  const activeBudget = searchParams.budget || "all";
+  const activeBhk = searchParams.bhk || "all";
+  const activePossession = searchParams.possession || "all";
+  const sortBy = searchParams.sortBy || "featured";
+
+  const updateSearch = (updates: Partial<SearchParams>) => {
+    router.navigate({
+      search: (prev) => {
+        const next: SearchParams = { ...prev, ...updates };
+        Object.keys(next).forEach((k) => {
+          const key = k as keyof SearchParams;
+          if (next[key] === "all" || next[key] === "" || next[key] === undefined) {
+            delete next[key];
+          }
+        });
+        return next;
+      },
+    });
+  };
 
   const results = useMemo(() => {
     let list = filterProperties({
@@ -68,6 +133,9 @@ function CitySearchPage() {
       locality: activeLocality,
       budget: activeBudget,
       bhk: activeBhk,
+      listingType: activeListing,
+      propertyType: activeType,
+      possession: activePossession,
     });
 
     if (textQuery.trim()) {
@@ -89,9 +157,39 @@ function CitySearchPage() {
     }
 
     return list;
-  }, [city.slug, activeLocality, activeBudget, activeBhk, textQuery, sortBy]);
+  }, [
+    city.slug,
+    activeLocality,
+    activeBudget,
+    activeBhk,
+    activeListing,
+    activeType,
+    activePossession,
+    textQuery,
+    sortBy,
+  ]);
 
   const cityLocalities = city.localities || [];
+
+  const handleMobileApply = () => {
+    setMobileSheetOpen(false);
+    updateSearch(localFilters);
+  };
+
+  const handleResetFilters = () => {
+    setTextQuery("");
+    setLocalFilters({});
+    router.navigate({ search: {} });
+  };
+
+  const hasActiveFilters =
+    activeListing !== "all" ||
+    activeType !== "all" ||
+    activeLocality !== "all" ||
+    activeBudget !== "all" ||
+    activeBhk !== "all" ||
+    activePossession !== "all" ||
+    Boolean(textQuery.trim());
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -118,14 +216,20 @@ function CitySearchPage() {
             <input
               type="text"
               value={textQuery}
-              onChange={(e) => setTextQuery(e.target.value)}
+              onChange={(e) => {
+                setTextQuery(e.target.value);
+                updateSearch({ q: e.target.value });
+              }}
               placeholder={`Search by project, locality or street in ${city.nameEn}...`}
               className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
             />
             {textQuery && (
               <button
                 type="button"
-                onClick={() => setTextQuery("")}
+                onClick={() => {
+                  setTextQuery("");
+                  updateSearch({ q: undefined });
+                }}
                 className="text-xs text-muted-foreground hover:text-foreground"
               >
                 Clear
@@ -136,17 +240,115 @@ function CitySearchPage() {
       </section>
 
       {/* Filter & Sort Bar */}
-      <section className="sticky top-20 z-30 border-b border-border bg-background/95 backdrop-blur-md py-4">
+      <section className="sticky top-20 z-30 border-b border-border bg-background/95 backdrop-blur-md py-3 shadow-xs">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-5 lg:px-8">
-          <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm">
-            <span className="flex items-center gap-1 font-semibold text-foreground">
+          {/* Mobile Filter Trigger */}
+          <div className="flex items-center gap-2 md:hidden w-full">
+            <Sheet
+              open={mobileSheetOpen}
+              onOpenChange={(open) => {
+                setMobileSheetOpen(open);
+                if (open) setLocalFilters(searchParams);
+              }}
+            >
+              <SheetTrigger asChild>
+                <button
+                  type="button"
+                  className="flex flex-1 items-center justify-between rounded-xs border border-border bg-card px-4 py-2 text-xs font-semibold"
+                >
+                  <span className="flex items-center gap-2">
+                    <SlidersHorizontal className="size-4 text-accent" />
+                    Filters {hasActiveFilters && "· Active"}
+                  </span>
+                  <span className="font-mono text-accent">{results.length} matches</span>
+                </button>
+              </SheetTrigger>
+              <SheetContent
+                side="bottom"
+                className="max-h-[85vh] overflow-y-auto rounded-t-2xl border-t border-border bg-background p-6"
+              >
+                <SheetHeader className="text-left pb-4 border-b border-border">
+                  <SheetTitle className="font-display text-2xl font-bold">Filter Results</SheetTitle>
+                  <SheetDescription className="text-xs text-muted-foreground">
+                    Refine property type, budget, and BHK.
+                  </SheetDescription>
+                </SheetHeader>
+                <div className="mt-6 space-y-4">
+                  <div>
+                    <label className="text-xs font-bold uppercase tracking-wider text-accent">Type</label>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      {PROPERTY_TYPES.map((pt) => (
+                        <button
+                          key={pt.value}
+                          type="button"
+                          onClick={() => setLocalFilters((prev) => ({ ...prev, type: pt.value }))}
+                          className={`rounded-xs border px-3 py-2 text-xs font-medium text-left ${
+                            (localFilters.type || "all") === pt.value
+                              ? "border-primary bg-primary text-primary-foreground font-semibold"
+                              : "border-border bg-card"
+                          }`}
+                        >
+                          {pt.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <label className="text-xs font-bold uppercase tracking-wider text-accent">Budget</label>
+                    <div className="mt-2 grid grid-cols-2 gap-2">
+                      {BUDGET_OPTIONS.map((b) => (
+                        <button
+                          key={b.value}
+                          type="button"
+                          onClick={() => setLocalFilters((prev) => ({ ...prev, budget: b.value }))}
+                          className={`rounded-xs border px-3 py-2 text-xs font-medium text-left ${
+                            (localFilters.budget || "all") === b.value
+                              ? "border-primary bg-primary text-primary-foreground font-semibold"
+                              : "border-border bg-card"
+                          }`}
+                        >
+                          {b.label}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+                <div className="sticky bottom-0 mt-8 border-t border-border bg-background pt-4 pb-2 flex gap-3">
+                  <Button variant="outline" onClick={handleResetFilters} className="flex-1">
+                    Reset
+                  </Button>
+                  <Button onClick={handleMobileApply} className="flex-[2]">
+                    Apply ({results.length} homes)
+                  </Button>
+                </div>
+              </SheetContent>
+            </Sheet>
+          </div>
+
+          {/* Desktop Filter Bar */}
+          <div className="hidden md:flex md:flex-wrap md:items-center md:gap-3 text-xs">
+            <span className="flex items-center gap-1 font-bold uppercase tracking-wider text-accent">
               <Filter className="size-3.5 text-accent" /> Filter:
             </span>
 
+            {/* Type */}
+            <select
+              value={activeType}
+              onChange={(e) => updateSearch({ type: e.target.value })}
+              className="rounded-xs border border-border bg-card px-3 py-1.5 font-medium outline-none focus:ring-1 focus:ring-accent"
+            >
+              {PROPERTY_TYPES.map((pt) => (
+                <option key={pt.value} value={pt.value}>
+                  {pt.label}
+                </option>
+              ))}
+            </select>
+
+            {/* Locality */}
             {cityLocalities.length > 0 && (
               <select
                 value={activeLocality}
-                onChange={(e) => setLocality(e.target.value)}
+                onChange={(e) => updateSearch({ locality: e.target.value })}
                 className="rounded-xs border border-border bg-card px-3 py-1.5 font-medium outline-none focus:ring-1 focus:ring-accent"
               >
                 <option value="all">All Localities</option>
@@ -158,37 +360,37 @@ function CitySearchPage() {
               </select>
             )}
 
-            <select
-              value={activeBhk}
-              onChange={(e) => setBhk(e.target.value)}
-              className="rounded-xs border border-border bg-card px-3 py-1.5 font-medium outline-none focus:ring-1 focus:ring-accent"
-            >
-              <option value="all">All BHKs</option>
-              <option value="2 BHK">2 BHK</option>
-              <option value="3 BHK">3 BHK</option>
-              <option value="4 BHK">4 BHK / Villa</option>
-            </select>
-
+            {/* Budget */}
             <select
               value={activeBudget}
-              onChange={(e) => setBudget(e.target.value)}
+              onChange={(e) => updateSearch({ budget: e.target.value })}
               className="rounded-xs border border-border bg-card px-3 py-1.5 font-medium outline-none focus:ring-1 focus:ring-accent"
             >
-              <option value="all">All Budgets</option>
-              <option value="under-1cr">Under ₹1 Cr</option>
-              <option value="1cr-2cr">₹1.0 – 2.0 Cr</option>
-              <option value="2cr-4cr">₹2.0 – 4.0 Cr</option>
-              <option value="4cr-plus">₹4.0 Cr+</option>
+              {BUDGET_OPTIONS.map((b) => (
+                <option key={b.value} value={b.value}>
+                  {b.label}
+                </option>
+              ))}
             </select>
 
-            {(activeLocality !== "all" || activeBudget !== "all" || activeBhk !== "all" || textQuery) && (
+            {/* BHK */}
+            <select
+              value={activeBhk}
+              onChange={(e) => updateSearch({ bhk: e.target.value })}
+              className="rounded-xs border border-border bg-card px-3 py-1.5 font-medium outline-none focus:ring-1 focus:ring-accent"
+            >
+              {BHK_OPTIONS.map((b) => (
+                <option key={b.value} value={b.value}>
+                  {b.label}
+                </option>
+              ))}
+            </select>
+
+            {hasActiveFilters && (
               <button
                 type="button"
-                onClick={() => {
-                  resetFilters();
-                  setTextQuery("");
-                }}
-                className="inline-flex items-center gap-1 text-xs text-accent hover:underline"
+                onClick={handleResetFilters}
+                className="inline-flex items-center gap-1 text-xs text-accent hover:underline ml-2"
               >
                 <RotateCcw className="size-3" /> Reset
               </button>
@@ -196,10 +398,10 @@ function CitySearchPage() {
           </div>
 
           <div className="flex items-center gap-4 text-xs">
-            <span className="font-semibold text-accent">{results.length} homes match</span>
+            <span className="font-semibold text-accent font-mono">{results.length} homes match</span>
             <select
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
+              onChange={(e) => updateSearch({ sortBy: e.target.value as any })}
               className="rounded-xs border border-border bg-card px-3 py-1.5 font-medium outline-none focus:ring-1 focus:ring-accent"
             >
               <option value="featured">Featured First</option>
@@ -215,8 +417,8 @@ function CitySearchPage() {
       <section className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
         {results.length > 0 ? (
           <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {results.map((property) => (
-              <PropertyCard key={property.id} property={property} />
+            {results.map((property, idx) => (
+              <PropertyCard key={property.id} property={property} index={idx} />
             ))}
           </div>
         ) : (
@@ -225,14 +427,7 @@ function CitySearchPage() {
             <p className="mt-2 text-sm text-muted-foreground">
               Try adjusting your query or filter parameters.
             </p>
-            <Button
-              onClick={() => {
-                resetFilters();
-                setTextQuery("");
-              }}
-              className="mt-6"
-              variant="outline"
-            >
+            <Button onClick={handleResetFilters} className="mt-6" variant="outline">
               Clear All Filters
             </Button>
           </div>

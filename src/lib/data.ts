@@ -4,6 +4,16 @@ import saltLakeImage from "@/assets/salt-lake.jpg";
 import aliporeImage from "@/assets/alipore-home.jpg";
 import { formatINR } from "@/lib/utils";
 
+export type ListingType = "buy" | "rent" | "new_launch";
+export type PropertyType =
+  | "Apartment"
+  | "Independent House"
+  | "Villa"
+  | "Plot"
+  | "Commercial";
+
+export type PossessionStatus = "Ready to move" | "Possession 2027" | "Possession 2028+";
+
 export interface Property {
   id: string;
   slug: string;
@@ -45,6 +55,33 @@ export interface Property {
   facing: string;
   possessionDate: string;
   isFeatured?: boolean;
+  listingType?: ListingType;
+  propertyType?: PropertyType;
+  serviceType?: string;
+  verified: boolean;
+  verifiedDate: string;
+}
+
+export function getDerivedPossessionStatus(possessionDate: string): PossessionStatus {
+  if (!possessionDate) return "Ready to move";
+  const lower = possessionDate.toLowerCase();
+  if (lower.includes("ready") || lower.includes("immediate")) {
+    return "Ready to move";
+  }
+  const match = possessionDate.match(/20\d\d/);
+  if (match) {
+    const year = parseInt(match[0], 10);
+    if (year <= 2026) {
+      return "Ready to move";
+    }
+    if (year === 2027) {
+      return "Possession 2027";
+    }
+    if (year >= 2028) {
+      return "Possession 2028+";
+    }
+  }
+  return "Ready to move";
 }
 
 export interface Locality {
@@ -304,6 +341,10 @@ export const properties: Property[] = [
     facing: "North-East (Wetland & Park Facing)",
     possessionDate: "December 2027",
     isFeatured: true,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-2",
@@ -358,6 +399,10 @@ export const properties: Property[] = [
     facing: "South Facing (Perpetual Breeze)",
     possessionDate: "Immediate / Ready",
     isFeatured: false,
+    listingType: "buy",
+    propertyType: "Villa",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-3",
@@ -412,6 +457,10 @@ export const properties: Property[] = [
     facing: "South-West (Lush Green Canopy Views)",
     possessionDate: "June 2026",
     isFeatured: false,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-4",
@@ -465,6 +514,10 @@ export const properties: Property[] = [
     facing: "East Facing (Morning Sun)",
     possessionDate: "Ready to Move",
     isFeatured: false,
+    listingType: "buy",
+    propertyType: "Villa",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-5",
@@ -518,6 +571,10 @@ export const properties: Property[] = [
     facing: "South-East",
     possessionDate: "March 2026",
     isFeatured: false,
+    listingType: "rent",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-6",
@@ -571,6 +628,10 @@ export const properties: Property[] = [
     facing: "South-West Facing",
     possessionDate: "Immediate",
     isFeatured: false,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-7",
@@ -624,6 +685,10 @@ export const properties: Property[] = [
     facing: "North-East",
     possessionDate: "August 2026",
     isFeatured: false,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-8",
@@ -677,6 +742,10 @@ export const properties: Property[] = [
     facing: "East Facing",
     possessionDate: "November 2026",
     isFeatured: false,
+    listingType: "new_launch",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
   },
   {
     id: "prop-9",
@@ -730,6 +799,466 @@ export const properties: Property[] = [
     facing: "East Facing (Sunrise & River View)",
     possessionDate: "December 2026",
     isFeatured: true,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-10",
+    slug: "habra-green-meadows",
+    title: "Habra Green Meadows",
+    bengaliTitle: "হাবড়া গ্রিন মেডোজ",
+    citySlug: "habra",
+    locality: "Jessore Road Corridor",
+    localitySlug: "jessore-road-corridor",
+    locationDetails: "Jessore Road, Near Habra Station & Municipal Market",
+    price: formatINR(18),
+    priceNumericLakhs: 18,
+    bhk: "1 BHK",
+    bhkCount: 1,
+    sqft: 580,
+    pricePerSqFt: 3103,
+    status: "Ready to Move",
+    reraProjectNo: "WBRERA/P/NOR/2023/000219",
+    developer: "North 24 Parganas Urban Living",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "Habra Municipality Approved",
+    metro: "Local EMU Rail 800m to Sealdah line",
+    floodRisk: "Low",
+    image_url: heroImage,
+    gallery_images: [heroImage, newTownImage],
+    galleryImages: [heroImage, newTownImage],
+    floor_plan_url: "/assets/floorplans/habra-1bhk.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 465,
+      balconyAreaSqFt: 45,
+      livingDiningSqFt: "14'0\" x 10'0\"",
+      masterBedroomSqFt: "12'0\" x 10'0\"",
+      kitchenSqFt: "7'0\" x 5'6\"",
+    },
+    description:
+      "An affordable, compact 1 BHK home built for first-time buyers and retirees. Direct rail connectivity to Kolkata, airy layout, and minimal maintenance fees.",
+    highlights: [
+      "Under ₹20 Lakh budget",
+      "800m from Habra Railway Station",
+      "Low monthly maintenance",
+      "Clear freehold municipal title",
+    ],
+    amenities: [
+      "24/7 potable filtered water supply",
+      "CCTV gated perimeter",
+      "Community courtyard",
+      "Two-wheeler dedicated parking",
+    ],
+    floor: "2nd of 4 Floors",
+    facing: "South Facing",
+    possessionDate: "Immediate / Ready",
+    isFeatured: false,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-11",
+    slug: "asansol-greenfield-studio",
+    title: "Asansol Greenfield Studio",
+    bengaliTitle: "আসানসোল গ্রিনফিল্ড স্টুডিও",
+    citySlug: "asansol",
+    locality: "Burnpur Road",
+    localitySlug: "burnpur-road",
+    locationDetails: "Burnpur Road, Near Asansol Polo Ground",
+    price: formatINR(22),
+    priceNumericLakhs: 22,
+    bhk: "1 BHK",
+    bhkCount: 1,
+    sqft: 640,
+    pricePerSqFt: 3438,
+    status: "Under Construction · Possession Dec 2027",
+    reraProjectNo: "WBRERA/P/PAS/2024/000881",
+    developer: "Damodar Valley Infrastructure",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "AMC Sanctioned",
+    metro: "1.2 km from Asansol Junction",
+    floodRisk: "Low",
+    image_url: heroImage,
+    gallery_images: [heroImage, saltLakeImage],
+    galleryImages: [heroImage, saltLakeImage],
+    floor_plan_url: "/assets/floorplans/asansol-1bhk.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 510,
+      balconyAreaSqFt: 50,
+      livingDiningSqFt: "15'0\" x 10'6\"",
+      masterBedroomSqFt: "12'6\" x 10'6\"",
+      kitchenSqFt: "7'6\" x 6'0\"",
+    },
+    description:
+      "A smart 1 BHK condominium in Asansol's prime industrial corridor. Modern security, solar water heating, and excellent connectivity to national highway network.",
+    highlights: [
+      "Ideal starter residence under ₹25 Lakhs",
+      "Minutes from Asansol Junction and market",
+      "100% Vastu-compliant north-east entry",
+      "Dedicated power backup for elevators",
+    ],
+    amenities: [
+      "Rooftop community lounge",
+      "Gated perimeter with guards",
+      "Ample resident car parking",
+      "Kids play park",
+    ],
+    floor: "4th of 7 Floors",
+    facing: "North-East",
+    possessionDate: "December 2027",
+    isFeatured: false,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-12",
+    slug: "durgapur-steel-city-residency",
+    title: "Durgapur Steel City Residency",
+    bengaliTitle: "দুর্গাপুর স্টিল সিটি রেসিডেন্সি",
+    citySlug: "durgapur",
+    locality: "City Centre",
+    localitySlug: "city-centre-durgapur",
+    locationDetails: "City Centre, Near Junction Mall",
+    price: formatINR(36),
+    priceNumericLakhs: 36,
+    bhk: "2 BHK",
+    bhkCount: 2,
+    sqft: 980,
+    pricePerSqFt: 3673,
+    status: "Ready to Move",
+    reraProjectNo: "WBRERA/P/PAS/2023/000542",
+    developer: "DMC Habitat Developers",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "DMC & WBRERA Registered",
+    metro: "NH-19 Corridor 500m",
+    floodRisk: "Low",
+    image_url: heroImage,
+    gallery_images: [heroImage, newTownImage],
+    galleryImages: [heroImage, newTownImage],
+    floor_plan_url: "/assets/floorplans/durgapur-2bhk.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 785,
+      balconyAreaSqFt: 85,
+      livingDiningSqFt: "18'0\" x 11'6\"",
+      masterBedroomSqFt: "13'6\" x 11'0\"",
+      kitchenSqFt: "8'6\" x 6'6\"",
+    },
+    description:
+      "A ready-to-move 2 BHK apartment in Durgapur City Centre. Walkable to Junction Mall, hospitals, and national schools with immediate registration.",
+    highlights: [
+      "Priced in the sweet spot of ₹25–50L band",
+      "Ready to move with Occupancy Certificate",
+      "Walkable to City Centre commercial zone",
+      "Wide balconies with green campus outlook",
+    ],
+    amenities: [
+      "Clubhouse with badminton court",
+      "24/7 security with RFID gate barrier",
+      "Elevator with automatic rescue device",
+      "Covered car parking",
+    ],
+    floor: "5th of 9 Floors",
+    facing: "East Facing",
+    possessionDate: "Ready to Move",
+    isFeatured: false,
+    listingType: "buy",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-13",
+    slug: "bardhaman-heritage-enclave",
+    title: "Bardhaman Heritage Enclave",
+    bengaliTitle: "বর্ধমান হেরিটেজ এনক্লেভ",
+    citySlug: "bardhaman",
+    locality: "Curzon Gate Heritage District",
+    localitySlug: "curzon-gate-district",
+    locationDetails: "GT Road, Near Burdwan University campus",
+    price: formatINR(44),
+    priceNumericLakhs: 44,
+    bhk: "2 BHK",
+    bhkCount: 2,
+    sqft: 1100,
+    pricePerSqFt: 4000,
+    status: "Under Construction · Possession June 2028",
+    reraProjectNo: "WBRERA/P/PUR/2024/000321",
+    developer: "Damodar Heritage Infratech",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "Burdwan Municipality Registered",
+    metro: "1.5 km to Bardhaman Railway Station",
+    floodRisk: "Low",
+    image_url: heroImage,
+    gallery_images: [heroImage, saltLakeImage],
+    galleryImages: [heroImage, saltLakeImage],
+    floor_plan_url: "/assets/floorplans/bardhaman-house.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 920,
+      balconyAreaSqFt: 90,
+      livingDiningSqFt: "19'0\" x 12'0\"",
+      masterBedroomSqFt: "14'0\" x 12'0\"",
+      kitchenSqFt: "9'0\" x 7'0\"",
+    },
+    description:
+      "An independent townhouse duplex in Bardhaman with private terrace, ground lawn, and direct freehold title on historic Grand Trunk corridor.",
+    highlights: [
+      "Independent house format under ₹50 Lakhs",
+      "Private roof rights and ground parking",
+      "Quiet residential neighbourhood near University",
+      "WBRERA sanctioned construction roadmap",
+    ],
+    amenities: [
+      "Gated community with solar streetlights",
+      "Paved walking tracks & landscaped park",
+      "Deep borewell and overhead water storage",
+      "24/7 security cabin",
+    ],
+    floor: "Ground + 1 Floor Duplex",
+    facing: "North Facing",
+    possessionDate: "June 2028",
+    isFeatured: false,
+    listingType: "new_launch",
+    propertyType: "Independent House",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-14",
+    slug: "sector-v-tech-square-suite",
+    title: "Sector V Tech Square Suite",
+    bengaliTitle: "সেক্টর ফাইভ টেক স্কয়ার স্যুট",
+    citySlug: "kolkata",
+    locality: "Salt Lake",
+    localitySlug: "salt-lake",
+    locationDetails: "Block EP & GP, Sector V, Salt Lake",
+    price: formatINR(68),
+    priceNumericLakhs: 68,
+    bhk: "Commercial",
+    bhkCount: 0,
+    sqft: 850,
+    pricePerSqFt: 8000,
+    status: "Ready to Move",
+    reraProjectNo: "WBRERA/P/NOR/2023/001402",
+    developer: "Bengal Tech Parks Ltd",
+    tenure_type: "Leasehold",
+    tenure: "Leasehold",
+    approval: "NKDA & Bidhannagar Sanctioned",
+    metro: "200m from Sector V Metro Station",
+    floodRisk: "Low",
+    image_url: saltLakeImage,
+    gallery_images: [saltLakeImage, heroImage],
+    galleryImages: [saltLakeImage, heroImage],
+    floor_plan_url: "/assets/floorplans/sectorv-office.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 680,
+      balconyAreaSqFt: 0,
+      livingDiningSqFt: "Open Workspace 26' x 20'",
+      masterBedroomSqFt: "Director Cabin 12' x 10'",
+      kitchenSqFt: "Pantry & Server 8' x 6'",
+    },
+    description:
+      "A premium ready-to-fit commercial office suite in Kolkata's primary IT hub. 100% power backup, high-speed fiber backbone, and direct pedestrian bridge to Sector V Metro.",
+    highlights: [
+      "Commercial Grade-A business address",
+      "High rental yield potential of 7.5%–8.5%",
+      "Walking reach to Sector V Metro hub",
+      "Double-height air-conditioned corporate lobby",
+    ],
+    amenities: [
+      "Central cafeteria and executive meeting rooms",
+      "6 high-speed passenger elevators + service lift",
+      "Multi-level basement parking with EV points",
+      "Round-the-clock enterprise grade security",
+    ],
+    floor: "8th of 16 Floors",
+    facing: "East Facing",
+    possessionDate: "Immediate",
+    isFeatured: false,
+    listingType: "buy",
+    propertyType: "Commercial",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-15",
+    slug: "new-town-aa3-villa-plot",
+    title: "New Town AA-III Freehold Villa Plot",
+    bengaliTitle: "নিউ টাউন ভিলা প্লট",
+    citySlug: "new-town",
+    locality: "New Town",
+    localitySlug: "new-town",
+    locationDetails: "Action Area III, Near Fin-Tech Hub & Outer Ring Road",
+    price: formatINR(48),
+    priceNumericLakhs: 48,
+    bhk: "Plot",
+    bhkCount: 0,
+    sqft: 2160,
+    pricePerSqFt: 2222,
+    status: "Ready for Registration",
+    reraProjectNo: "WBRERA/P/NOR/2024/000998",
+    developer: "Bengal Freehold Land Estates",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "HIDCO Master Plan Approved",
+    metro: "2.3 km from AA-III Metro Hub",
+    floodRisk: "Low",
+    image_url: newTownImage,
+    gallery_images: [newTownImage, heroImage],
+    galleryImages: [newTownImage, heroImage],
+    floor_plan_url: "/assets/floorplans/plot-3cottah.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 2160,
+      balconyAreaSqFt: 0,
+      livingDiningSqFt: "Plot Frontage 36 Feet",
+      masterBedroomSqFt: "Plot Depth 60 Feet",
+      kitchenSqFt: "Road Width 40 Feet",
+    },
+    description:
+      "A rare 3-Cottah demarcated residential villa plot with clear freehold title and underground utility conduits in New Town Action Area III. Ready for immediate boundary construction.",
+    highlights: [
+      "Direct freehold title — no HIDCO lease encumbrances",
+      "40-foot wide asphalt blacktop access road",
+      "Underground drainage, power and water lines ready",
+      "High capital appreciation near upcoming FinTech Hub",
+    ],
+    amenities: [
+      "Demarcated boundary pillars installed",
+      "Gated enclave with security post",
+      "Street lighting and manicured tree avenue",
+      "Municipal water connection at plot edge",
+    ],
+    floor: "Residential Plot (G+3 Sanctionable)",
+    facing: "North-East Facing",
+    possessionDate: "Immediate",
+    isFeatured: false,
+    listingType: "buy",
+    propertyType: "Plot",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-16",
+    slug: "siliguri-tea-hills-sanctuary",
+    title: "Siliguri Tea Hills Sanctuary",
+    bengaliTitle: "শিলিগুড়ি টি হিলস স্যাঙ্কচুয়ারি",
+    citySlug: "siliguri",
+    locality: "Sevoke Road Corridor",
+    localitySlug: "sevoke-road-corridor",
+    locationDetails: "Sevoke Road Foothills, Near Coronation Bridge approach",
+    price: formatINR(135),
+    priceNumericLakhs: 135,
+    bhk: "3 BHK",
+    bhkCount: 3,
+    sqft: 2450,
+    pricePerSqFt: 5510,
+    status: "Under Construction · Possession Dec 2028",
+    reraProjectNo: "WBRERA/P/DAR/2024/000109",
+    developer: "Himalayan Foothills Living",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "SJDA & WBRERA Registered",
+    metro: "New Jalpaiguri (NJP) 9 km / Bagdogra Airport 18 km",
+    floodRisk: "Minimal",
+    image_url: heroImage,
+    gallery_images: [heroImage, aliporeImage],
+    galleryImages: [heroImage, aliporeImage],
+    floor_plan_url: "/assets/floorplans/siliguri-villa.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 1980,
+      balconyAreaSqFt: 280,
+      livingDiningSqFt: "26'0\" x 16'0\"",
+      masterBedroomSqFt: "17'0\" x 14'0\"",
+      kitchenSqFt: "13'0\" x 10'0\"",
+    },
+    description:
+      "A luxury boutique villa enclave nestled along the Sevoke Road tea garden foothills with unobstructed Kanchenjunga horizon views and crisp foothill breezes.",
+    highlights: [
+      "Foothills climate with tea garden perimeter",
+      "Independent private garden and upper timber sundeck",
+      "Earthquake resistant Seismic Zone IV construction",
+      "25 minutes to Bagdogra Airport",
+    ],
+    amenities: [
+      "Heated indoor plunge pool & clubhouse",
+      "Organic tea tasting pavilion & reading lounge",
+      "24/7 guarded security & solar electric fencing",
+      "Concierge and holiday maintenance package",
+    ],
+    floor: "Ground + 1 Independent Villa",
+    facing: "North-West (Mountain Facing)",
+    possessionDate: "December 2028",
+    isFeatured: true,
+    listingType: "new_launch",
+    propertyType: "Villa",
+    verified: true,
+    verifiedDate: "October 2026",
+  },
+  {
+    id: "prop-17",
+    slug: "eco-park-skyline-rental-suite",
+    title: "Eco Park Skyline Rental Suite",
+    bengaliTitle: "ইকোপার্ক স্কাইলাইন রেন্টাল স্যুট",
+    citySlug: "new-town",
+    locality: "New Town",
+    localitySlug: "new-town",
+    locationDetails: "Action Area II, Facing Eco Park Lake",
+    price: "₹32,000 / mo",
+    priceNumericLakhs: 1,
+    bhk: "2 BHK",
+    bhkCount: 2,
+    sqft: 1150,
+    pricePerSqFt: 28,
+    status: "Available for Rent",
+    reraProjectNo: "WBRERA/P/NOR/2023/000780",
+    developer: "Eastern Habitat Infrastructure",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "HIDCO Sanctioned",
+    metro: "1.2 km from Eco Park Metro",
+    floodRisk: "Low",
+    image_url: newTownImage,
+    gallery_images: [newTownImage, heroImage],
+    galleryImages: [newTownImage, heroImage],
+    floor_plan_url: "/assets/floorplans/ecopark-rent.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 920,
+      balconyAreaSqFt: 110,
+      livingDiningSqFt: "20'0\" x 13'0\"",
+      masterBedroomSqFt: "14'0\" x 12'0\"",
+      kitchenSqFt: "10'0\" x 8'0\"",
+    },
+    description:
+      "Fully verified, semi-furnished 2 BHK apartment for long-term lease. Lake views, modular kitchen with chimney, AC in all bedrooms, and designated covered parking.",
+    highlights: [
+      "Curated single-owner verified rental",
+      "Direct lake views over Eco Park",
+      "Semi-furnished with modular kitchen & wardrobes",
+      "Standard registered lease agreement",
+    ],
+    amenities: [
+      "Full clubhouse and gym membership included",
+      "High-speed elevator with power backup",
+      "Covered reserved basement car parking",
+      "24/7 biometric security",
+    ],
+    floor: "11th of 18 Floors",
+    facing: "North-East",
+    possessionDate: "Immediate",
+    isFeatured: false,
+    listingType: "rent",
+    propertyType: "Apartment",
+    verified: true,
+    verifiedDate: "October 2026",
   },
 ];
 
@@ -819,12 +1348,24 @@ export function filterProperties({
   citySlug,
   locality,
   budget,
+  budgetMin,
+  budgetMax,
   bhk,
+  listingType,
+  propertyType,
+  possession,
+  verifiedOnly,
 }: {
   citySlug?: string;
   locality?: string;
   budget?: string;
+  budgetMin?: number;
+  budgetMax?: number;
   bhk?: string;
+  listingType?: string;
+  propertyType?: string;
+  possession?: string;
+  verifiedOnly?: boolean;
 }): Property[] {
   return properties.filter((p) => {
     // City check
@@ -834,7 +1375,7 @@ export function filterProperties({
     }
 
     // Locality check
-    if (locality && locality !== "all" && locality !== "All Localities") {
+    if (locality && locality !== "all" && locality !== "All Localities" && locality !== "All Neighbourhoods") {
       const locNorm = locality.toLowerCase().replace(/\s+/g, "-");
       if (
         p.localitySlug !== locNorm &&
@@ -844,17 +1385,70 @@ export function filterProperties({
       }
     }
 
+    // Listing Type check (buy / rent / new_launch)
+    if (listingType && listingType !== "all") {
+      const pListing = p.listingType || "buy";
+      if (pListing !== listingType) return false;
+    }
+
+    // Property Type check (Apartment / Independent House / Villa / Plot / Commercial)
+    if (propertyType && propertyType !== "all" && propertyType !== "All Types") {
+      const pType = p.propertyType || "Apartment";
+      if (pType.toLowerCase() !== propertyType.toLowerCase()) return false;
+    }
+
     // BHK check
-    if (bhk && bhk !== "all" && bhk !== "All BHKs") {
+    if (bhk && bhk !== "all" && bhk !== "All BHKs" && bhk !== "All Layouts") {
       const bhkClean = bhk.toUpperCase();
-      if (!p.bhk.toUpperCase().includes(bhkClean.replace(" BHK", ""))) {
+      if (bhkClean === "1 BHK" || bhkClean === "1") {
+        if (p.bhkCount !== 1) return false;
+      } else if (bhkClean === "2 BHK" || bhkClean === "2") {
+        if (p.bhkCount !== 2) return false;
+      } else if (bhkClean === "3 BHK" || bhkClean === "3") {
+        if (p.bhkCount !== 3) return false;
+      } else if (bhkClean.includes("4") || bhkClean === "4 BHK+" || bhkClean === "4 BHK") {
+        if (p.bhkCount < 4) return false;
+      } else if (!p.bhk.toUpperCase().includes(bhkClean.replace(" BHK", ""))) {
         return false;
       }
     }
 
-    // Budget check
-    if (budget && budget !== "all" && budget !== "All Budgets") {
-      if (budget === "under-1cr" || budget.includes("75 L") || budget.includes("< ₹1 Cr")) {
+    // Possession check
+    if (possession && possession !== "all") {
+      const derived = getDerivedPossessionStatus(p.possessionDate);
+      if (possession === "ready" || possession === "Ready to move") {
+        if (derived !== "Ready to move") return false;
+      } else if (possession === "2027" || possession === "Possession 2027") {
+        if (derived !== "Possession 2027") return false;
+      } else if (possession === "2028" || possession === "2028+" || possession === "Possession 2028+") {
+        if (derived !== "Possession 2028+") return false;
+      }
+    }
+
+    // Verified only check
+    if (verifiedOnly) {
+      if (!p.verified) return false;
+    }
+
+    // Explicit numeric budget range
+    if (budgetMin !== undefined && p.priceNumericLakhs < budgetMin) return false;
+    if (budgetMax !== undefined && p.priceNumericLakhs > budgetMax) return false;
+
+    // Budget slug check
+    if (budget && budget !== "all" && budget !== "All Budgets" && budget !== "Any Price Band") {
+      if (budget === "under-25l" || budget === "Under ₹25L") {
+        if (p.priceNumericLakhs > 25) return false;
+      } else if (budget === "25l-50l" || budget === "₹25–50L" || budget === "₹25-50L") {
+        if (p.priceNumericLakhs < 25 || p.priceNumericLakhs > 50) return false;
+      } else if (budget === "50l-1cr" || budget === "₹50L–1Cr" || budget === "₹50L-1Cr") {
+        if (p.priceNumericLakhs < 50 || p.priceNumericLakhs > 100) return false;
+      } else if (budget === "1cr-3cr" || budget === "₹1–3Cr" || budget === "₹1-3Cr") {
+        if (p.priceNumericLakhs < 100 || p.priceNumericLakhs > 300) return false;
+      } else if (budget === "3cr-plus" || budget === "₹3Cr+") {
+        if (p.priceNumericLakhs < 300) return false;
+      }
+      // Backward compatibility with older query parameters
+      else if (budget === "under-1cr" || budget.includes("75 L") || budget.includes("< ₹1 Cr")) {
         if (p.priceNumericLakhs > 100) return false;
       } else if (budget === "1cr-2cr" || budget.includes("1–2 Cr") || budget.includes("1-2 Cr")) {
         if (p.priceNumericLakhs < 100 || p.priceNumericLakhs > 200) return false;
