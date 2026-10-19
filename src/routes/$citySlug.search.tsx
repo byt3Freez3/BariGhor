@@ -1,5 +1,5 @@
 import { createFileRoute, Link, notFound, useRouter } from "@tanstack/react-router";
-import { Filter, MapPin, RotateCcw, Search as SearchIcon, SlidersHorizontal } from "lucide-react";
+import { BadgeCheck, Filter, MapPin, RotateCcw, Search as SearchIcon, SlidersHorizontal } from "lucide-react";
 import { useMemo, useState } from "react";
 import { z } from "zod";
 import { Button } from "@/components/ui/button";
@@ -136,6 +136,7 @@ function CitySearchPage() {
       listingType: activeListing,
       propertyType: activeType,
       possession: activePossession,
+      verifiedOnly: Boolean(searchParams.verifiedOnly),
     });
 
     if (textQuery.trim()) {
@@ -165,6 +166,7 @@ function CitySearchPage() {
     activeListing,
     activeType,
     activePossession,
+    searchParams.verifiedOnly,
     textQuery,
     sortBy,
   ]);
@@ -189,6 +191,7 @@ function CitySearchPage() {
     activeBudget !== "all" ||
     activeBhk !== "all" ||
     activePossession !== "all" ||
+    Boolean(searchParams.verifiedOnly) ||
     Boolean(textQuery.trim());
 
   return (
@@ -312,6 +315,30 @@ function CitySearchPage() {
                       ))}
                     </div>
                   </div>
+
+                  {/* Verified Only Switch */}
+                  <div className="rounded-xs border border-border bg-card p-4">
+                    <label className="flex items-center justify-between cursor-pointer">
+                      <div className="flex items-center gap-2">
+                        <BadgeCheck className="size-4 text-emerald-600" />
+                        <div>
+                          <p className="text-xs font-bold text-foreground">Verified Only</p>
+                          <p className="text-[11px] text-muted-foreground">4-Pillar Due Diligence Cleared</p>
+                        </div>
+                      </div>
+                      <input
+                        type="checkbox"
+                        checked={Boolean(localFilters.verifiedOnly)}
+                        onChange={(e) =>
+                          setLocalFilters((prev) => ({
+                            ...prev,
+                            verifiedOnly: e.target.checked ? true : undefined,
+                          }))
+                        }
+                        className="size-4 accent-[#A16207] rounded-xs cursor-pointer"
+                      />
+                    </label>
+                  </div>
                 </div>
                 <div className="sticky bottom-0 mt-8 border-t border-border bg-background pt-4 pb-2 flex gap-3">
                   <Button variant="outline" onClick={handleResetFilters} className="flex-1">
@@ -385,6 +412,20 @@ function CitySearchPage() {
                 </option>
               ))}
             </select>
+
+            {/* Verified Only Toggle */}
+            <label className="inline-flex items-center gap-1.5 cursor-pointer rounded-xs border border-border bg-card px-3 py-1.5 font-medium hover:border-accent select-none transition-colors">
+              <input
+                type="checkbox"
+                checked={Boolean(searchParams.verifiedOnly)}
+                onChange={(e) => updateSearch({ verifiedOnly: e.target.checked ? true : undefined })}
+                className="size-3.5 accent-[#A16207] rounded-xs cursor-pointer"
+              />
+              <span className="flex items-center gap-1 font-semibold text-foreground">
+                <BadgeCheck className="size-3.5 text-emerald-600" />
+                Verified Only
+              </span>
+            </label>
 
             {hasActiveFilters && (
               <button

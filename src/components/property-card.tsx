@@ -36,10 +36,21 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
 
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
-          <span className="inline-flex items-center gap-1 rounded-xs bg-primary/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground backdrop-blur-xs">
-            <BadgeCheck className="size-3 text-emerald-400" />
-            WBRERA Verified
-          </span>
+          {property.verified !== false ? (
+            <Link
+              to="/about/verification"
+              onClick={(e) => e.stopPropagation()}
+              className="inline-flex items-center gap-1 rounded-xs bg-primary/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground backdrop-blur-xs transition-colors hover:bg-primary"
+              title="Verified by BariGhor: Click to read our 4-pillar audit report"
+            >
+              <BadgeCheck className="size-3 text-emerald-400" />
+              WBRERA Verified
+            </Link>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-xs bg-amber-800/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white backdrop-blur-xs">
+              Audit Pending
+            </span>
+          )}
           <span className="rounded-xs bg-card/90 px-2.5 py-1 text-[11px] font-semibold text-foreground backdrop-blur-xs">
             {property.tenure_type || property.tenure}
           </span>

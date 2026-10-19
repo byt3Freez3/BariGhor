@@ -17,6 +17,7 @@ import { Route as ShortlistRouteImport } from './routes/shortlist'
 import { Route as SignInRouteImport } from './routes/sign-in'
 import { Route as CitySlugIndexRouteImport } from './routes/$citySlug.index'
 import { Route as CitySlugSearchRouteImport } from './routes/$citySlug.search'
+import { Route as AboutVerificationRouteImport } from './routes/about.verification'
 import { Route as CitiesIndexRouteImport } from './routes/cities.index'
 import { Route as CitiesSlugRouteImport } from './routes/cities.$slug'
 import { Route as JournalIndexRouteImport } from './routes/journal.index'
@@ -70,6 +71,11 @@ const CitySlugSearchRoute = CitySlugSearchRouteImport.update({
   id: '/search',
   path: '/search',
   getParentRoute: () => CitySlugRoute,
+} as any)
+const AboutVerificationRoute = AboutVerificationRouteImport.update({
+  id: '/verification',
+  path: '/verification',
+  getParentRoute: () => AboutRoute,
 } as any)
 const CitiesIndexRoute = CitiesIndexRouteImport.update({
   id: '/cities/',
@@ -142,11 +148,12 @@ const CitySlugPropertiesPropertySlugRoute =
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$citySlug': typeof CitySlugRouteWithChildren
-  '/about': typeof AboutRoute
+  '/about': typeof AboutRouteWithChildren
   '/search': typeof SearchRoute
   '/shortlist': typeof ShortlistRoute
   '/sign-in': typeof SignInRoute
   '/$citySlug/search': typeof CitySlugSearchRoute
+  '/about/verification': typeof AboutVerificationRoute
   '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
@@ -164,11 +171,12 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
-  '/about': typeof AboutRoute
+  '/about': typeof AboutRouteWithChildren
   '/search': typeof SearchRoute
   '/shortlist': typeof ShortlistRoute
   '/sign-in': typeof SignInRoute
   '/$citySlug/search': typeof CitySlugSearchRoute
+  '/about/verification': typeof AboutVerificationRoute
   '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
@@ -188,11 +196,12 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$citySlug': typeof CitySlugRouteWithChildren
-  '/about': typeof AboutRoute
+  '/about': typeof AboutRouteWithChildren
   '/search': typeof SearchRoute
   '/shortlist': typeof ShortlistRoute
   '/sign-in': typeof SignInRoute
   '/$citySlug/search': typeof CitySlugSearchRoute
+  '/about/verification': typeof AboutVerificationRoute
   '/cities/$slug': typeof CitiesSlugRoute
   '/journal/$slug': typeof JournalSlugRoute
   '/localities/$slug': typeof LocalitiesSlugRoute
@@ -218,6 +227,7 @@ export interface FileRouteTypes {
     | '/shortlist'
     | '/sign-in'
     | '/$citySlug/search'
+    | '/about/verification'
     | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
@@ -240,6 +250,7 @@ export interface FileRouteTypes {
     | '/shortlist'
     | '/sign-in'
     | '/$citySlug/search'
+    | '/about/verification'
     | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
@@ -263,6 +274,7 @@ export interface FileRouteTypes {
     | '/shortlist'
     | '/sign-in'
     | '/$citySlug/search'
+    | '/about/verification'
     | '/cities/$slug'
     | '/journal/$slug'
     | '/localities/$slug'
@@ -282,7 +294,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CitySlugRoute: typeof CitySlugRouteWithChildren
-  AboutRoute: typeof AboutRoute
+  AboutRoute: typeof AboutRouteWithChildren
   SearchRoute: typeof SearchRoute
   ShortlistRoute: typeof ShortlistRoute
   SignInRoute: typeof SignInRoute
@@ -354,6 +366,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/$citySlug/search'
       preLoaderRoute: typeof CitySlugSearchRouteImport
       parentRoute: typeof CitySlugRoute
+    }
+    '/about/verification': {
+      id: '/about/verification'
+      path: '/verification'
+      fullPath: '/about/verification'
+      preLoaderRoute: typeof AboutVerificationRouteImport
+      parentRoute: typeof AboutRoute
     }
     '/cities/': {
       id: '/cities/'
@@ -471,10 +490,20 @@ const CitySlugRouteWithChildren = CitySlugRoute._addFileChildren(
   CitySlugRouteChildren,
 )
 
+interface AboutRouteChildren {
+  AboutVerificationRoute: typeof AboutVerificationRoute
+}
+
+const AboutRouteChildren: AboutRouteChildren = {
+  AboutVerificationRoute: AboutVerificationRoute,
+}
+
+const AboutRouteWithChildren = AboutRoute._addFileChildren(AboutRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CitySlugRoute: CitySlugRouteWithChildren,
-  AboutRoute: AboutRoute,
+  AboutRoute: AboutRouteWithChildren,
   SearchRoute: SearchRoute,
   ShortlistRoute: ShortlistRoute,
   SignInRoute: SignInRoute,

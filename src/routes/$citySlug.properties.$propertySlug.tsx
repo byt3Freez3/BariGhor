@@ -13,6 +13,7 @@ import {
   Expand,
   FileCheck,
   FileText,
+  Heart,
   Home,
   Layers,
   MapPin,
@@ -115,7 +116,8 @@ export const Route = createFileRoute("/$citySlug/properties/$propertySlug")({
 
 function PropertyDetailPage() {
   const { city, property } = Route.useLoaderData();
-  const { language } = useAppStore();
+  const { language, isShortlisted, toggleShortlist } = useAppStore();
+  const saved = isShortlisted(property.id);
   const gallery = property.gallery_images || property.galleryImages || [property.image_url];
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<"overview" | "floorplan" | "specs">("overview");
@@ -185,13 +187,33 @@ function PropertyDetailPage() {
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 pointer-events-none" />
 
             <div className="absolute left-4 top-4 flex flex-wrap gap-2">
-              <span className="rounded-xs bg-primary/95 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md backdrop-blur-xs">
+              <Link
+                to="/about/verification"
+                className="inline-flex items-center gap-1.5 rounded-xs bg-primary/95 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md backdrop-blur-xs transition-colors hover:bg-primary"
+                title="BariGhor 4-Pillar Due Diligence: Click to view audit protocol"
+              >
+                <BadgeCheck className="size-3.5 text-emerald-400" />
                 WBRERA: {property.reraProjectNo}
-              </span>
+              </Link>
               <span className="rounded-xs bg-card/90 px-3 py-1.5 text-xs font-semibold text-foreground shadow-md backdrop-blur-xs">
                 {property.tenure_type || property.tenure}
               </span>
             </div>
+
+            {/* Shortlist Heart Button */}
+            <button
+              type="button"
+              onClick={() => toggleShortlist(property.id)}
+              className={`absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold backdrop-blur-xs transition-transform active:scale-95 ${
+                saved
+                  ? "bg-rose-500 text-white shadow-lg"
+                  : "bg-black/50 text-white hover:bg-black/70"
+              }`}
+              aria-label={saved ? "Remove from shortlist" : "Save to shortlist"}
+            >
+              <Heart className={`size-4 ${saved ? "fill-white" : ""}`} />
+              <span>{saved ? "Saved to Shortlist" : "Save Home"}</span>
+            </button>
 
             <div className="absolute bottom-4 left-4 right-4 flex items-end justify-between text-white">
               <div>
@@ -305,18 +327,38 @@ function PropertyDetailPage() {
                 );
               })}
             </div>
+            <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xs border border-accent/20 bg-accent/5 p-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wider text-accent">
+                  4-Pillar Due Diligence Certified
+                </p>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Title Search · Sanction Plan · Physical Survey · WBRERA Escrow
+                </p>
+              </div>
+              <Link
+                to="/about/verification"
+                className="text-xs font-semibold text-accent hover:underline shrink-0"
+              >
+                Read Full Audit Standard →
+              </Link>
+            </div>
           </div>
         </div>
 
         {/* Sticky Concierge Sidebar */}
         <aside className="lg:sticky lg:top-28 h-fit">
           <div className="rounded-xs border border-border bg-card p-6 shadow-md">
-            <div className="flex items-center gap-2">
-              <BadgeCheck className="size-5 text-emerald-600" />
-              <span className="text-xs font-bold uppercase tracking-wider text-foreground">
-                100% Verified Inventory
+            <Link
+              to="/about/verification"
+              className="group flex items-center gap-2 hover:opacity-90"
+              title="Click to view our 4-pillar audit methodology"
+            >
+              <BadgeCheck className="size-5 text-emerald-600 shrink-0" />
+              <span className="text-xs font-bold uppercase tracking-wider text-foreground group-hover:text-accent group-hover:underline">
+                100% Verified Inventory (Audit Details →)
               </span>
-            </div>
+            </Link>
             <h3 className="mt-3 font-display text-2xl font-bold">{property.price}</h3>
             <p className="mt-1 text-xs text-muted-foreground">
               Direct developer terms. No brokerage surcharge.
@@ -338,6 +380,16 @@ function PropertyDetailPage() {
               >
                 Call Advisory (+91 90735 99355)
               </a>
+
+              <Button
+                type="button"
+                variant={saved ? "secondary" : "outline"}
+                onClick={() => toggleShortlist(property.id)}
+                className="w-full flex items-center justify-center gap-2 rounded-xs py-3 text-sm font-semibold"
+              >
+                <Heart className={`size-4 ${saved ? "fill-rose-500 text-rose-500" : ""}`} />
+                <span>{saved ? "Saved to Your Shortlist" : "Save to Shortlist"}</span>
+              </Button>
             </div>
 
             <p className="mt-4 text-center text-xs text-muted-foreground">
