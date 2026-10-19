@@ -199,3 +199,25 @@ describe("Property Inventory Data Invariants", () => {
     });
   });
 });
+
+import { MOTION_DURATIONS, MOTION_DURATIONS_MS, MOTION_EASINGS } from "@/lib/motion";
+
+describe("Motion Token System Invariants (Step 0)", () => {
+  it("defines strictly allowed durations with none exceeding 600ms", () => {
+    expect(MOTION_DURATIONS_MS.fast).toBe(150);
+    expect(MOTION_DURATIONS_MS.base).toBe(250);
+    expect(MOTION_DURATIONS_MS.slow).toBe(400);
+    expect(MOTION_DURATIONS_MS.page).toBe(500);
+
+    Object.values(MOTION_DURATIONS_MS).forEach((duration) => {
+      expect(duration).toBeLessThanOrEqual(600);
+      expect(duration).toBeGreaterThanOrEqual(100);
+    });
+  });
+
+  it("defines strict cubic-bezier deceleration curves without spring or overshoot", () => {
+    expect(MOTION_EASINGS.premium).toEqual([0.22, 1, 0.36, 1]);
+    expect(MOTION_EASINGS.out).toEqual([0.16, 1, 0.3, 1]);
+    expect(MOTION_EASINGS.in).toEqual([0.7, 0, 0.84, 0]);
+  });
+});
