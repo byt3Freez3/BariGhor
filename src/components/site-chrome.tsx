@@ -720,6 +720,86 @@ export function SiteFooter() {
         </div>
       </div>
 
+      {/* DEEP SEO SITEMAP MATRIX: City × BHK, City × Budget, City × Locality */}
+      <div className="border-t border-primary-foreground/15 bg-black/25 py-12">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-primary-foreground/15 pb-4">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
+              West Bengal Property Directory & Deep SEO Index
+            </p>
+            <span className="text-[11px] text-primary-foreground/50">
+              Verified Listings & Municipal Land Records
+            </span>
+          </div>
+
+          <div className="mt-8 grid gap-8 sm:grid-cols-2 md:grid-cols-4 text-xs text-primary-foreground/75">
+            {/* Column 1: BHK by City */}
+            <div>
+              <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
+                Popular BHK Configurations
+              </p>
+              <ul className="mt-3 space-y-1.5">
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "kolkata" }} search={{ bhk: "2 BHK" }} className="hover:text-accent">2 BHK Flats in Kolkata</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "kolkata" }} search={{ bhk: "3 BHK" }} className="hover:text-accent">3 BHK Flats in Kolkata</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "new-town" }} search={{ bhk: "3 BHK" }} className="hover:text-accent">3 BHK Apartments in New Town</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "howrah" }} search={{ bhk: "2 BHK" }} className="hover:text-accent">2 BHK Riverfront Flats in Howrah</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "siliguri" }} search={{ bhk: "3 BHK" }} className="hover:text-accent">3 BHK Luxury Flats in Siliguri</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "durgapur" }} search={{ bhk: "2 BHK" }} className="hover:text-accent">2 BHK Gated Flats in Durgapur</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "kolkata" }} search={{ bhk: "4 BHK+" }} className="hover:text-accent">4 BHK Penthouses in South Kolkata</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 2: Budget Bands */}
+            <div>
+              <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
+                Browse by Budget Band
+              </p>
+              <ul className="mt-3 space-y-1.5">
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "habra" }} search={{ budget: "under-25l" }} className="hover:text-accent">Affordable Homes Under ₹25L</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "asansol" }} search={{ budget: "25l-50l" }} className="hover:text-accent">Homes in ₹25 – 50 Lakhs (Tier 2)</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "kolkata" }} search={{ budget: "50l-1cr" }} className="hover:text-accent">Kolkata Homes ₹50L – 1.0 Crore</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "new-town" }} search={{ budget: "1cr-3cr" }} className="hover:text-accent">New Town Residences ₹1.0 – 3.0 Cr</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "kolkata" }} search={{ budget: "3cr-plus" }} className="hover:text-accent">Ultra Luxury Alipore Homes ₹3 Cr+</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "bardhaman" }} search={{ budget: "25l-50l" }} className="hover:text-accent">Bardhaman Townhouses ₹25 – 50L</Link></li>
+                <li><Link to="/$citySlug/properties" params={{ citySlug: "kalyani" }} search={{ budget: "under-25l" }} className="hover:text-accent">Kalyani Smart City Plots & Flats</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 3: Prime Bengal Localities */}
+            <div>
+              <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
+                Prime Bengal Neighbourhoods
+              </p>
+              <ul className="mt-3 space-y-1.5">
+                <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "kolkata", localitySlug: "alipore" }} className="hover:text-accent">Alipore & Burdwan Road</Link></li>
+                <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "kolkata", localitySlug: "salt-lake" }} className="hover:text-accent">Salt Lake Sector V & Central Park</Link></li>
+                <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "new-town", localitySlug: "new-town" }} className="hover:text-accent">New Town Action Area I & II</Link></li>
+                <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "kolkata", localitySlug: "ballygunge" }} className="hover:text-accent">Ballygunge Circular Road</Link></li>
+                <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "howrah", localitySlug: "shibpur" }} className="hover:text-accent">Shibpur Foreshore Road</Link></li>
+                <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "siliguri", localitySlug: "sevoke-road" }} className="hover:text-accent">Sevoke Road Foothill Belt</Link></li>
+                <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "durgapur", localitySlug: "city-centre" }} className="hover:text-accent">City Centre Durgapur</Link></li>
+              </ul>
+            </div>
+
+            {/* Column 4: Regulatory & Statutory */}
+            <div>
+              <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
+                Statutory & Buyer Protection
+              </p>
+              <ul className="mt-3 space-y-1.5">
+                <li><Link to="/about/verification" className="hover:text-accent">4-Pillar Due Diligence Protocol</Link></li>
+                <li><Link to="/about" hash="licence" className="hover:text-accent">WBRERA Licence Details</Link></li>
+                <li><Link to="/about" hash="story" className="hover:text-accent">Single-Admin Advisory Model</Link></li>
+                <li><Link to="/journal/$slug" params={{ slug: "understanding-wbrera" }} className="hover:text-accent">Escrow & Consumer Remedies</Link></li>
+                <li><Link to="/journal/$slug" params={{ slug: "freehold-leasehold-kolkata" }} className="hover:text-accent">Kolkata Freehold vs Leasehold</Link></li>
+                <li><Link to="/journal/$slug" params={{ slug: "kolkata-monsoon-drainage-guide" }} className="hover:text-accent">Monsoon High-Tide Drainage Guide</Link></li>
+                <li><Link to="/shortlist" className="hover:text-accent">Private Shortlist (Zero Login)</Link></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+
       <div className="border-t border-primary-foreground/15 px-5 py-6 text-center text-xs text-primary-foreground/60">
         <div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-2 sm:flex-row">
           <p>
