@@ -224,7 +224,8 @@ function PropertyDetailPage() {
               width={1200}
               height={600}
               decoding="async"
-              className="size-full object-cover transition-all duration-500"
+              style={{ viewTransitionName: `prop-img-${property.slug}` }}
+              className="size-full object-cover transition-opacity duration-base ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 pointer-events-none" />
 

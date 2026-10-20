@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Property } from "@/lib/data";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { useAppStore } from "@/lib/store";
+import { MOTION_DURATIONS, MOTION_EASINGS } from "@/lib/motion";
 
 export function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const citySlug = property.citySlug || (property.localitySlug === "new-town" ? "new-town" : "kolkata");
@@ -13,16 +14,16 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 16 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-40px" }}
       transition={{
-        duration: 0.6,
-        delay: index * 0.08,
-        ease: [0.22, 1, 0.36, 1],
+        duration: MOTION_DURATIONS.slow,
+        delay: Math.min(index * 0.06, 0.3),
+        ease: MOTION_EASINGS.premium,
       }}
       whileHover={{ y: -4 }}
-      className="group flex flex-col overflow-hidden rounded-xs border border-black/5 bg-card shadow-xs transition-shadow duration-300 hover:shadow-xl"
+      className="group flex flex-col overflow-hidden rounded-xs border border-black/5 bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-muted">
         <img
@@ -32,9 +33,10 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
           height={500}
           loading="lazy"
           decoding="async"
-          className="size-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+          style={{ viewTransitionName: `prop-img-${property.slug}` }}
+          className="size-full object-cover transition-transform duration-base ease-out group-hover:scale-[1.03]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-base ease-out group-hover:opacity-100 pointer-events-none" />
 
         <div className="absolute left-3 top-3 flex flex-wrap gap-2">
           {property.verified !== false ? (

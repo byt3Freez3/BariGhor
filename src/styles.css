@@ -259,6 +259,12 @@ header[data-tone="inverse"],
   }
 }
 
+/* Shared Element Transition: Property Card to Property Detail (400ms, --ease-premium) */
+::view-transition-group(*) {
+  animation-duration: var(--duration-slow);
+  animation-timing-function: var(--ease-premium);
+}
+
 /* View Transitions API soft cross-fade (300ms, --ease-premium) */
 ::view-transition-old(root) {
   animation: 300ms var(--ease-premium) both vt-fade-out;
