@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { PropertyCard } from "@/components/property-card";
+import { AnimatedPropertyGrid } from "@/components/animated-property-grid";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { filterProperties, properties } from "@/lib/data";
@@ -527,29 +528,13 @@ function CityPropertiesIndexPage() {
 
       {/* Property Cards Grid */}
       <section className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
-        {filteredProperties.length > 0 ? (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {filteredProperties.map((property, index) => (
-              <PropertyCard key={property.id} property={property} index={index} />
-            ))}
-          </div>
-        ) : (
-          <div className="mx-auto max-w-md py-20 text-center">
-            <div className="mx-auto grid size-16 place-items-center rounded-full bg-secondary text-muted-foreground">
-              <Filter className="size-8" />
-            </div>
-            <h2 className="mt-6 font-display text-2xl font-bold">No residences match your criteria</h2>
-            <p className="mt-2 text-sm text-muted-foreground">
-              We update our inventory following physical site audits. Reset your filters or message our advisory desk on WhatsApp.
-            </p>
-            <div className="mt-8 flex justify-center gap-4">
-              <Button onClick={handleResetFilters} variant="outline" className="font-semibold">
-                Reset Filters
-              </Button>
-              <WhatsAppAction context="general" variant="primary" label="Enquire on WhatsApp" />
-            </div>
-          </div>
-        )}
+        <AnimatedPropertyGrid
+          properties={filteredProperties}
+          onResetFilters={handleResetFilters}
+          emptyTitle="No residences match your criteria"
+          emptySubtitle="We update our inventory following physical site audits. Reset your filters or message our advisory desk on WhatsApp."
+          showWhatsAppOnEmpty
+        />
       </section>
 
       <SiteFooter />

@@ -1,12 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, ArrowRight, Check, Heart, Scale, Share2, Trash2 } from "lucide-react";
 import { useMemo } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { PropertyCard } from "@/components/property-card";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { properties } from "@/lib/data";
 import { useAppStore } from "@/lib/store";
+import { MOTION_DURATIONS, MOTION_EASINGS, useReducedMotion } from "@/lib/motion";
 
 export const Route = createFileRoute("/shortlist")({
   head: () => ({
@@ -24,6 +26,7 @@ export const Route = createFileRoute("/shortlist")({
 
 export default function ShortlistPage() {
   const { shortlist, selectedCity, language, toggleShortlist, clearShortlist } = useAppStore();
+  const prefersReduced = useReducedMotion();
 
   const savedProperties = useMemo(() => {
     return properties.filter((p) => shortlist.includes(p.id));
@@ -88,7 +91,7 @@ export default function ShortlistPage() {
                   href={whatsappUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center gap-2 rounded-xs bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-md transition-transform hover:scale-105"
+                  className="inline-flex items-center justify-center gap-2 rounded-xs bg-[#25D366] px-5 py-3 text-sm font-semibold text-white shadow-md transition-transform duration-base ease-out hover:scale-[1.02] active:scale-[0.97]"
                 >
                   <Share2 className="size-4" />
                   {language === "en"
@@ -105,22 +108,52 @@ export default function ShortlistPage() {
       <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         {savedProperties.length > 0 ? (
           <div className="space-y-16">
-            <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {savedProperties.map((property, index) => (
-                <div key={property.id} className="relative group">
-                  <PropertyCard property={property} index={index} />
-                  <button
-                    type="button"
-                    onClick={() => toggleShortlist(property.id)}
-                    className="absolute top-4 right-4 z-20 grid size-9 place-items-center rounded-full bg-background/80 text-destructive backdrop-blur-md transition-colors hover:bg-destructive hover:text-white"
-                    title="Remove from shortlist"
-                    aria-label="Remove from shortlist"
+            <AnimatePresence mode="popLayout" initial={false}>
+              <motion.div
+                key="shortlist-grid"
+                layout={!prefersReduced ? "position" : false}
+                transition={{ duration: 0.3, ease: MOTION_EASINGS.premium }}
+                className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3"
+              >
+                {savedProperties.map((property, index) => (
+                  <motion.div
+                    key={property.id}
+                    layout={!prefersReduced ? "position" : false}
+                    initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 16 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={
+                      prefersReduced
+                        ? { opacity: 0, transition: { duration: 0.05 } }
+                        : {
+                            opacity: 0,
+                            scale: 0.96,
+                            transition: {
+                              duration: MOTION_DURATIONS.fast,
+                              ease: MOTION_EASINGS.in,
+                            },
+                          }
+                    }
+                    transition={{
+                      duration: 0.3,
+                      ease: MOTION_EASINGS.premium,
+                      layout: { duration: 0.3, ease: MOTION_EASINGS.premium },
+                    }}
+                    className="relative group"
                   >
-                    <Trash2 className="size-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
+                    <PropertyCard property={property} index={index} />
+                    <button
+                      type="button"
+                      onClick={() => toggleShortlist(property.id)}
+                      className="absolute top-4 right-4 z-20 grid size-9 place-items-center rounded-full bg-background/80 text-destructive backdrop-blur-md transition-all duration-fast ease-out hover:bg-destructive hover:text-white active:scale-95"
+                      title="Remove from shortlist"
+                      aria-label="Remove from shortlist"
+                    >
+                      <Trash2 className="size-4" />
+                    </button>
+                  </motion.div>
+                ))}
+              </motion.div>
+            </AnimatePresence>
 
             {/* SIDE-BY-SIDE COMPARISON MATRIX (When 2 or more properties are shortlisted) */}
             {savedProperties.length >= 2 && (

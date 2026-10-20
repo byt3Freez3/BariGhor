@@ -12,6 +12,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { PropertyCard } from "@/components/property-card";
+import { AnimatedPropertyGrid } from "@/components/animated-property-grid";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { filterProperties, properties } from "@/lib/data";
@@ -456,23 +457,12 @@ function CitySearchPage() {
 
       {/* Results Grid */}
       <section className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
-        {results.length > 0 ? (
-          <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {results.map((property, idx) => (
-              <PropertyCard key={property.id} property={property} index={idx} />
-            ))}
-          </div>
-        ) : (
-          <div className="rounded-md border border-dashed border-border bg-card p-16 text-center">
-            <p className="font-display text-2xl font-bold">No residences found</p>
-            <p className="mt-2 text-sm text-muted-foreground">
-              Try adjusting your query or filter parameters.
-            </p>
-            <Button onClick={handleResetFilters} className="mt-6" variant="outline">
-              Clear All Filters
-            </Button>
-          </div>
-        )}
+        <AnimatedPropertyGrid
+          properties={results}
+          onResetFilters={handleResetFilters}
+          emptyTitle="No residences found"
+          emptySubtitle="Try adjusting your query or filter parameters."
+        />
       </section>
 
       <SiteFooter />

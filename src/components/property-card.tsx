@@ -5,25 +5,39 @@ import { Button } from "@/components/ui/button";
 import { Property } from "@/lib/data";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { useAppStore } from "@/lib/store";
-import { MOTION_DURATIONS, MOTION_EASINGS } from "@/lib/motion";
+import { MOTION_DURATIONS, MOTION_EASINGS, useReducedMotion } from "@/lib/motion";
 import { BlurImage } from "@/components/blur-image";
 
 export function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
+  const prefersReduced = useReducedMotion();
   const citySlug = property.citySlug || (property.localitySlug === "new-town" ? "new-town" : "kolkata");
   const { isShortlisted, toggleShortlist } = useAppStore();
   const saved = isShortlisted(property.id);
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 16 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-40px" }}
+      layout={!prefersReduced ? "position" : false}
+      initial={prefersReduced ? { opacity: 0 } : { opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={
+        prefersReduced
+          ? { opacity: 0, transition: { duration: 0.05 } }
+          : {
+              opacity: 0,
+              scale: 0.97,
+              transition: {
+                duration: MOTION_DURATIONS.fast,
+                ease: MOTION_EASINGS.in,
+              },
+            }
+      }
       transition={{
-        duration: MOTION_DURATIONS.slow,
-        delay: Math.min(index * 0.06, 0.3),
+        duration: 0.3,
+        delay: prefersReduced ? 0 : Math.min((index % 6) * 0.05, 0.25),
         ease: MOTION_EASINGS.premium,
+        layout: { duration: 0.3, ease: MOTION_EASINGS.premium },
       }}
-      whileHover={{ y: -4 }}
+      whileHover={prefersReduced ? undefined : { y: -4 }}
       className="group flex flex-col overflow-hidden rounded-xs border border-black/5 bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-muted">
@@ -144,5 +158,37 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
         </div>
       </div>
     </motion.article>
+  );
+}
+
+export function PropertyCardSkeleton() {
+  return (
+    <div
+      aria-hidden="true"
+      className="flex flex-col overflow-hidden rounded-xs border border-black/5 bg-card shadow-xs animate-pulse"
+    >
+      <div className="relative aspect-[16/10] bg-muted/70" />
+      <div className="flex flex-1 flex-col p-6">
+        <div className="flex items-center gap-2">
+          <div className="h-3.5 w-24 rounded-xs bg-muted/60" />
+          <span className="text-muted/40">·</span>
+          <div className="h-3 w-32 rounded-xs bg-muted/40" />
+        </div>
+        <div className="mt-3 space-y-2">
+          <div className="h-6 w-4/5 rounded-xs bg-muted/70" />
+          <div className="h-3 w-1/2 rounded-xs bg-muted/40" />
+        </div>
+        <div className="mt-4 grid grid-cols-3 gap-2 border-y border-border py-3">
+          <div className="h-3.5 rounded-xs bg-muted/50" />
+          <div className="h-3.5 rounded-xs bg-muted/50" />
+          <div className="h-3.5 rounded-xs bg-muted/50" />
+        </div>
+        <div className="mt-3 h-8 w-full rounded-xs bg-muted/30" />
+        <div className="mt-6 flex items-center gap-2 pt-2">
+          <div className="h-8 flex-1 rounded-xs bg-muted/60" />
+          <div className="h-8 w-24 rounded-xs bg-muted/60" />
+        </div>
+      </div>
+    </div>
   );
 }
