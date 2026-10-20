@@ -1,6 +1,7 @@
 import { useState, useId, useEffect } from "react";
 import { IndianRupee, Landmark, ShieldCheck, Sparkles, TrendingUp } from "lucide-react";
 import { formatINR } from "@/lib/utils";
+import { useReducedMotion } from "@/lib/motion";
 
 function calculateEmi(principal: number, annualRate: number, years: number): number {
   if (principal <= 0 || annualRate <= 0 || years <= 0) return 0;
@@ -12,8 +13,6 @@ function calculateEmi(principal: number, annualRate: number, years: number): num
   return Math.round(emi);
 }
 
-
-
 export function EmiCalculator({
   initialLoanLakhs = 105,
   initialYears = 20,
@@ -23,6 +22,7 @@ export function EmiCalculator({
   initialYears?: number;
   compact?: boolean;
 }) {
+  const prefersReduced = useReducedMotion();
   const [loanLakhs, setLoanLakhs] = useState(initialLoanLakhs);
   const [years, setYears] = useState(initialYears);
 
@@ -36,12 +36,18 @@ export function EmiCalculator({
   const tenureSliderId = useId();
   const prevEmiRef = useState({ current: rawEmi })[0];
 
-  // Smooth number transition
+  // Smooth number transition (200ms)
   useEffect(() => {
+    if (prefersReduced) {
+      setDisplayEmi(rawEmi);
+      prevEmiRef.current = rawEmi;
+      return;
+    }
+
     let startTimestamp: number | null = null;
     const startValue = prevEmiRef.current || rawEmi;
     const endValue = rawEmi;
-    const duration = 250;
+    const duration = 200;
 
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -57,7 +63,7 @@ export function EmiCalculator({
 
     const animId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(animId);
-  }, [rawEmi, prevEmiRef]);
+  }, [rawEmi, prevEmiRef, prefersReduced]);
 
   return (
     <div className={compact ? "w-full" : "grid gap-12 lg:grid-cols-[1fr_1.15fr] lg:items-center"}>

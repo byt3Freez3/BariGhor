@@ -23,6 +23,7 @@ import { EmiCalculator } from "@/components/emi-calculator";
 import { HeroSearch } from "@/components/hero-search";
 import { PropertyCard } from "@/components/property-card";
 import { Reveal } from "@/components/reveal";
+import { CountUp } from "@/components/count-up";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import {
@@ -350,7 +351,7 @@ function CityHomePage() {
                   </div>
                   <div>
                     <p className="font-display text-2xl font-bold tracking-tight text-foreground">
-                      {item.value}
+                      <CountUp value={item.value} />
                     </p>
                     <p className="text-sm font-semibold text-foreground">{item.label}</p>
                     <p className="text-xs text-muted-foreground">{item.sub}</p>

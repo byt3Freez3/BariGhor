@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { useReducedMotion } from "@/lib/motion";
 import {
   ArrowLeft,
   Building,
@@ -113,6 +115,12 @@ export default function LocalityDetailPage() {
   const { city, locality } = Route.useLoaderData();
   const { language } = useAppStore();
   const localProperties = properties.filter((p) => p.localitySlug === locality.slug);
+  const prefersReduced = useReducedMotion();
+  const [hasAnimatedChart, setHasAnimatedChart] = useState(false);
+
+  useEffect(() => {
+    setHasAnimatedChart(true);
+  }, []);
 
   const chartData = locality.price_trend?.historicalRates || [
     { year: "2023", avgRate: 7000 },
@@ -389,6 +397,9 @@ export default function LocalityDetailPage() {
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#rateGradient)"
+                    isAnimationActive={!hasAnimatedChart && !prefersReduced}
+                    animationDuration={600}
+                    animationEasing="ease-out"
                   />
                 </AreaChart>
               </ResponsiveContainer>
