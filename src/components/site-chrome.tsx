@@ -80,16 +80,16 @@ export function SiteHeader({
   }, [selectedCity]);
 
   // Header background logic:
-  // When over hero (inverse): transparent at scrollY 0, transitioning to solid deep teal (#0A3632) after 80px scroll.
-  // When sticky or inner page: solid background with border.
+  // When over hero (inverse): transparent at scrollY 0, transitioning smoothly to solid deep teal (#0A3632) after 80px scroll.
+  // Using fixed positioning prevents layout snaps between absolute and sticky.
   const isSolid = sticky || !inverse || scrolled;
-  const headerClasses = isSolid
-    ? inverse
-      ? "sticky top-0 z-40 bg-[#0A3632] text-white border-b border-white/10 shadow-md backdrop-blur-md site-header transition-all duration-200"
-      : "sticky top-0 z-40 bg-background/95 text-foreground border-b border-border shadow-xs backdrop-blur-md site-header transition-all duration-200"
-    : "absolute inset-x-0 top-0 z-40 bg-transparent text-hero-foreground border-b border-hero-foreground/15 site-header transition-all duration-200";
+  const headerClasses = inverse
+    ? scrolled
+      ? "fixed inset-x-0 top-0 z-40 bg-[#0A3632] text-white border-b border-white/10 shadow-md backdrop-blur-md site-header transition-[background-color,border-color,box-shadow,color] duration-base ease-premium"
+      : "fixed inset-x-0 top-0 z-40 bg-transparent text-hero-foreground border-b border-hero-foreground/15 shadow-none site-header transition-[background-color,border-color,box-shadow,color] duration-base ease-premium"
+    : "sticky top-0 z-40 bg-background/95 text-foreground border-b border-border shadow-xs backdrop-blur-md site-header transition-[background-color,border-color,box-shadow,color] duration-base ease-premium";
 
-  const isDarkTone = inverse || (isSolid && inverse);
+  const isDarkTone = inverse;
 
   return (
     <>
@@ -427,7 +427,7 @@ export function SiteHeader({
 
         {/* Mobile Navigation Drawer */}
         {mobileNavOpen && (
-          <div className="border-t border-border bg-background px-6 py-6 text-foreground shadow-2xl lg:hidden max-h-[85vh] overflow-y-auto animate-in slide-in-from-top-2 duration-200">
+          <div className="border-t border-border bg-background px-6 py-6 text-foreground shadow-2xl lg:hidden max-h-[85vh] overflow-y-auto animate-in slide-in-from-top-2 duration-base ease-premium">
             <nav className="grid gap-2 text-base font-medium">
               <Link
                 to="/$citySlug/properties"
