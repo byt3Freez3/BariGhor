@@ -50,14 +50,13 @@ export function WhatsAppAction({
           href={waUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="group flex items-center gap-2.5 rounded-full bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground shadow-2xl transition-all duration-300 hover:scale-105 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 md:px-6 md:py-4"
+          className="group flex items-center gap-2.5 rounded-full bg-primary px-5 py-3.5 text-sm font-semibold text-primary-foreground shadow-2xl transition-[transform,background-color] duration-base ease-premium hover:scale-[1.03] hover:bg-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 md:px-6 md:py-4"
           aria-label="Enquire on WhatsApp"
         >
-          <span className="relative flex size-3">
-            <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-            <span className="relative inline-flex size-3 rounded-full bg-emerald-500" />
+          <span className="relative flex size-2.5">
+            <span className="relative inline-flex size-2.5 rounded-full bg-emerald-400" />
           </span>
-          <MessageCircle className="size-5 transition-transform duration-300 group-hover:rotate-12" />
+          <MessageCircle className="size-5 transition-transform duration-base ease-premium group-hover:rotate-6" />
           <span className="tracking-wide">Enquire on WhatsApp</span>
         </a>
       </aside>

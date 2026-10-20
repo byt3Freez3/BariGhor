@@ -248,7 +248,7 @@ function PropertyDetailPage() {
             <button
               type="button"
               onClick={() => toggleShortlist(property.id)}
-              className={`absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold backdrop-blur-xs transition-transform active:scale-95 ${
+              className={`absolute right-4 top-4 z-10 flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-semibold backdrop-blur-xs transition-[transform,background-color] duration-fast ease-premium active:scale-[0.97] ${
                 saved
                   ? "bg-rose-500 text-white shadow-lg"
                   : "bg-black/50 text-white hover:bg-black/70"

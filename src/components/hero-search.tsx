@@ -386,7 +386,7 @@ export function HeroSearch({
         <Button
           type="submit"
           size="lg"
-          className="h-full min-h-[58px] rounded-none bg-primary px-7 text-sm font-semibold text-primary-foreground transition-all duration-200 hover:bg-accent hover:text-primary"
+          className="h-full min-h-[58px] rounded-none bg-primary px-7 text-sm font-semibold text-primary-foreground transition-[background-color,color] duration-base ease-premium hover:bg-accent hover:text-primary"
         >
           <Search className="mr-2 size-4" />
           {language === "en" ? "Explore" : "খুঁজুন"}
