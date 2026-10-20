@@ -200,14 +200,26 @@ describe("Property Inventory Data Invariants", () => {
   });
 });
 
+import fs from "node:fs";
+import path from "node:path";
 import { MOTION_DURATIONS, MOTION_DURATIONS_MS, MOTION_EASINGS } from "@/lib/motion";
+import { PropertyCardSkeleton } from "@/components/property-card";
+import { AnimatedPropertyGrid } from "@/components/animated-property-grid";
+import { CountUp } from "@/components/count-up";
+import { BlurImage } from "@/components/blur-image";
+import { Reveal } from "@/components/reveal";
 
-describe("Motion Token System Invariants (Step 0)", () => {
+describe("Motion Token System Invariants (Step 0 - Step 9)", () => {
   it("defines strictly allowed durations with none exceeding 600ms", () => {
     expect(MOTION_DURATIONS_MS.fast).toBe(150);
     expect(MOTION_DURATIONS_MS.base).toBe(250);
     expect(MOTION_DURATIONS_MS.slow).toBe(400);
     expect(MOTION_DURATIONS_MS.page).toBe(500);
+
+    expect(MOTION_DURATIONS.fast).toBe(0.15);
+    expect(MOTION_DURATIONS.base).toBe(0.25);
+    expect(MOTION_DURATIONS.slow).toBe(0.4);
+    expect(MOTION_DURATIONS.page).toBe(0.5);
 
     Object.values(MOTION_DURATIONS_MS).forEach((duration) => {
       expect(duration).toBeLessThanOrEqual(600);
@@ -220,4 +232,36 @@ describe("Motion Token System Invariants (Step 0)", () => {
     expect(MOTION_EASINGS.out).toEqual([0.16, 1, 0.3, 1]);
     expect(MOTION_EASINGS.in).toEqual([0.7, 0, 0.84, 0]);
   });
+
+  it("ensures styles.css custom properties match exact token definitions", () => {
+    const cssPath = path.resolve(process.cwd(), "src/styles.css");
+    const cssContent = fs.readFileSync(cssPath, "utf-8");
+
+    expect(cssContent).toContain("--duration-fast: 150ms");
+    expect(cssContent).toContain("--duration-base: 250ms");
+    expect(cssContent).toContain("--duration-slow: 400ms");
+    expect(cssContent).toContain("--duration-page: 500ms");
+
+    expect(cssContent).toContain("--ease-premium: cubic-bezier(0.22, 1, 0.36, 1)");
+    expect(cssContent).toContain("--ease-out: cubic-bezier(0.16, 1, 0.3, 1)");
+    expect(cssContent).toContain("--ease-in: cubic-bezier(0.7, 0, 0.84, 0)");
+  });
+
+  it("ensures prefers-reduced-motion media query disables transforms and animations in styles.css", () => {
+    const cssPath = path.resolve(process.cwd(), "src/styles.css");
+    const cssContent = fs.readFileSync(cssPath, "utf-8");
+
+    expect(cssContent).toContain("@media (prefers-reduced-motion: reduce)");
+    expect(cssContent).toContain("animation-duration: 0.01ms !important");
+    expect(cssContent).toContain("transition-duration: 0.01ms !important");
+  });
+
+  it("exports all motion-aware components cleanly", () => {
+    expect(typeof PropertyCardSkeleton).toBe("function");
+    expect(typeof AnimatedPropertyGrid).toBe("function");
+    expect(typeof CountUp).toBe("function");
+    expect(typeof BlurImage).toBe("function");
+    expect(typeof Reveal).toBe("function");
+  });
 });
+
