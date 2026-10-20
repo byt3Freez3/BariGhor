@@ -4,6 +4,7 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { cities, tier3Districts } from "@/data/regions";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { Button } from "@/components/ui/button";
+import { Reveal } from "@/components/reveal";
 
 export const Route = createFileRoute("/cities/")({
   head: () => ({
@@ -143,16 +144,20 @@ function CitiesIndexPage() {
           </div>
 
           <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {tier1Cities.map((city) => (
-              <article
+            {tier1Cities.map((city, idx) => (
+              <Reveal
                 key={city.slug}
-                className="group flex flex-col overflow-hidden rounded-xs border border-border bg-card shadow-xs transition-shadow hover:shadow-xl"
+                index={idx}
+                as="article"
+                className="group flex flex-col overflow-hidden rounded-xs border border-border bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl"
               >
                 <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                   <img
                     src={city.heroImage}
                     alt={city.nameEn}
-                    className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                    className="size-full object-cover transition-transform duration-base ease-out group-hover:scale-[1.03]"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
                   <div className="absolute top-4 left-4">
@@ -202,7 +207,7 @@ function CitiesIndexPage() {
                     </Link>
                   </div>
                 </div>
-              </article>
+              </Reveal>
             ))}
           </div>
         </div>
@@ -227,10 +232,11 @@ function CitiesIndexPage() {
           </div>
 
           <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {tier2Cities.map((city) => (
-              <div
+            {tier2Cities.map((city, idx) => (
+              <Reveal
                 key={city.slug}
-                className="group flex flex-col justify-between rounded-xs border border-border bg-card p-6 shadow-xs transition-all hover:shadow-md hover:border-accent/50"
+                index={idx}
+                className="group flex flex-col justify-between rounded-xs border border-border bg-card p-6 shadow-xs transition-[box-shadow,border-color] duration-base ease-out hover:shadow-md hover:border-accent/50"
               >
                 <div>
                   <div className="flex items-start justify-between">
@@ -274,7 +280,7 @@ function CitiesIndexPage() {
                     View {city.nameEn} Homes <ArrowRight className="size-3.5" />
                   </Link>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>

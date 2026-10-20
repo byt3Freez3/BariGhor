@@ -11,6 +11,7 @@ import {
 import { z } from "zod";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
+import { Reveal } from "@/components/reveal";
 import { properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
@@ -87,14 +88,16 @@ export default function CityLocalitiesPage() {
       <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         {cityLocalities.length > 0 ? (
           <div className="space-y-16">
-            {cityLocalities.map((loc) => {
+            {cityLocalities.map((loc, idx) => {
               const locProps = properties.filter((p) => p.localitySlug === loc.slug);
               const homeCount = loc.propertyCount || locProps.length;
 
               return (
-                <article
+                <Reveal
                   key={loc.slug}
-                  className="grid overflow-hidden rounded-xs border border-border bg-card shadow-xs transition-shadow duration-300 hover:shadow-xl lg:grid-cols-[1.2fr_1.4fr]"
+                  index={idx}
+                  as="article"
+                  className="grid overflow-hidden rounded-xs border border-border bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl lg:grid-cols-[1.2fr_1.4fr]"
                 >
                   {/* Left Hero Image */}
                   <div className="relative min-h-[340px] overflow-hidden bg-muted">
@@ -104,7 +107,8 @@ export default function CityLocalitiesPage() {
                       width={800}
                       height={500}
                       loading="lazy"
-                      className="size-full object-cover transition-transform duration-700 hover:scale-105"
+                      decoding="async"
+                      className="size-full object-cover transition-transform duration-base ease-out hover:scale-[1.03]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
 
@@ -198,7 +202,7 @@ export default function CityLocalitiesPage() {
                       </Link>
                     </div>
                   </div>
-                </article>
+                </Reveal>
               );
             })}
           </div>

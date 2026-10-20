@@ -42,15 +42,19 @@ export function Reveal({
   distance = 16,
 }: RevealProps) {
   const ref = useRef<HTMLElement | null>(null);
+  const [mounted, setMounted] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
   const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     // If reduced motion is requested or in SSR/unsupported environments, show immediately
     if (prefersReduced || typeof window === "undefined" || !("IntersectionObserver" in window)) {
+      setMounted(true);
       setIsVisible(true);
       return;
     }
+
+    setMounted(true);
 
     const node = ref.current;
     if (!node) return;
@@ -83,8 +87,8 @@ export function Reveal({
     ? delay
     : Math.min(index * 70, 350); // 70ms stagger step, capped at 350ms
 
-  // If prefers-reduced-motion, no transform or transition run
-  if (prefersReduced) {
+  // If not yet hydrated or prefers-reduced-motion, render fully visible without transforms
+  if (!mounted || prefersReduced) {
     return (
       <Component ref={ref} className={className} style={style}>
         {children}

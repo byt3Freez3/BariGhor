@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { EmiCalculator } from "@/components/emi-calculator";
 import { HeroSearch } from "@/components/hero-search";
 import { PropertyCard } from "@/components/property-card";
+import { Reveal } from "@/components/reveal";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import {
@@ -343,7 +344,7 @@ function CityHomePage() {
             {trustSignals.map((item, idx) => {
               const Icon = item.Icon;
               return (
-                <div key={idx} className="flex items-start gap-4">
+                <Reveal key={idx} index={idx} className="flex items-start gap-4">
                   <div className="grid size-12 shrink-0 place-items-center rounded-xs bg-primary/10 text-primary">
                     <Icon className="size-6 text-accent" />
                   </div>
@@ -354,7 +355,7 @@ function CityHomePage() {
                     <p className="text-sm font-semibold text-foreground">{item.label}</p>
                     <p className="text-xs text-muted-foreground">{item.sub}</p>
                   </div>
-                </div>
+                </Reveal>
               );
             })}
           </div>
@@ -419,26 +420,27 @@ function CityHomePage() {
             </div>
 
             <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
-              {BUDGET_BANDS.map((b) => (
-                <Link
-                  key={b.slug}
-                  to="/$citySlug/properties"
-                  params={{ citySlug: city.slug }}
-                  search={{ budget: b.slug }}
-                  className="group flex flex-col justify-between rounded-xs border border-border bg-card p-5 shadow-xs transition-all duration-200 hover:-translate-y-1 hover:border-accent hover:shadow-lg"
-                >
-                  <div>
-                    <span className="font-mono text-xs font-bold text-accent">{b.range}</span>
-                    <h4 className="mt-2 font-display text-lg font-bold text-foreground group-hover:text-primary">
-                      {language === "en" ? b.title : b.titleBn}
-                    </h4>
-                    <p className="mt-2 text-xs text-muted-foreground line-clamp-2">{b.sub}</p>
-                  </div>
-                  <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between text-xs font-semibold text-accent">
-                    <span>Explore band</span>
-                    <ArrowRight className="size-3 transition-transform group-hover:translate-x-1" />
-                  </div>
-                </Link>
+              {BUDGET_BANDS.map((b, idx) => (
+                <Reveal key={b.slug} index={idx}>
+                  <Link
+                    to="/$citySlug/properties"
+                    params={{ citySlug: city.slug }}
+                    search={{ budget: b.slug }}
+                    className="group flex h-full flex-col justify-between rounded-xs border border-border bg-card p-5 shadow-xs transition-[transform,box-shadow,border-color] duration-base ease-out hover:-translate-y-1 hover:border-accent hover:shadow-lg"
+                  >
+                    <div>
+                      <span className="font-mono text-xs font-bold text-accent">{b.range}</span>
+                      <h4 className="mt-2 font-display text-lg font-bold text-foreground group-hover:text-primary">
+                        {language === "en" ? b.title : b.titleBn}
+                      </h4>
+                      <p className="mt-2 text-xs text-muted-foreground line-clamp-2">{b.sub}</p>
+                    </div>
+                    <div className="mt-4 pt-3 border-t border-border/50 flex items-center justify-between text-xs font-semibold text-accent">
+                      <span>Explore band</span>
+                      <ArrowRight className="size-3 transition-transform duration-base ease-out group-hover:translate-x-1" />
+                    </div>
+                  </Link>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -454,24 +456,25 @@ function CityHomePage() {
                 {language === "en" ? "Browse by BHK Configuration" : "বিএইচকে অনুযায়ী মাপ"}
               </h3>
               <div className="mt-6 grid grid-cols-2 gap-3">
-                {BHK_BANDS.map((item) => (
-                  <Link
-                    key={item.slug}
-                    to="/$citySlug/properties"
-                    params={{ citySlug: city.slug }}
-                    search={{ bhk: item.slug }}
-                    className="group rounded-xs border border-border bg-card p-4 transition-all hover:border-accent hover:shadow-md"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="font-display text-xl font-bold text-foreground group-hover:text-primary">
-                        {item.label}
-                      </span>
-                      <span className="text-[11px] text-muted-foreground font-bengali">
-                        {item.bn}
-                      </span>
-                    </div>
-                    <p className="mt-1 text-xs text-muted-foreground">{item.sub}</p>
-                  </Link>
+                {BHK_BANDS.map((item, idx) => (
+                  <Reveal key={item.slug} index={idx}>
+                    <Link
+                      to="/$citySlug/properties"
+                      params={{ citySlug: city.slug }}
+                      search={{ bhk: item.slug }}
+                      className="group block rounded-xs border border-border bg-card p-4 transition-[box-shadow,border-color] duration-base ease-out hover:border-accent hover:shadow-md"
+                    >
+                      <div className="flex items-center justify-between">
+                        <span className="font-display text-xl font-bold text-foreground group-hover:text-primary">
+                          {item.label}
+                        </span>
+                        <span className="text-[11px] text-muted-foreground font-bengali">
+                          {item.bn}
+                        </span>
+                      </div>
+                      <p className="mt-1 text-xs text-muted-foreground">{item.sub}</p>
+                    </Link>
+                  </Reveal>
                 ))}
               </div>
             </div>
@@ -485,30 +488,31 @@ function CityHomePage() {
                 {language === "en" ? "Browse by Possession Timeline" : "হস্তান্তর সময়সীমা"}
               </h3>
               <div className="mt-6 space-y-3">
-                {POSSESSION_BANDS.map((item) => (
-                  <Link
-                    key={item.slug}
-                    to="/$citySlug/properties"
-                    params={{ citySlug: city.slug }}
-                    search={{ possession: item.slug }}
-                    className="group flex items-center justify-between rounded-xs border border-border bg-card p-4 transition-all hover:border-accent hover:shadow-md"
-                  >
-                    <div className="flex items-center gap-3">
-                      <div className="grid size-9 place-items-center rounded-xs bg-primary/10 text-primary">
-                        <Calendar className="size-4 text-accent" />
+                {POSSESSION_BANDS.map((item, idx) => (
+                  <Reveal key={item.slug} index={idx}>
+                    <Link
+                      to="/$citySlug/properties"
+                      params={{ citySlug: city.slug }}
+                      search={{ possession: item.slug }}
+                      className="group flex items-center justify-between rounded-xs border border-border bg-card p-4 transition-[box-shadow,border-color] duration-base ease-out hover:border-accent hover:shadow-md"
+                    >
+                      <div className="flex items-center gap-3">
+                        <div className="grid size-9 place-items-center rounded-xs bg-primary/10 text-primary">
+                          <Calendar className="size-4 text-accent" />
+                        </div>
+                        <div>
+                          <p className="font-display text-base font-bold text-foreground group-hover:text-primary">
+                            {item.label}{" "}
+                            <span className="text-xs font-normal text-muted-foreground">
+                              ({item.bn})
+                            </span>
+                          </p>
+                          <p className="text-xs text-muted-foreground">{item.sub}</p>
+                        </div>
                       </div>
-                      <div>
-                        <p className="font-display text-base font-bold text-foreground group-hover:text-primary">
-                          {item.label}{" "}
-                          <span className="text-xs font-normal text-muted-foreground">
-                            ({item.bn})
-                          </span>
-                        </p>
-                        <p className="text-xs text-muted-foreground">{item.sub}</p>
-                      </div>
-                    </div>
-                    <ArrowRight className="size-4 text-accent transition-transform group-hover:translate-x-1" />
-                  </Link>
+                      <ArrowRight className="size-4 text-accent transition-transform duration-base ease-out group-hover:translate-x-1" />
+                    </Link>
+                  </Reveal>
                 ))}
               </div>
             </div>
@@ -539,10 +543,11 @@ function CityHomePage() {
             </div>
 
             <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {cityLocalities.map((loc) => (
-                <div
+              {cityLocalities.map((loc, idx) => (
+                <Reveal
                   key={loc.slug}
-                  className="group flex flex-col overflow-hidden rounded-xs border border-border bg-card shadow-xs transition-shadow hover:shadow-xl"
+                  index={idx}
+                  className="group flex flex-col overflow-hidden rounded-xs border border-border bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl"
                 >
                   <div className="relative aspect-[16/10] overflow-hidden bg-muted">
                     <img
@@ -551,7 +556,8 @@ function CityHomePage() {
                       width={600}
                       height={375}
                       loading="lazy"
-                      className="size-full object-cover transition-transform duration-700 group-hover:scale-105"
+                      decoding="async"
+                      className="size-full object-cover transition-transform duration-base ease-out group-hover:scale-[1.03]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                     <div className="absolute bottom-4 left-4 right-4 text-white">
@@ -577,7 +583,7 @@ function CityHomePage() {
                       Read neighbourhood dossier <ArrowRight className="size-3.5" />
                     </Link>
                   </div>
-                </div>
+                </Reveal>
               ))}
             </div>
           </div>
@@ -703,10 +709,11 @@ function CityHomePage() {
           </div>
 
           <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-            {journalArticles.slice(0, 3).map((article) => (
-              <div
+            {journalArticles.slice(0, 3).map((article, idx) => (
+              <Reveal
                 key={article.slug}
-                className="group flex flex-col justify-between rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow hover:shadow-lg"
+                index={idx}
+                className="group flex flex-col justify-between rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-lg"
               >
                 <div>
                   <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -731,7 +738,7 @@ function CityHomePage() {
                     Read field guide <ArrowRight className="size-3.5" />
                   </Link>
                 </div>
-              </div>
+              </Reveal>
             ))}
           </div>
         </div>
