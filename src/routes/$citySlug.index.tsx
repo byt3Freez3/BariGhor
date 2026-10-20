@@ -279,23 +279,24 @@ function CityHomePage() {
       <section className="relative flex min-h-[92vh] items-center justify-center overflow-hidden bg-hero text-hero-foreground">
         <div
           className="ken-burns absolute inset-0 bg-cover bg-center opacity-35"
-          style={{ backgroundImage: `url(${city.heroImage || imagery.heroImage})` }}
+          style={{
+            backgroundImage: `url(${city.heroImage || imagery.heroImage})`,
+            viewTransitionName: "city-hero-image",
+          }}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-hero via-hero/65 to-hero/30" />
 
         <div className="relative z-10 mx-auto max-w-7xl px-5 py-28 text-center lg:px-8">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="mx-auto max-w-4xl"
-          >
+          <div className="mx-auto max-w-4xl">
             <p className="inline-flex items-center gap-2 rounded-full border border-hero-foreground/20 bg-hero-foreground/10 px-4 py-1.5 text-xs font-bold tracking-widest text-accent uppercase">
               <MapPin className="size-3.5 text-accent" />
               {city.nameEn} · {city.nameBn} · Avg ₹{city.avgPricePerSqft.toLocaleString("en-IN")}/sq ft
             </p>
 
-            <h1 className="mt-6 font-display text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl">
+            <h1
+              className="mt-6 font-display text-4xl font-extrabold tracking-tight sm:text-6xl lg:text-7xl"
+              style={{ viewTransitionName: "city-hero-title" }}
+            >
               {language === "en" ? (
                 <>
                   Find your{" "}
@@ -331,7 +332,7 @@ function CityHomePage() {
                 Browse all {city.nameEn} homes <ArrowRight className="size-3.5" />
               </Link>
             </div>
-          </motion.div>
+          </div>
         </div>
       </section>
 
