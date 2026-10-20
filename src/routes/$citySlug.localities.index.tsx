@@ -12,6 +12,7 @@ import { z } from "zod";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { Reveal } from "@/components/reveal";
+import { BlurImage } from "@/components/blur-image";
 import { properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
@@ -101,13 +102,11 @@ export default function CityLocalitiesPage() {
                 >
                   {/* Left Hero Image */}
                   <div className="relative min-h-[340px] overflow-hidden bg-muted">
-                    <img
+                    <BlurImage
                       src={loc.image || loc.hero_image}
                       alt={loc.name}
                       width={800}
                       height={500}
-                      loading="lazy"
-                      decoding="async"
                       className="size-full object-cover transition-transform duration-base ease-out hover:scale-[1.03]"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />

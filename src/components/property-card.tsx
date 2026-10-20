@@ -6,6 +6,7 @@ import { Property } from "@/lib/data";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { useAppStore } from "@/lib/store";
 import { MOTION_DURATIONS, MOTION_EASINGS } from "@/lib/motion";
+import { BlurImage } from "@/components/blur-image";
 
 export function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const citySlug = property.citySlug || (property.localitySlug === "new-town" ? "new-town" : "kolkata");
@@ -26,13 +27,11 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
       className="group flex flex-col overflow-hidden rounded-xs border border-black/5 bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl"
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-muted">
-        <img
+        <BlurImage
           src={property.image_url}
           alt={property.title}
           width={800}
           height={500}
-          loading="lazy"
-          decoding="async"
           style={{ viewTransitionName: `prop-img-${property.slug}` }}
           className="size-full object-cover transition-transform duration-base ease-out group-hover:scale-[1.03]"
         />

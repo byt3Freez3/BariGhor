@@ -28,6 +28,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { EmiCalculator } from "@/components/emi-calculator";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
+import { BlurImage } from "@/components/blur-image";
 import { getPropertyBySlug, properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
@@ -218,14 +219,14 @@ function PropertyDetailPage() {
       <section className="border-b border-border bg-black/95 py-6">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="relative aspect-[16/9] w-full overflow-hidden rounded-xs bg-black/40 sm:aspect-[21/9]">
-            <img
+            <BlurImage
               src={gallery[activeImageIndex]}
               alt={`${property.title} - view ${activeImageIndex + 1}`}
               width={1200}
               height={600}
-              decoding="async"
+              isHero={activeImageIndex === 0}
               style={{ viewTransitionName: `prop-img-${property.slug}` }}
-              className="size-full object-cover transition-opacity duration-base ease-out"
+              className="size-full object-cover transition-transform duration-base ease-out"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 pointer-events-none" />
 
