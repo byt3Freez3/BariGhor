@@ -27,6 +27,9 @@ import { Route as LocalitiesSlugRouteImport } from './routes/localities.$slug'
 import { Route as PropertiesIndexRouteImport } from './routes/properties.index'
 import { Route as PropertiesSlugRouteImport } from './routes/properties.$slug'
 import { Route as PropertySlugRouteImport } from './routes/property.$slug'
+import { Route as ServicesIndexRouteImport } from './routes/services.index'
+import { Route as ServicesConstructionRouteImport } from './routes/services.construction'
+import { Route as ServicesInteriorsRouteImport } from './routes/services.interiors'
 import { Route as CitySlugLocalitiesIndexRouteImport } from './routes/$citySlug.localities.index'
 import { Route as CitySlugLocalitiesLocalitySlugRouteImport } from './routes/$citySlug.localities.$localitySlug'
 import { Route as CitySlugPropertiesIndexRouteImport } from './routes/$citySlug.properties.index'
@@ -122,6 +125,21 @@ const PropertySlugRoute = PropertySlugRouteImport.update({
   path: '/property/$slug',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ServicesIndexRoute = ServicesIndexRouteImport.update({
+  id: '/services/',
+  path: '/services/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesConstructionRoute = ServicesConstructionRouteImport.update({
+  id: '/services/construction',
+  path: '/services/construction',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ServicesInteriorsRoute = ServicesInteriorsRouteImport.update({
+  id: '/services/interiors',
+  path: '/services/interiors',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const CitySlugLocalitiesIndexRoute = CitySlugLocalitiesIndexRouteImport.update({
   id: '/localities/',
   path: '/localities/',
@@ -159,11 +177,14 @@ export interface FileRoutesByFullPath {
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/services/construction': typeof ServicesConstructionRoute
+  '/services/interiors': typeof ServicesInteriorsRoute
   '/$citySlug/': typeof CitySlugIndexRoute
   '/cities/': typeof CitiesIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/localities/': typeof LocalitiesIndexRoute
   '/properties/': typeof PropertiesIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/$citySlug/localities/$localitySlug': typeof CitySlugLocalitiesLocalitySlugRoute
   '/$citySlug/properties/$propertySlug': typeof CitySlugPropertiesPropertySlugRoute
   '/$citySlug/localities/': typeof CitySlugLocalitiesIndexRoute
@@ -182,11 +203,14 @@ export interface FileRoutesByTo {
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/services/construction': typeof ServicesConstructionRoute
+  '/services/interiors': typeof ServicesInteriorsRoute
   '/$citySlug': typeof CitySlugIndexRoute
   '/cities': typeof CitiesIndexRoute
   '/journal': typeof JournalIndexRoute
   '/localities': typeof LocalitiesIndexRoute
   '/properties': typeof PropertiesIndexRoute
+  '/services': typeof ServicesIndexRoute
   '/$citySlug/localities/$localitySlug': typeof CitySlugLocalitiesLocalitySlugRoute
   '/$citySlug/properties/$propertySlug': typeof CitySlugPropertiesPropertySlugRoute
   '/$citySlug/localities': typeof CitySlugLocalitiesIndexRoute
@@ -207,11 +231,14 @@ export interface FileRoutesById {
   '/localities/$slug': typeof LocalitiesSlugRoute
   '/properties/$slug': typeof PropertiesSlugRoute
   '/property/$slug': typeof PropertySlugRoute
+  '/services/construction': typeof ServicesConstructionRoute
+  '/services/interiors': typeof ServicesInteriorsRoute
   '/$citySlug/': typeof CitySlugIndexRoute
   '/cities/': typeof CitiesIndexRoute
   '/journal/': typeof JournalIndexRoute
   '/localities/': typeof LocalitiesIndexRoute
   '/properties/': typeof PropertiesIndexRoute
+  '/services/': typeof ServicesIndexRoute
   '/$citySlug/localities/$localitySlug': typeof CitySlugLocalitiesLocalitySlugRoute
   '/$citySlug/properties/$propertySlug': typeof CitySlugPropertiesPropertySlugRoute
   '/$citySlug/localities/': typeof CitySlugLocalitiesIndexRoute
@@ -233,11 +260,14 @@ export interface FileRouteTypes {
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/services/construction'
+    | '/services/interiors'
     | '/$citySlug/'
     | '/cities/'
     | '/journal/'
     | '/localities/'
     | '/properties/'
+    | '/services/'
     | '/$citySlug/localities/$localitySlug'
     | '/$citySlug/properties/$propertySlug'
     | '/$citySlug/localities/'
@@ -256,11 +286,14 @@ export interface FileRouteTypes {
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/services/construction'
+    | '/services/interiors'
     | '/$citySlug'
     | '/cities'
     | '/journal'
     | '/localities'
     | '/properties'
+    | '/services'
     | '/$citySlug/localities/$localitySlug'
     | '/$citySlug/properties/$propertySlug'
     | '/$citySlug/localities'
@@ -280,11 +313,14 @@ export interface FileRouteTypes {
     | '/localities/$slug'
     | '/properties/$slug'
     | '/property/$slug'
+    | '/services/construction'
+    | '/services/interiors'
     | '/$citySlug/'
     | '/cities/'
     | '/journal/'
     | '/localities/'
     | '/properties/'
+    | '/services/'
     | '/$citySlug/localities/$localitySlug'
     | '/$citySlug/properties/$propertySlug'
     | '/$citySlug/localities/'
@@ -303,10 +339,13 @@ export interface RootRouteChildren {
   LocalitiesSlugRoute: typeof LocalitiesSlugRoute
   PropertiesSlugRoute: typeof PropertiesSlugRoute
   PropertySlugRoute: typeof PropertySlugRoute
+  ServicesConstructionRoute: typeof ServicesConstructionRoute
+  ServicesInteriorsRoute: typeof ServicesInteriorsRoute
   CitiesIndexRoute: typeof CitiesIndexRoute
   JournalIndexRoute: typeof JournalIndexRoute
   LocalitiesIndexRoute: typeof LocalitiesIndexRoute
   PropertiesIndexRoute: typeof PropertiesIndexRoute
+  ServicesIndexRoute: typeof ServicesIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -437,6 +476,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof PropertySlugRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/services/': {
+      id: '/services/'
+      path: '/services'
+      fullPath: '/services/'
+      preLoaderRoute: typeof ServicesIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/construction': {
+      id: '/services/construction'
+      path: '/services/construction'
+      fullPath: '/services/construction'
+      preLoaderRoute: typeof ServicesConstructionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/services/interiors': {
+      id: '/services/interiors'
+      path: '/services/interiors'
+      fullPath: '/services/interiors'
+      preLoaderRoute: typeof ServicesInteriorsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/$citySlug/localities/': {
       id: '/$citySlug/localities/'
       path: '/localities'
@@ -512,10 +572,13 @@ const rootRouteChildren: RootRouteChildren = {
   LocalitiesSlugRoute: LocalitiesSlugRoute,
   PropertiesSlugRoute: PropertiesSlugRoute,
   PropertySlugRoute: PropertySlugRoute,
+  ServicesConstructionRoute: ServicesConstructionRoute,
+  ServicesInteriorsRoute: ServicesInteriorsRoute,
   CitiesIndexRoute: CitiesIndexRoute,
   JournalIndexRoute: JournalIndexRoute,
   LocalitiesIndexRoute: LocalitiesIndexRoute,
   PropertiesIndexRoute: PropertiesIndexRoute,
+  ServicesIndexRoute: ServicesIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

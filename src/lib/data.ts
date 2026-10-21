@@ -1629,6 +1629,49 @@ export const journalArticles: JournalArticle[] = [
       "Check our neighbourhood flood risk tag on every BariGhor listing.",
     ],
   },
+,
+  {
+    slug: "kolkata-monsoon-proof-interiors-guide",
+    title: "The Kolkata Homeowner's Guide to Monsoon-Proof Interiors & Marine Ply",
+    bengaliTitle: "বর্ষায় সুরক্ষিত ইন্টেরিয়র: মেরিন প্লাই ও আর্কিটেকচারাল ফিনিশ",
+    category: "Interior Architecture",
+    readTime: "6 min read",
+    date: "October 2026",
+    author: "BariGhor Interior Studio",
+    excerpt:
+      "Why standard commercial plywood delaminates during Bengal's 95% humidity months, and what specifications to demand for kitchens and wardrobes.",
+    content: [
+      "Bengal's subtropical monsoon delivers consecutive months with ambient relative humidity exceeding 90%. Under these conditions, standard MR commercial plywood absorbs ambient vapor, swelling at the core.",
+      "At BariGhor, our interior studio specifies IS-710 Marine Grade plywood (710 BWP) for all wet-zone carcasses, withstanding 72 hours of continuous boiling water immersion without ply separation.",
+      "We also mandate full-height aluminum anti-warp stiffeners inside all floor-to-ceiling wardrobe shutters over 7 feet tall.",
+    ],
+    keyTakeaways: [
+      "Demand certified IS-710 Marine Grade ply for all kitchen and vanity cabinetry.",
+      "Insist on 1mm calibrated anti-fingerprint laminates bonded with waterproof D3/D4 PVA adhesives.",
+      "Ensure false ceilings use moisture-resistant Gyproc boards rather than regular gypsum.",
+    ],
+  },
+  {
+    slug: "seismic-zone-iv-bengal-soil-construction",
+    title: "Seismic Zone IV & Alluvial Soil: Engineering Freehold Plot Homes",
+    bengaliTitle: "সিসমিক জোন ৪ ও পাইলিং: বাংলায় নিরাপদ বাড়ি নির্মাণ",
+    category: "Civil Engineering",
+    readTime: "8 min read",
+    date: "October 2026",
+    author: "BariGhor Civil Engineering Division",
+    excerpt:
+      "What every plot buyer in New Town and Salt Lake must demand before laying foundations on Bengal's deep alluvial clay delta.",
+    content: [
+      "The Greater Kolkata deltaic basin rests upon young alluvial strata characterized by silty clays and shallow water tables. Furthermore, revised BIS maps place the region within Seismic Zone IV.",
+      "Building a multi-story residence on shallow strip footings in this soil profile creates dangerous risks of differential settlement and hairline shear cracks.",
+      "BariGhor's construction standard mandates geotechnical soil bore-log drilling to a minimum depth of 18 meters, anchoring bored cast-in-situ RCC piles into hard dense sand layers.",
+    ],
+    keyTakeaways: [
+      "Never begin plot excavation without a licensed geotechnical soil bore-log report.",
+      "Require bored cast-in-situ RCC piles tied to an elevated plinth beam minimum 30 inches above the finished road crown.",
+      "Specify Tata Tiscon Fe500D / Fe550D corrosion-resistant TMT steel.",
+    ],
+  },
 ];
 
 export function getPropertyCategory(property: Property): PropertyCategory {

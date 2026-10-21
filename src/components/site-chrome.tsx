@@ -1,12 +1,15 @@
 import { Link, useRouter } from "@tanstack/react-router";
 import {
   ArrowRight,
+  Building,
   ChevronDown,
   Compass,
   FileText,
   Heart,
   Home,
+  Layers,
   Menu,
+  Paintbrush,
   Search,
   ShieldCheck,
   Sparkles,
@@ -274,6 +277,66 @@ export function SiteHeader({
               </DropdownMenuContent>
             </DropdownMenu>
 
+            {/* Services Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                className={`flex items-center gap-1.5 transition-colors hover:text-accent font-medium outline-none ${
+                  isDarkTone ? "text-hero-foreground" : "text-foreground"
+                }`}
+              >
+                <span>{language === "en" ? "Services" : "সেবা ও নির্মাণ"}</span>
+                <ChevronDown className="size-3.5 opacity-70" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-64 p-2 shadow-xl">
+                <DropdownMenuLabel className="text-[11px] font-bold uppercase tracking-wider text-accent">
+                  Turnkey Capabilities
+                </DropdownMenuLabel>
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/services"
+                    className="flex items-center gap-2 cursor-pointer font-medium"
+                  >
+                    <Layers className="size-4 text-accent" />
+                    <span>All Architectural Services</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/services/interiors"
+                    className="flex items-center justify-between cursor-pointer text-xs"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Paintbrush className="size-4 text-accent" />
+                      <span className="font-medium">Interior Design</span>
+                    </div>
+                    <span className="text-[11px] text-muted-foreground font-mono">From ₹1,250/sq ft</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/services/construction"
+                    className="flex items-center justify-between cursor-pointer text-xs"
+                  >
+                    <div className="flex items-center gap-2">
+                      <Building className="size-4 text-accent" />
+                      <span className="font-medium">Turnkey Construction</span>
+                    </div>
+                    <span className="text-[11px] text-muted-foreground font-mono">From ₹1,950/sq ft</span>
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link
+                    to="/about/verification"
+                    className="flex items-center gap-2 cursor-pointer text-xs"
+                  >
+                    <ShieldCheck className="size-4 text-emerald-600" />
+                    <span>Property Advisory & Land Audit</span>
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* Journal */}
             <Link
               to="/journal"
@@ -463,6 +526,18 @@ export function SiteHeader({
                 <div>
                   <p className="font-display text-lg font-bold">West Bengal Price Map</p>
                   <p className="text-xs text-muted-foreground">১১টি শহরের রোলআউট ও স্কোয়ারফুট দর</p>
+                </div>
+                <ArrowRight className="size-4 text-accent" />
+              </Link>
+
+              <Link
+                to="/services"
+                className="flex items-center justify-between border-b border-border/50 py-3.5 transition-colors hover:text-accent"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                <div>
+                  <p className="font-display text-lg font-bold">Architectural Services</p>
+                  <p className="text-xs text-muted-foreground">ইন্টেরিয়র ডিজাইন ও টার্নকি প্লট নির্মাণ</p>
                 </div>
                 <ArrowRight className="size-4 text-accent" />
               </Link>
@@ -674,6 +749,21 @@ export function SiteFooter() {
             Journal & Direct Desk
           </p>
           <ul className="mt-4 space-y-2 text-xs text-primary-foreground/80">
+            <li>
+              <Link to="/services" className="hover:text-accent transition-colors font-semibold text-accent">
+                Architectural & Turnkey Services
+              </Link>
+            </li>
+            <li>
+              <Link to="/services/interiors" className="hover:text-accent transition-colors">
+                Interior Design & Furnishing
+              </Link>
+            </li>
+            <li>
+              <Link to="/services/construction" className="hover:text-accent transition-colors">
+                Turnkey Plot Construction
+              </Link>
+            </li>
             <li>
               <Link
                 to="/journal/$slug"

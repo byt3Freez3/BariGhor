@@ -107,7 +107,15 @@ export default function ShortlistPage() {
       {/* Shortlist Cards */}
       <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         {savedProperties.length > 0 ? (
-          <div className="space-y-16">
+          <div className="space-y-8">
+            {/* Contextual Bridge: Unified Interiors */}
+            <p className="text-xs text-muted-foreground flex flex-wrap items-center gap-1.5 border-b border-border/50 pb-4">
+              <span>Planning interiors for any of these?</span>
+              <Link to="/services/interiors" className="font-semibold text-accent hover:underline">
+                Explore turnkey furnishing by the team that built them →
+              </Link>
+            </p>
+
             <AnimatePresence mode="popLayout" initial={false}>
               <motion.div
                 key="shortlist-grid"

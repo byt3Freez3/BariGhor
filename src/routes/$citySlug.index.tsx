@@ -338,9 +338,9 @@ function CityHomePage() {
         </div>
       </section>
 
-      {/* SECTION 2: TRUST SIGNALS BAND */}
+      {/* SECTION 2: TRUST SIGNALS & CAPABILITIES BAND */}
       <section className="border-b border-border bg-card/50 py-10">
-        <div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="mx-auto max-w-7xl px-5 lg:px-8 space-y-8">
           <div className="grid gap-8 sm:grid-cols-3">
             {trustSignals.map((item, idx) => {
               const Icon = item.Icon;
@@ -359,6 +359,52 @@ function CityHomePage() {
                 </Reveal>
               );
             })}
+          </div>
+
+          {/* ONE Restrained Band: We find it, build it, and furnish it */}
+          <div className="border-t border-border/60 pt-6">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 rounded-xs bg-primary/5 border border-primary/15 p-4 sm:px-6">
+              <div className="flex items-center gap-3">
+                <span className="grid size-8 place-items-center rounded-xs bg-primary text-primary-foreground font-display text-sm font-bold">
+                  ব
+                </span>
+                <div>
+                  <p className="font-display text-sm sm:text-base font-bold text-foreground">
+                    We find it, build it, and furnish it.
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    West Bengal's only single-admin integrated property and craftsmanship house.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs font-semibold">
+                <Link
+                  to="/$citySlug/properties"
+                  params={{ citySlug: city.slug }}
+                  className="text-primary hover:text-accent hover:underline flex items-center gap-1"
+                >
+                  <span>1. Find Homes</span>
+                  <ArrowRight className="size-3" />
+                </Link>
+                <span className="text-muted-foreground/40 hidden sm:inline">·</span>
+                <Link
+                  to="/services/construction"
+                  className="text-primary hover:text-accent hover:underline flex items-center gap-1"
+                >
+                  <span>2. Build on Plots</span>
+                  <ArrowRight className="size-3" />
+                </Link>
+                <span className="text-muted-foreground/40 hidden sm:inline">·</span>
+                <Link
+                  to="/services/interiors"
+                  className="text-primary hover:text-accent hover:underline flex items-center gap-1"
+                >
+                  <span>3. Furnish Interiors</span>
+                  <ArrowRight className="size-3" />
+                </Link>
+              </div>
+            </div>
           </div>
         </div>
       </section>
