@@ -49,6 +49,7 @@
   --font-sans: "DM Sans", "Work Sans", ui-sans-serif, system-ui, sans-serif;
   --duration-fast: 150ms;
   --duration-base: 250ms;
+  --duration-route: 300ms;
   --duration-slow: 400ms;
   --duration-page: 500ms;
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
@@ -61,6 +62,7 @@
   /* Motion tokens */
   --duration-fast: 150ms;
   --duration-base: 250ms;
+  --duration-route: 300ms;
   --duration-slow: 400ms;
   --duration-page: 500ms;
   --ease-premium: cubic-bezier(0.22, 1, 0.36, 1);
@@ -211,11 +213,51 @@ header[data-tone="inverse"],
     background-color: currentColor;
     transform: scaleX(0);
     transform-origin: bottom left;
-    transition: transform 200ms var(--ease-premium);
+    transition: transform var(--duration-base) var(--ease-premium);
   }
   &:hover::after,
   &:focus-visible::after {
     transform: scaleX(1);
+  }
+}
+
+/* Card hover interaction tokens: translateY(-4px) + deeper shadow + inner image scale(1.03) */
+@utility card-hover-lift {
+  transition: transform var(--duration-base) var(--ease-out),
+              box-shadow var(--duration-base) var(--ease-out),
+              border-color var(--duration-base) var(--ease-out);
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-editorial);
+  }
+}
+
+/* Button micro-interaction: scale(0.97) on press, 100ms */
+@utility button-press {
+  transition: transform var(--duration-fast) var(--ease-premium);
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* GPU-friendly Accordion grid transition (STEP A4) */
+@utility accordion-grid {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--duration-base) var(--ease-premium);
+  &[data-state="open"],
+  &.is-open {
+    grid-template-rows: 1fr;
+  }
+}
+
+@utility accordion-grid-inner {
+  overflow: hidden;
+  opacity: 0;
+  transition: opacity var(--duration-base) var(--ease-premium) 50ms;
+  [data-state="open"] &,
+  .is-open & {
+    opacity: 1;
   }
 }
 
@@ -288,11 +330,11 @@ header[data-tone="inverse"],
 
 /* View Transitions API soft cross-fade (300ms, --ease-premium) */
 ::view-transition-old(root) {
-  animation: 300ms var(--ease-premium) both vt-fade-out;
+  animation: var(--duration-route) var(--ease-premium) both vt-fade-out;
 }
 
 ::view-transition-new(root) {
-  animation: 300ms var(--ease-premium) both vt-fade-in;
+  animation: var(--duration-route) var(--ease-premium) both vt-fade-in;
 }
 
 /* City switch smooth cross-fade without full frame movement */
@@ -300,7 +342,7 @@ header[data-tone="inverse"],
 ::view-transition-new(city-hero-image),
 ::view-transition-old(city-hero-title),
 ::view-transition-new(city-hero-title) {
-  animation: 300ms var(--ease-premium) both;
+  animation: var(--duration-route) var(--ease-premium) both;
 }
 
 @keyframes vt-fade-out {

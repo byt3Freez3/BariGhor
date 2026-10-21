@@ -3,18 +3,19 @@ import { useEffect, useState } from "react";
 /**
  * BariGhor Central Motion Token System
  * Strict design rules:
- * - Animate ONLY transform and opacity.
- * - Entry distances stay small: 12–24px.
+ * - Central config as the ONLY source of durations and easings.
+ * - Animate ONLY transform and opacity (no width, height, margin, or layout thrash).
+ * - Entry distances stay small: 12–24px (default 20px).
  * - Easing: cubic-bezier(0.22, 1, 0.36, 1) for premium reveals.
- * - Durations: 150–250ms for micro-interactions, 300–500ms for sections/pages.
- * - Zero spring/bouncy/overshoot effects.
+ * - Durations: 150–250ms for micro-interactions, 400ms for section reveals, 500ms for route transitions.
+ * - Zero spring/bouncy/overshoot effects anywhere.
  */
 
 export const MOTION_DURATIONS = {
-  fast: 0.15, // 150ms - micro-interactions, button presses, focus rings
-  base: 0.25, // 250ms - card hovers, popovers, dropdowns
-  slow: 0.4,  // 400ms - section reveals, shared element transitions
-  page: 0.5,  // 500ms - view transitions, page cross-fades
+  fast: 0.15, // 150ms - hover, focus, press, slider
+  base: 0.25, // 250ms - toggles, accordions, card hovers, popovers
+  slow: 0.4,  // 400ms - scroll reveals, shared element transitions
+  page: 0.5,  // 500ms - route transitions, page cross-fades
 } as const;
 
 export const MOTION_DURATIONS_MS = {
@@ -25,7 +26,7 @@ export const MOTION_DURATIONS_MS = {
 } as const;
 
 export const MOTION_EASINGS = {
-  premium: [0.22, 1, 0.36, 1] as const, // Calm, restrained deceleration curve
+  premium: [0.22, 1, 0.36, 1] as const, // Restrained, calm deceleration curve
   out: [0.16, 1, 0.3, 1] as const,     // Standard entering ease
   in: [0.7, 0, 0.84, 0] as const,      // Standard exiting ease
 } as const;
@@ -34,6 +35,22 @@ export const MOTION_EASINGS_CSS = {
   premium: "cubic-bezier(0.22, 1, 0.36, 1)",
   out: "cubic-bezier(0.16, 1, 0.3, 1)",
   in: "cubic-bezier(0.7, 0, 0.84, 0)",
+} as const;
+
+/**
+ * Section-type stagger presets (STEP A2)
+ * Hard rule: no single stagger chain may exceed ~600ms total.
+ */
+export const STAGGER_PRESETS_MS = {
+  headingGroup: 80, // Section heading + eyebrow + subhead (0ms, 80ms, 80ms)
+  packageTier: 100, // Package tier cards (3-up): 100ms
+  cardGrid: 60,     // Add-on / inclusion card grids: 60ms
+  portfolio: 120,   // Completed-project cards (2-up): 120ms
+  processStep: 80,  // Process / lifecycle step cards: 80ms strictly in sequence (01, 02, 03...)
+  faqItem: 50,      // FAQ list items: 50ms
+  trustItem: 80,    // Trust strip / stat items: 80ms
+  footerColumn: 60, // Footer columns: 60ms
+  maxCumulative: 600, // Cap so the last item never waits noticeably
 } as const;
 
 /**
