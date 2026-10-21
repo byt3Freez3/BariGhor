@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120" fill="none">
+  <rect width="160" height="120" rx="4" fill="#F4F1EA"/>
+  <!-- Wall Section with Texture Swatch -->
+  <rect x="25" y="20" width="110" height="80" rx="2" fill="#FFFFFF" stroke="#0A3632" stroke-width="1.8"/>
+  <rect x="35" y="28" width="50" height="64" fill="#E8E2D5" stroke="#A16207" stroke-width="1"/>
+  <!-- Paint Roller -->
+  <rect x="80" y="38" width="42" height="14" rx="3" fill="#0A3632"/>
+  <!-- Roller wet coat strip -->
+  <path d="M80 52 L122 52 L122 76 Q100 80 80 74 Z" fill="#D4A373" opacity="0.75"/>
+  <!-- Roller Handle -->
+  <path d="M122 45 L132 45 L132 75 L118 75 L118 92" stroke="#A16207" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Texture Stipple Dots -->
+  <circle cx="45" cy="40" r="1.5" fill="#A16207" opacity="0.6"/>
+  <circle cx="55" cy="48" r="1.5" fill="#A16207" opacity="0.6"/>
+  <circle cx="42" cy="62" r="1.5" fill="#A16207" opacity="0.6"/>
+  <circle cx="68" cy="72" r="1.5" fill="#A16207" opacity="0.6"/>
+</svg>

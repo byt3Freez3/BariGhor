@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120" fill="none">
+  <rect width="160" height="120" rx="4" fill="#F4F1EA"/>
+  <!-- Pitched Roof Profile -->
+  <polygon points="80,18 20,54 26,58 80,26 134,58 140,54" fill="#A16207" stroke="#0A3632" stroke-width="1.8"/>
+  <polygon points="80,26 26,58 35,62 80,35 125,62 134,58" fill="#D4A373" stroke="#0A3632" stroke-width="1"/>
+  <!-- Terracotta tiles pattern -->
+  <line x1="45" y1="46" x2="52" y2="50" stroke="#0A3632" stroke-width="1.2"/>
+  <line x1="60" y1="37" x2="67" y2="41" stroke="#0A3632" stroke-width="1.2"/>
+  <line x1="100" y1="37" x2="93" y2="41" stroke="#0A3632" stroke-width="1.2"/>
+  <line x1="115" y1="46" x2="108" y2="50" stroke="#0A3632" stroke-width="1.2"/>
+  <!-- Terrace Deck Floor & Parapet -->
+  <rect x="30" y="66" width="100" height="34" rx="2" fill="#FFFFFF" stroke="#0A3632" stroke-width="1.8"/>
+  <!-- Terrace Pergola Louvers -->
+  <line x1="40" y1="66" x2="40" y2="82" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="120" y1="66" x2="120" y2="82" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="36" y1="66" x2="124" y2="66" stroke="#A16207" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Rainwater Downpipe with spout -->
+  <path d="M126 58 L130 58 L130 96 L136 96" stroke="#52796F" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

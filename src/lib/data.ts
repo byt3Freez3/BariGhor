@@ -12,6 +12,13 @@ export type PropertyType =
   | "Plot"
   | "Commercial";
 
+export type PropertyCategory =
+  | "apartment"
+  | "villa"
+  | "independent_house"
+  | "plot"
+  | "commercial";
+
 export type PossessionStatus = "Ready to move" | "Possession 2027" | "Possession 2028+";
 
 export interface Property {
@@ -57,6 +64,7 @@ export interface Property {
   isFeatured?: boolean;
   listingType?: ListingType;
   propertyType?: PropertyType;
+  propertyCategory: PropertyCategory;
   serviceType?: string;
   verified: boolean;
   verifiedDate: string;
@@ -617,6 +625,7 @@ export const properties: Property[] = [
     isFeatured: true,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -675,6 +684,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Villa",
+    propertyCategory: "villa",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -733,6 +743,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -790,6 +801,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Villa",
+    propertyCategory: "villa",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -847,6 +859,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "rent",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -904,6 +917,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -961,6 +975,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1018,6 +1033,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "new_launch",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1075,6 +1091,7 @@ export const properties: Property[] = [
     isFeatured: true,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1132,6 +1149,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1189,6 +1207,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1246,6 +1265,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1303,6 +1323,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "new_launch",
     propertyType: "Independent House",
+    propertyCategory: "independent_house",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1360,6 +1381,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Commercial",
+    propertyCategory: "commercial",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1417,6 +1439,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "buy",
     propertyType: "Plot",
+    propertyCategory: "plot",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1474,6 +1497,7 @@ export const properties: Property[] = [
     isFeatured: true,
     listingType: "new_launch",
     propertyType: "Villa",
+    propertyCategory: "villa",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1531,6 +1555,7 @@ export const properties: Property[] = [
     isFeatured: false,
     listingType: "rent",
     propertyType: "Apartment",
+    propertyCategory: "apartment",
     verified: true,
     verifiedDate: "October 2026",
   },
@@ -1605,6 +1630,15 @@ export const journalArticles: JournalArticle[] = [
     ],
   },
 ];
+
+export function getPropertyCategory(property: Property): PropertyCategory {
+  if (property.propertyCategory) return property.propertyCategory;
+  if (property.propertyType === "Plot") return "plot";
+  if (property.propertyType === "Commercial") return "commercial";
+  if (property.propertyType === "Villa") return "villa";
+  if (property.propertyType === "Independent House") return "independent_house";
+  return "apartment";
+}
 
 export function getPropertyBySlug(slug: string): Property | undefined {
   return properties.find((p) => p.slug === slug);

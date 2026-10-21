@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120" fill="none">
+  <rect width="160" height="120" rx="4" fill="#F4F1EA"/>
+  <!-- Ground baseline -->
+  <line x1="10" y1="96" x2="150" y2="96" stroke="#0A3632" stroke-width="2"/>
+  <!-- Left Brick Pillar -->
+  <rect x="20" y="34" width="22" height="62" fill="#DDD7CD" stroke="#0A3632" stroke-width="1.8"/>
+  <!-- Pillar Pyramid Cap -->
+  <polygon points="31,24 16,34 46,34" fill="#A16207" stroke="#0A3632" stroke-width="1.5"/>
+  <!-- Right Brick Pillar -->
+  <rect x="118" y="34" width="22" height="62" fill="#DDD7CD" stroke="#0A3632" stroke-width="1.8"/>
+  <polygon points="129,24 114,34 144,34" fill="#A16207" stroke="#0A3632" stroke-width="1.5"/>
+  <!-- Wrought Iron Gate Panels in Center -->
+  <rect x="44" y="44" width="36" height="52" fill="#F9F7F1" stroke="#0A3632" stroke-width="1.5"/>
+  <rect x="80" y="44" width="36" height="52" fill="#F9F7F1" stroke="#0A3632" stroke-width="1.5"/>
+  <!-- Vertical Railings with spear tips -->
+  <line x1="52" y1="44" x2="52" y2="96" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="60" y1="44" x2="60" y2="96" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="68" y1="44" x2="68" y2="96" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="88" y1="44" x2="88" y2="96" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="96" y1="44" x2="96" y2="96" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="104" y1="44" x2="104" y2="96" stroke="#0A3632" stroke-width="1.5"/>
+  <!-- Gate arch top -->
+  <path d="M44 44 Q80 34 116 44" stroke="#A16207" stroke-width="2" fill="none"/>
+</svg>

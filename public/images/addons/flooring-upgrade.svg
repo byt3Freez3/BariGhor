@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120" fill="none">
+  <rect width="160" height="120" rx="4" fill="#F4F1EA"/>
+  <!-- Isometric Floor Slabs / Marble pattern -->
+  <polygon points="80,24 135,52 80,80 25,52" fill="#FFFFFF" stroke="#0A3632" stroke-width="1.8"/>
+  <polygon points="80,80 135,52 135,62 80,90" fill="#EDE8DF" stroke="#0A3632" stroke-width="1.5"/>
+  <polygon points="80,80 25,52 25,62 80,90" fill="#DDD7CD" stroke="#0A3632" stroke-width="1.5"/>
+  <!-- Marble Veins on Top Surface -->
+  <path d="M50 45 Q70 42 85 55 T115 50" stroke="#A16207" stroke-width="1.2" opacity="0.6" stroke-linecap="round"/>
+  <path d="M65 35 Q85 36 95 44" stroke="#52796F" stroke-width="1" opacity="0.5" stroke-linecap="round"/>
+  <!-- Reflection highlight -->
+  <polygon points="75,28 95,38 85,55 65,45" fill="#FFFFFF" opacity="0.4"/>
+  <!-- Tile grid division lines -->
+  <line x1="80" y1="24" x2="80" y2="80" stroke="#0A3632" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="25" y1="52" x2="135" y2="52" stroke="#0A3632" stroke-width="1" stroke-dasharray="3 3"/>
+</svg>

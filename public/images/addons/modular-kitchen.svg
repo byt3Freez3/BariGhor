@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 120" width="160" height="120" fill="none">
+  <rect width="160" height="120" rx="4" fill="#F4F1EA"/>
+  <rect x="16" y="24" width="128" height="72" rx="2" fill="#FFFFFF" stroke="#0A3632" stroke-width="2"/>
+  <!-- Upper cabinets -->
+  <rect x="24" y="32" width="34" height="24" fill="#EDE8DF" stroke="#0A3632" stroke-width="1.5"/>
+  <rect x="62" y="32" width="36" height="24" fill="#EDE8DF" stroke="#0A3632" stroke-width="1.5"/>
+  <rect x="102" y="32" width="34" height="24" fill="#EDE8DF" stroke="#0A3632" stroke-width="1.5"/>
+  <!-- Chimney hood -->
+  <path d="M72 32 L76 26 L84 26 L88 32 Z" fill="#A16207"/>
+  <!-- Countertop slab -->
+  <rect x="20" y="66" width="120" height="5" fill="#0A3632"/>
+  <!-- Lower cabinets with drawers -->
+  <rect x="24" y="73" width="34" height="17" fill="#F9F7F1" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="36" y1="81" x2="46" y2="81" stroke="#A16207" stroke-width="2" stroke-linecap="round"/>
+  <rect x="62" y="73" width="36" height="17" fill="#F9F7F1" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="75" y1="81" x2="85" y2="81" stroke="#A16207" stroke-width="2" stroke-linecap="round"/>
+  <rect x="102" y="73" width="34" height="17" fill="#F9F7F1" stroke="#0A3632" stroke-width="1.5"/>
+  <line x1="114" y1="81" x2="124" y2="81" stroke="#A16207" stroke-width="2" stroke-linecap="round"/>
+  <!-- Tile backsplash pattern -->
+  <line x1="24" y1="60" x2="136" y2="60" stroke="#DDD7CD" stroke-dasharray="4 2"/>
+</svg>
