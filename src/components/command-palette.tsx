@@ -1,16 +1,23 @@
 import * as React from "react";
 import { useRouter } from "@tanstack/react-router";
 import {
-  Building2,
+  ArrowRight,
+  BookOpen,
+  Building,
+  Clock,
   Compass,
   FileText,
   Heart,
+  History,
   Home,
   Layers,
   MapPin,
+  Paintbrush,
   Search,
   ShieldCheck,
   Sparkles,
+  Trash2,
+  X,
 } from "lucide-react";
 import {
   CommandDialog,
@@ -21,9 +28,77 @@ import {
   CommandList,
   CommandSeparator,
 } from "@/components/ui/command";
-import { cities } from "@/lib/regions";
-import { properties } from "@/lib/data";
 import { useAppStore } from "@/lib/store";
+import {
+  executeFuzzySearch,
+  getRecentSearches,
+  saveRecentSearch,
+  clearRecentSearches,
+  POPULAR_LOCALITIES,
+  type RankedSearchResult,
+  type RecentSearchEntry,
+} from "@/lib/search";
+import { logSearchQuery } from "@/lib/enquiries";
+
+/**
+ * Bold matched characters in search results (safe index slicing, zero regex)
+ */
+function HighlightedText({ text, query }: { text: string; query: string }) {
+  if (!query || !query.trim() || !text) {
+    return <span>{text}</span>;
+  }
+
+  const q = query.trim().toLowerCase();
+  const lower = text.toLowerCase();
+  const idx = lower.indexOf(q);
+
+  if (idx !== -1) {
+    // Exact contiguous match
+    const before = text.slice(0, idx);
+    const match = text.slice(idx, idx + q.length);
+    const after = text.slice(idx + q.length);
+
+    return (
+      <span>
+        {before}
+        <strong className="font-bold text-accent underline decoration-accent/60 underline-offset-2">
+          {match}
+        </strong>
+        {after}
+      </span>
+    );
+  }
+
+  // Non-contiguous fuzzy match: highlight matching characters
+  const qSet = new Set(q.split(""));
+  const elements: React.ReactNode[] = [];
+  let buffer = "";
+
+  for (let i = 0; i < text.length; i++) {
+    const char = text[i];
+    if (qSet.has(char.toLowerCase())) {
+      if (buffer) {
+        elements.push(<span key={`buf-${i}`}>{buffer}</span>);
+        buffer = "";
+      }
+      elements.push(
+        <strong
+          key={`match-${i}`}
+          className="font-bold text-accent underline decoration-accent/60 underline-offset-2"
+        >
+          {char}
+        </strong>
+      );
+    } else {
+      buffer += char;
+    }
+  }
+  if (buffer) {
+    elements.push(<span key="buf-end">{buffer}</span>);
+  }
+
+  return <span>{elements}</span>;
+}
 
 export function CommandPalette({
   open,
@@ -33,8 +108,14 @@ export function CommandPalette({
   onOpenChange: (open: boolean) => void;
 }) {
   const router = useRouter();
-  const { selectedCity, setCity, language } = useAppStore();
+  const { selectedCity, language } = useAppStore();
+  const isBn = language === "bn";
 
+  const [rawQuery, setRawQuery] = React.useState("");
+  const [debouncedQuery, setDebouncedQuery] = React.useState("");
+  const [recentSearches, setRecentSearches] = React.useState<RecentSearchEntry[]>([]);
+
+  // 1. Keyboard shortcut listener (⌘K / Ctrl+K)
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
@@ -46,341 +127,400 @@ export function CommandPalette({
     return () => document.removeEventListener("keydown", down);
   }, [open, onOpenChange]);
 
-  const handleSelect = (callback: () => void) => {
+  // 2. Load recent searches on palette open
+  React.useEffect(() => {
+    if (open) {
+      setRecentSearches(getRecentSearches());
+    } else {
+      setRawQuery("");
+      setDebouncedQuery("");
+    }
+  }, [open]);
+
+  // 3. 150ms debounce on search input
+  React.useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(rawQuery);
+    }, 150);
+
+    return () => clearTimeout(timer);
+  }, [rawQuery]);
+
+  // 4. Execute Fuse.js fuzzy search with personalized history blending
+  const { results, grouped, totalCount } = React.useMemo(() => {
+    return executeFuzzySearch(debouncedQuery);
+  }, [debouncedQuery]);
+
+  // 5. Log search query anonymously to /api/enquiries (no PII, no IP)
+  React.useEffect(() => {
+    const trimmed = debouncedQuery.trim();
+    if (trimmed.length >= 2) {
+      const timer = setTimeout(() => {
+        logSearchQuery(trimmed, totalCount);
+      }, 500);
+      return () => clearTimeout(timer);
+    }
+  }, [debouncedQuery, totalCount]);
+
+  const handleSelect = (link: string, resultId?: string) => {
+    if (debouncedQuery.trim()) {
+      saveRecentSearch(debouncedQuery.trim(), resultId);
+    }
     onOpenChange(false);
-    callback();
+    router.navigate({ href: link });
   };
 
-  const allLocalities = React.useMemo(() => {
-    return cities.flatMap((c) =>
-      c.localities.map((l) => ({
-        citySlug: c.slug,
-        cityName: c.nameEn,
-        slug: l.slug,
-        name: l.name,
-        bengali: l.bengali,
-        avgPrice: l.avgPriceSqFt,
-      })),
-    );
-  }, []);
+  const handleRecentClick = (term: string) => {
+    setRawQuery(term);
+    setDebouncedQuery(term);
+  };
+
+  const handleClearHistory = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    clearRecentSearches();
+    setRecentSearches([]);
+  };
+
+  const hasQuery = debouncedQuery.trim().length > 0;
+  const noMatches = hasQuery && totalCount === 0;
 
   return (
-    <CommandDialog open={open} onOpenChange={onOpenChange}>
+    <CommandDialog open={open} onOpenChange={onOpenChange} shouldFilter={false}>
       <CommandInput
+        value={rawQuery}
+        onValueChange={setRawQuery}
         placeholder={
-          language === "en"
-            ? "Search cities, neighbourhoods, properties, budgets (or press Esc)..."
-            : "শহর, পাড়া, বাড়ি, বাজেট খুঁজুন..."
+          isBn
+            ? "শহর, পাড়া, বাড়ি, বা সেবা খুঁজুন (যেমন: 'নিউ টাউন', 'কিচেন')..."
+            : "Search localities, properties, services (e.g. 'New Town', 'kitchen')..."
         }
       />
-      <CommandList className="max-h-[75vh]">
-        <CommandEmpty>
-          <div className="py-8 text-center text-sm">
-            <p className="font-semibold text-foreground">No matches found.</p>
-            <p className="mt-1 text-xs text-muted-foreground">
-              Try searching by city name, locality, BHK, or price.
-            </p>
-          </div>
-        </CommandEmpty>
 
-        {/* Quick Navigation / Collections */}
-        <CommandGroup heading="Browse Collections">
-          <CommandItem
-            value="browse all properties handpicked homes"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/$citySlug/properties",
-                  params: { citySlug: selectedCity },
-                }),
-              )
-            }
-          >
-            <Home className="mr-2 size-4 text-accent" />
-            <span className="font-medium">All Curated Residences</span>
-            <span className="ml-auto text-xs text-muted-foreground">
-              {properties.length} homes in West Bengal
-            </span>
-          </CommandItem>
+      <CommandList className="max-h-[75vh] overflow-y-auto p-2">
+        {/* EMPTY INPUT STATE: RECENT SEARCHES + POPULAR LOCALITIES */}
+        {!hasQuery && (
+          <>
+            {/* Recent Searches */}
+            {recentSearches.length > 0 && (
+              <CommandGroup
+                heading={
+                  <div className="flex items-center justify-between text-[11px] font-bold uppercase tracking-wider text-accent px-1">
+                    <span className="flex items-center gap-1.5">
+                      <History className="size-3 text-accent" />
+                      <span>{isBn ? "সাম্প্রতিক অনুসন্ধান" : "Recent Searches"}</span>
+                    </span>
+                    <button
+                      type="button"
+                      onClick={handleClearHistory}
+                      className="text-[10px] text-muted-foreground hover:text-destructive transition-colors font-normal cursor-pointer flex items-center gap-1"
+                    >
+                      <Trash2 className="size-2.5" />
+                      <span>{isBn ? "মুছুন" : "Clear"}</span>
+                    </button>
+                  </div>
+                }
+              >
+                {recentSearches.map((rs, idx) => (
+                  <CommandItem
+                    key={`recent-${idx}`}
+                    value={`recent-${rs.term}`}
+                    onSelect={() => handleRecentClick(rs.term)}
+                    className="flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-xs text-xs font-medium"
+                  >
+                    <div className="flex items-center gap-2.5">
+                      <Clock className="size-3.5 text-muted-foreground" />
+                      <span>{rs.term}</span>
+                    </div>
+                    <span className="text-[10px] font-mono text-muted-foreground">
+                      searched recently
+                    </span>
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
 
-          <CommandItem
-            value="shortlist saved homes favourites"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/shortlist",
-                }),
-              )
-            }
-          >
-            <Heart className="mr-2 size-4 text-accent" />
-            <span className="font-medium">My Shortlist</span>
-            <span className="ml-auto text-xs text-muted-foreground">Saved homes</span>
-          </CommandItem>
+            {recentSearches.length > 0 && <CommandSeparator className="my-2" />}
 
-          <CommandItem
-            value="market journal legal guide wbrera articles"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/journal",
-                }),
-              )
-            }
-          >
-            <FileText className="mr-2 size-4 text-accent" />
-            <span className="font-medium">Market Journal & Field Guides</span>
-          </CommandItem>
-
-          <CommandItem
-            value="west bengal cities rollout price map"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/cities",
-                }),
-              )
-            }
-          >
-            <Compass className="mr-2 size-4 text-accent" />
-            <span className="font-medium">West Bengal Cities & Price Map</span>
-          </CommandItem>
-        </CommandGroup>
-
-        <CommandSeparator />
-
-        {/* West Bengal Cities */}
-        <CommandGroup heading="West Bengal Cities">
-          {cities.map((c) => (
-            <CommandItem
-              key={c.slug}
-              value={`${c.nameEn} ${c.nameBn} ${c.district} Tier ${c.tier}`}
-              onSelect={() =>
-                handleSelect(() => {
-                  setCity(c.slug);
-                  router.navigate({
-                    to: "/$citySlug",
-                    params: { citySlug: c.slug },
-                  });
-                })
+            {/* Popular Localities Fallback */}
+            <CommandGroup
+              heading={
+                <div className="flex items-center gap-1.5 text-[11px] font-bold uppercase tracking-wider text-accent px-1">
+                  <MapPin className="size-3 text-accent" />
+                  <span>{isBn ? "জনপ্রিয় এলাকা ও পাড়া" : "Popular Localities"}</span>
+                </div>
               }
             >
-              <Building2 className="mr-2 size-4 text-muted-foreground" />
-              <div className="flex flex-col">
-                <span className="font-medium">
-                  {c.nameEn}{" "}
-                  <span className="text-xs text-muted-foreground font-normal">
-                    ({c.nameBn})
+              {POPULAR_LOCALITIES.map((loc, idx) => (
+                <CommandItem
+                  key={`pop-${idx}`}
+                  value={`popular-locality-${loc.name}`}
+                  onSelect={() => handleSelect(loc.link, `pop-${loc.name}`)}
+                  className="flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-xs text-xs"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <MapPin className="size-3.5 text-accent" />
+                    <div>
+                      <p className="font-semibold text-foreground">{loc.name}</p>
+                      <p className="text-[11px] text-muted-foreground">{loc.city}</p>
+                    </div>
+                  </div>
+                  <span className="font-mono text-[11px] text-accent font-semibold">
+                    {loc.avgPrice}
                   </span>
-                </span>
-                <span className="text-[11px] text-muted-foreground">
-                  {c.district} · Tier {c.tier}
-                </span>
-              </div>
-              <span className="ml-auto text-xs font-mono text-accent">
-                ₹{c.avgPricePerSqft.toLocaleString("en-IN")}/sq ft
-              </span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
+                </CommandItem>
+              ))}
+            </CommandGroup>
 
-        <CommandSeparator />
+            <CommandSeparator className="my-2" />
 
-        {/* Popular Localities */}
-        <CommandGroup heading="Neighbourhood Dossiers">
-          {allLocalities.map((loc) => (
-            <CommandItem
-              key={`${loc.citySlug}-${loc.slug}`}
-              value={`${loc.name} ${loc.bengali} ${loc.cityName}`}
-              onSelect={() =>
-                handleSelect(() => {
-                  setCity(loc.citySlug);
-                  router.navigate({
-                    to: "/$citySlug/localities/$localitySlug",
-                    params: { citySlug: loc.citySlug, localitySlug: loc.slug },
-                  });
-                })
-              }
-            >
-              <MapPin className="mr-2 size-4 text-muted-foreground" />
-              <span>
-                {loc.name}{" "}
-                <span className="text-xs text-muted-foreground">
-                  ({loc.bengali}) · {loc.cityName}
-                </span>
-              </span>
-              <span className="ml-auto text-[11px] text-muted-foreground font-mono">
-                {loc.avgPrice}
-              </span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
+            {/* Quick Collections */}
+            <CommandGroup heading="Browse Capabilities">
+              <CommandItem
+                value="action-services-interiors"
+                onSelect={() => handleSelect("/services/interiors", "service-interiors")}
+                className="flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-xs text-xs"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Paintbrush className="size-3.5 text-accent" />
+                  <div>
+                    <span className="font-medium text-foreground">Turnkey Interior Design</span>
+                    <p className="text-[11px] text-muted-foreground">Marine ply, modular kitchens & lighting</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono text-muted-foreground">From ₹1,250/sq ft</span>
+              </CommandItem>
 
-        <CommandSeparator />
+              <CommandItem
+                value="action-services-construction"
+                onSelect={() => handleSelect("/services/construction", "service-construction")}
+                className="flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-xs text-xs"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Building className="size-3.5 text-accent" />
+                  <div>
+                    <span className="font-medium text-foreground">Turnkey Plot Construction</span>
+                    <p className="text-[11px] text-muted-foreground">Deep piles, seismic frame & sanctions</p>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono text-muted-foreground">From ₹1,950/sq ft</span>
+              </CommandItem>
 
-        {/* Curated Properties */}
-        <CommandGroup heading="Verified Residences">
-          {properties.slice(0, 8).map((p) => (
-            <CommandItem
-              key={p.id}
-              value={`${p.title} ${p.bengaliTitle} ${p.locality} ${p.bhk} ${p.price}`}
-              onSelect={() =>
-                handleSelect(() => {
-                  const citySlug =
-                    p.citySlug || (p.localitySlug === "new-town" ? "new-town" : "kolkata");
-                  setCity(citySlug);
-                  router.navigate({
-                    to: "/$citySlug/properties/$propertySlug",
-                    params: { citySlug, propertySlug: p.slug },
-                  });
-                })
-              }
-            >
-              <Sparkles className="mr-2 size-4 text-accent" />
-              <div className="flex flex-col">
-                <span className="font-medium text-foreground">{p.title}</span>
-                <span className="text-[11px] text-muted-foreground">
-                  {p.locality} · {p.bhk} · {p.propertyType || "Apartment"}
-                </span>
-              </div>
-              <span className="ml-auto text-xs font-semibold text-accent">{p.price}</span>
-            </CommandItem>
-          ))}
-        </CommandGroup>
+              <CommandItem
+                value="action-shortlist"
+                onSelect={() => handleSelect("/shortlist", "quick-shortlist")}
+                className="flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-xs text-xs"
+              >
+                <div className="flex items-center gap-2.5">
+                  <Heart className="size-3.5 text-rose-500" />
+                  <span className="font-medium text-foreground">View My Saved Shortlist</span>
+                </div>
+                <span className="text-[10px] font-mono text-muted-foreground">Zero login required</span>
+              </CommandItem>
+            </CommandGroup>
+          </>
+        )}
 
-        <CommandSeparator />
+        {/* ACTIVE SEARCH: GROUPED RESULTS */}
+        {hasQuery && !noMatches && (
+          <>
+            {/* GROUP 1: LOCALITIES */}
+            {grouped.locality.length > 0 && (
+              <CommandGroup
+                heading={
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-accent px-1">
+                    Neighbourhoods & Localities ({grouped.locality.length})
+                  </span>
+                }
+              >
+                {grouped.locality.map((res) => (
+                  <CommandItem
+                    key={res.item.id}
+                    value={`${res.item.id}-${res.item.title}`}
+                    onSelect={() => handleSelect(res.item.link, res.item.id)}
+                    className="flex items-center justify-between cursor-pointer py-3 px-3 rounded-xs text-xs hover:bg-accent/10 focus-visible:ring-1 focus-visible:ring-accent"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="grid size-7 place-items-center rounded-xs bg-primary/10 text-primary shrink-0">
+                        <MapPin className="size-3.5 text-accent" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground text-sm truncate">
+                          <HighlightedText text={res.item.title} query={debouncedQuery} />
+                          {res.item.bengaliTitle && (
+                            <span className="ml-1.5 text-xs text-muted-foreground font-normal" lang="bn">
+                              ({res.item.bengaliTitle})
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-[11px] text-muted-foreground truncate">
+                          {res.item.city} · {res.item.description}
+                        </p>
+                      </div>
+                    </div>
+                    {res.item.badge && (
+                      <span className="ml-2 font-mono text-[11px] text-accent font-semibold shrink-0">
+                        {res.item.badge}
+                      </span>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
 
-        {/* Browse by Budget */}
-        <CommandGroup heading="Browse by Budget Band">
-          <CommandItem
-            value="under 25 lakh low income affordable"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/$citySlug/properties",
-                  params: { citySlug: selectedCity },
-                  search: { budget: "under-25l" },
-                }),
-              )
-            }
-          >
-            <Layers className="mr-2 size-4 text-muted-foreground" />
-            <span>Under ₹25 Lakhs</span>
-            <span className="ml-auto text-xs text-muted-foreground">Affordable builds</span>
-          </CommandItem>
-          <CommandItem
-            value="25 to 50 lakh mid tier"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/$citySlug/properties",
-                  params: { citySlug: selectedCity },
-                  search: { budget: "25l-50l" },
-                }),
-              )
-            }
-          >
-            <Layers className="mr-2 size-4 text-muted-foreground" />
-            <span>₹25 – 50 Lakhs</span>
-            <span className="ml-auto text-xs text-muted-foreground">Suburban & Tier 2</span>
-          </CommandItem>
-          <CommandItem
-            value="50 lakh to 1 crore"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/$citySlug/properties",
-                  params: { citySlug: selectedCity },
-                  search: { budget: "50l-1cr" },
-                }),
-              )
-            }
-          >
-            <Layers className="mr-2 size-4 text-muted-foreground" />
-            <span>₹50 Lakhs – ₹1.0 Cr</span>
-            <span className="ml-auto text-xs text-muted-foreground">Urban planned</span>
-          </CommandItem>
-          <CommandItem
-            value="1 crore to 3 crore luxury"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/$citySlug/properties",
-                  params: { citySlug: selectedCity },
-                  search: { budget: "1cr-3cr" },
-                }),
-              )
-            }
-          >
-            <Layers className="mr-2 size-4 text-muted-foreground" />
-            <span>₹1.0 – 3.0 Cr</span>
-            <span className="ml-auto text-xs text-muted-foreground">Premium residences</span>
-          </CommandItem>
-          <CommandItem
-            value="3 crore plus ultra luxury heritage"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/$citySlug/properties",
-                  params: { citySlug: selectedCity },
-                  search: { budget: "3cr-plus" },
-                }),
-              )
-            }
-          >
-            <Layers className="mr-2 size-4 text-muted-foreground" />
-            <span>₹3.0 Cr & Above</span>
-            <span className="ml-auto text-xs text-muted-foreground">Trophy estates</span>
-          </CommandItem>
-        </CommandGroup>
+            {/* GROUP 2: PROPERTIES */}
+            {grouped.property.length > 0 && (
+              <CommandGroup
+                heading={
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-accent px-1">
+                    Handpicked Residences ({grouped.property.length})
+                  </span>
+                }
+              >
+                {grouped.property.map((res) => (
+                  <CommandItem
+                    key={res.item.id}
+                    value={`${res.item.id}-${res.item.title}`}
+                    onSelect={() => handleSelect(res.item.link, res.item.id)}
+                    className="flex items-center justify-between cursor-pointer py-3 px-3 rounded-xs text-xs hover:bg-accent/10 focus-visible:ring-1 focus-visible:ring-accent"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="grid size-7 place-items-center rounded-xs bg-primary/10 text-primary shrink-0">
+                        <Home className="size-3.5 text-accent" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground text-sm truncate">
+                          <HighlightedText text={res.item.title} query={debouncedQuery} />
+                        </p>
+                        <p className="text-[11px] text-muted-foreground truncate">
+                          {res.item.locality} · {res.item.description}
+                        </p>
+                      </div>
+                    </div>
+                    {res.item.badge && (
+                      <span className="ml-2 font-display text-xs font-bold text-primary shrink-0">
+                        {res.item.badge}
+                      </span>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
 
-        <CommandSeparator />
+            {/* GROUP 3: SERVICES */}
+            {grouped.service.length > 0 && (
+              <CommandGroup
+                heading={
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-accent px-1">
+                    Architectural & Turnkey Services ({grouped.service.length})
+                  </span>
+                }
+              >
+                {grouped.service.map((res) => (
+                  <CommandItem
+                    key={res.item.id}
+                    value={`${res.item.id}-${res.item.title}`}
+                    onSelect={() => handleSelect(res.item.link, res.item.id)}
+                    className="flex items-center justify-between cursor-pointer py-3 px-3 rounded-xs text-xs hover:bg-accent/10 focus-visible:ring-1 focus-visible:ring-accent"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="grid size-7 place-items-center rounded-xs bg-primary/10 text-primary shrink-0">
+                        <Sparkles className="size-3.5 text-accent" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground text-sm truncate">
+                          <HighlightedText text={res.item.title} query={debouncedQuery} />
+                        </p>
+                        <p className="text-[11px] text-muted-foreground truncate">
+                          {res.item.description}
+                        </p>
+                      </div>
+                    </div>
+                    {res.item.badge && (
+                      <span className="ml-2 font-mono text-[11px] text-accent font-semibold shrink-0">
+                        {res.item.badge}
+                      </span>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
 
-        {/* About & Trust */}
-        <CommandGroup heading="About & Trust">
-          <CommandItem
-            value="our story about barighor boutique ethos"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/about",
-                  hash: "story",
-                }),
-              )
-            }
-          >
-            <ShieldCheck className="mr-2 size-4 text-muted-foreground" />
-            <span>Our Story & Advisory Model</span>
-          </CommandItem>
-          <CommandItem
-            value="wbrera agent licence regulatory check"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/about",
-                  hash: "licence",
-                }),
-              )
-            }
-          >
-            <ShieldCheck className="mr-2 size-4 text-muted-foreground" />
-            <span>WBRERA Agent Licence: WBRERA/A/KOL/2023/000184</span>
-          </CommandItem>
-          <CommandItem
-            value="verification physical audit title check standard"
-            onSelect={() =>
-              handleSelect(() =>
-                router.navigate({
-                  to: "/about",
-                  hash: "verification",
-                }),
-              )
-            }
-          >
-            <ShieldCheck className="mr-2 size-4 text-accent" />
-            <span>4-Pillar Physical Verification Standard</span>
-          </CommandItem>
-        </CommandGroup>
+            {/* GROUP 4: JOURNAL */}
+            {grouped.journal.length > 0 && (
+              <CommandGroup
+                heading={
+                  <span className="text-[11px] font-bold uppercase tracking-wider text-accent px-1">
+                    Market Journal & Field Guides ({grouped.journal.length})
+                  </span>
+                }
+              >
+                {grouped.journal.map((res) => (
+                  <CommandItem
+                    key={res.item.id}
+                    value={`${res.item.id}-${res.item.title}`}
+                    onSelect={() => handleSelect(res.item.link, res.item.id)}
+                    className="flex items-center justify-between cursor-pointer py-3 px-3 rounded-xs text-xs hover:bg-accent/10 focus-visible:ring-1 focus-visible:ring-accent"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="grid size-7 place-items-center rounded-xs bg-primary/10 text-primary shrink-0">
+                        <BookOpen className="size-3.5 text-accent" />
+                      </div>
+                      <div className="min-w-0">
+                        <p className="font-semibold text-foreground text-sm truncate">
+                          <HighlightedText text={res.item.title} query={debouncedQuery} />
+                        </p>
+                        <p className="text-[11px] text-muted-foreground truncate">
+                          {res.item.description}
+                        </p>
+                      </div>
+                    </div>
+                    {res.item.badge && (
+                      <span className="ml-2 font-mono text-[10px] text-muted-foreground shrink-0">
+                        {res.item.badge}
+                      </span>
+                    )}
+                  </CommandItem>
+                ))}
+              </CommandGroup>
+            )}
+          </>
+        )}
+
+        {/* NEVER A BLANK EMPTY STATE: FALL BACK TO POPULAR LOCALITIES */}
+        {noMatches && (
+          <div className="p-4 space-y-4">
+            <div className="rounded-xs border border-accent/20 bg-accent/5 p-4 text-center">
+              <p className="font-display text-sm font-bold text-foreground">
+                No direct matches for "{debouncedQuery}"
+              </p>
+              <p className="mt-1 text-xs text-muted-foreground">
+                Our inventory is curated by our single-admin team. Here are verified popular localities and recommendations:
+              </p>
+            </div>
+
+            <CommandGroup heading="Popular Verified Localities">
+              {POPULAR_LOCALITIES.map((loc, idx) => (
+                <CommandItem
+                  key={`fallback-${idx}`}
+                  value={`fallback-loc-${loc.name}`}
+                  onSelect={() => handleSelect(loc.link, `fallback-${loc.name}`)}
+                  className="flex items-center justify-between cursor-pointer py-2.5 px-3 rounded-xs text-xs"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <MapPin className="size-3.5 text-accent" />
+                    <div>
+                      <p className="font-semibold text-foreground">{loc.name}</p>
+                      <p className="text-[11px] text-muted-foreground">{loc.city}</p>
+                    </div>
+                  </div>
+                  <span className="font-mono text-[11px] text-accent font-semibold">
+                    {loc.avgPrice}
+                  </span>
+                </CommandItem>
+              ))}
+            </CommandGroup>
+          </div>
+        )}
       </CommandList>
     </CommandDialog>
   );
