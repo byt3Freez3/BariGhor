@@ -30,6 +30,7 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { BlurImage } from "@/components/blur-image";
 import { PropertyConfigurator } from "@/components/property-configurator";
+import { InFlowTeaser, ScrollAwareNudge, StickyDiscoveryBar } from "@/components/property-discovery";
 import { getPropertyBySlug, properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
@@ -342,6 +343,9 @@ function PropertyDetailPage() {
               {property.description}
             </p>
 
+            {/* In-Flow Discovery Teaser */}
+            <InFlowTeaser property={property} />
+
             <div className="mt-8">
               <h3 className="font-display text-lg font-bold">Key Architectural Highlights</h3>
               <ul className="mt-4 grid gap-3 sm:grid-cols-2">
@@ -463,11 +467,8 @@ function PropertyDetailPage() {
       </section>
 
       <SiteFooter />
-      <WhatsAppAction
-        floating
-        context="property"
-        propertyTitle={`${property.title} in ${property.locality}`}
-      />
+      <ScrollAwareNudge property={property} />
+      <StickyDiscoveryBar property={property} />
     </main>
   );
 }
