@@ -4,6 +4,7 @@ import type { Property } from "@/lib/data";
 import {
   getServicePackages,
   getServiceTypeForCategory,
+  getDiscoveryCopy,
   INDICATIVE_PRICE_DISCLAIMER,
 } from "@/data/services";
 import { useAppStore } from "@/lib/store";
@@ -19,7 +20,9 @@ interface PropertyDiscoveryProps {
 export function InFlowTeaser({ property }: { property: Property }) {
   const { language } = useAppStore();
   const isBn = language === "bn";
-  const isConstruction = getServiceTypeForCategory(property.propertyCategory) === "construction";
+  const serviceType = getServiceTypeForCategory(property.propertyCategory);
+  const isConstruction = serviceType === "construction";
+  const copy = getDiscoveryCopy(serviceType);
 
   const scrollToConfigurator = () => {
     const el = document.getElementById("configurator");
@@ -37,15 +40,11 @@ export function InFlowTeaser({ property }: { property: Property }) {
           </div>
           <div>
             <p className="font-display text-sm font-bold text-foreground sm:text-base">
-              {isConstruction
-                ? "Demarcated plot. Build your architectural home with us too →"
-                : "Built by us. Furnish it with us too →"}
+              {copy.teaserHeadline}
             </p>
             {isBn && (
               <p className="text-xs text-muted-foreground mt-0.5" lang="bn">
-                {isConstruction
-                  ? "প্লট নির্বাচন সম্পন্ন? আর্কিটেকচারাল বাড়ি নির্মাণও হোক আমাদের সাথেই →"
-                  : "আমাদেরই নির্মাণ। ইন্টেরিয়রও হোক আমাদের বিশ্বস্ত কারিগরদের সাথে →"}
+                {copy.teaserHeadlineBn}
               </p>
             )}
           </div>
@@ -56,7 +55,7 @@ export function InFlowTeaser({ property }: { property: Property }) {
           onClick={scrollToConfigurator}
           className="self-start sm:self-auto inline-flex items-center gap-1.5 rounded-xs bg-[#0A3632] px-3.5 py-2 text-xs font-semibold text-[#F9F7F1] shadow-xs transition-colors hover:bg-[#124B45] focus-visible:ring-2 focus-visible:ring-accent shrink-0 cursor-pointer"
         >
-          <span>{isConstruction ? "Configure Construction Package" : "Explore Integrated Interiors"}</span>
+          <span>{copy.teaserCta}</span>
           <span aria-hidden="true">↓</span>
         </button>
       </div>
@@ -73,7 +72,8 @@ export function InFlowTeaser({ property }: { property: Property }) {
  */
 export function ScrollAwareNudge({ property }: { property: Property }) {
   const [visible, setVisible] = useState(false);
-  const isConstruction = getServiceTypeForCategory(property.propertyCategory) === "construction";
+  const serviceType = getServiceTypeForCategory(property.propertyCategory);
+  const copy = getDiscoveryCopy(serviceType);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -138,9 +138,7 @@ export function ScrollAwareNudge({ property }: { property: Property }) {
         >
           <ChevronDown className="size-4 shrink-0 text-[#E5B869]" />
           <span className="font-sans font-medium text-xs leading-tight">
-            {isConstruction
-              ? "Scroll to explore turnkey plot construction ▾"
-              : "Scroll down to configure custom interiors ▾"}
+            {copy.nudgeLabel}
           </span>
         </button>
 
@@ -167,6 +165,7 @@ export function StickyDiscoveryBar({ property }: PropertyDiscoveryProps) {
   const isConstruction = serviceType === "construction";
   const packages = getServicePackages(serviceType);
   const startingRate = packages[0]?.indicativePricePerSqft || (isConstruction ? 1950 : 1250);
+  const copy = getDiscoveryCopy(serviceType);
 
   const scrollToConfigurator = () => {
     document.getElementById("configurator")?.scrollIntoView({ behavior: "smooth" });
@@ -194,11 +193,7 @@ export function StickyDiscoveryBar({ property }: PropertyDiscoveryProps) {
 
           <div className="truncate">
             <p className="font-display text-xs sm:text-sm font-bold text-white group-hover:text-[#E5B869] transition-colors truncate">
-              {isConstruction ? (
-                <>Build on this plot from ₹{startingRate.toLocaleString("en-IN")}/sq ft →</>
-              ) : (
-                <>Furnish this home from ₹{startingRate.toLocaleString("en-IN")}/sq ft →</>
-              )}
+              {copy.stickyHeadline(startingRate)}
             </p>
             <p className="text-[10px] sm:text-[11px] font-mono text-[#D4A373]/80 truncate">
               {INDICATIVE_PRICE_DISCLAIMER}

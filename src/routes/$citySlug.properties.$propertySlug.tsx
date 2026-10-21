@@ -181,7 +181,7 @@ function PropertyDetailPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-background text-foreground selection:bg-accent selection:text-white">
+    <main className="min-h-screen bg-background text-foreground pb-20 selection:bg-accent selection:text-white">
       <SiteHeader sticky />
 
       {/* Breadcrumb Navigation */}

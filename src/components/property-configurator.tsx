@@ -19,6 +19,8 @@ import {
   getServiceTypeForCategory,
   calculatePackageCost,
   calculateAddOnCost,
+  getConfiguratorCopy,
+  CONFIGURATOR_COPY,
   INDICATIVE_PRICE_DISCLAIMER,
   INDICATIVE_PRICE_DISCLAIMER_BN,
   type ServicePackage,
@@ -104,6 +106,10 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
   }, [selectedAddOns, property.sqft]);
 
   const combinedServiceTotal = packageTotal + addOnsTotal;
+
+  // Typed copy dictionaries from data layer (zero hardcoded strings)
+  const copy = useMemo(() => getConfiguratorCopy(serviceType), [serviceType]);
+  const commonCopy = CONFIGURATOR_COPY.common;
 
   // Persist configuration whenever it changes
   useEffect(() => {
@@ -222,43 +228,28 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
         <div className="max-w-3xl">
           <div className="inline-flex items-center gap-2 rounded-full bg-[#124B45] border border-[#236860] px-3.5 py-1 text-xs font-semibold uppercase tracking-widest text-[#E5B869]">
             <Sparkles className="size-3.5 text-[#E5B869]" />
-            <span>{isConstruction ? "Unified Construction Suite" : "Unified Interior Architecture"}</span>
+            <span>{copy.badge}</span>
           </div>
 
           <h2
             id={`${compId}-heading`}
             className="mt-4 font-display text-3xl font-bold tracking-tight text-white sm:text-4xl lg:text-5xl"
           >
-            {isConstruction ? (
-              <>
-                Built by the team that planned it.
-                {isBn && (
-                  <span className="block mt-1 font-sans text-xl font-normal text-[#C2D1CF]" lang="bn">
-                    আপনার প্লটে আর্কিটেকচারাল নির্মাণ — বাড়িঘরের বিশ্বস্ততায়।
-                  </span>
-                )}
-              </>
-            ) : (
-              <>
-                Interiors by the team that built it.
-                {isBn && (
-                  <span className="block mt-1 font-sans text-xl font-normal text-[#C2D1CF]" lang="bn">
-                    যে টিম বাড়িটি বানিয়েছে, তাদেরই ইন্টেরিয়র।
-                  </span>
-                )}
-              </>
+            {copy.headline}
+            {isBn && (
+              <span className="block mt-1 font-sans text-xl font-normal text-[#C2D1CF]" lang="bn">
+                {copy.headlineBn}
+              </span>
             )}
           </h2>
 
           <p className="mt-4 text-base leading-relaxed text-[#C2D1CF] sm:text-lg">
-            {isConstruction
-              ? "One accountable engineering team, one master structural warranty, and zero vendor coordination friction. From soil testing to finished turnkey handover, your plot is engineered to Seismic Zone IV standards."
-              : "One accountable team, one integrated warranty, and zero coordination friction between separate vendors. We deliver finished keys, crafted to the exact structural tolerances of your home."}
+            {copy.subhead}
           </p>
 
           <p className="mt-3 text-xs italic font-mono text-[#D4A373]/90">
-            {INDICATIVE_PRICE_DISCLAIMER}
-            {isBn && <span className="ml-2 not-italic" lang="bn">({INDICATIVE_PRICE_DISCLAIMER_BN})</span>}
+            {commonCopy.disclaimer}
+            {isBn && <span className="ml-2 not-italic" lang="bn">({commonCopy.disclaimerBn})</span>}
           </p>
         </div>
 
@@ -270,10 +261,10 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
               <div className="flex items-baseline justify-between border-b border-[#1A544E] pb-3">
                 <div>
                   <h3 className="font-display text-xl font-bold text-white">
-                    1. Select Service Package Tier
+                    {copy.tierStepTitle}
                   </h3>
                   <p className="text-xs text-[#C2D1CF] mt-0.5">
-                    Choose an architectural tier suited to your lifestyle and finishes
+                    {copy.tierStepDesc}
                   </p>
                 </div>
                 <span className="text-xs font-mono text-[#D4A373]">
@@ -302,7 +293,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                       {isSelected && (
                         <div className="absolute -top-3 right-3 flex items-center gap-1 rounded-full bg-[#E5B869] px-2.5 py-0.5 text-[11px] font-bold text-[#0A3632] shadow-xs">
                           <Check className="size-3 stroke-[3]" />
-                          <span>Active Tier</span>
+                          <span>{commonCopy.activeTierBadge}</span>
                         </div>
                       )}
 
@@ -337,7 +328,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
 
                       <div className="mt-4 pt-3 border-t border-[#1B5650] flex-1">
                         <p className="text-[11px] font-bold uppercase tracking-wider text-[#A9BEBC] mb-2">
-                          Key Inclusions:
+                          {commonCopy.keyInclusionsTitle}
                         </p>
                         <ul className="space-y-1.5 text-xs text-[#C2D1CF]">
                           {pkg.included.slice(0, 3).map((item, idx) => (
@@ -358,10 +349,10 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
             <div>
               <div className="border-b border-[#1A544E] pb-3">
                 <h3 className="font-display text-xl font-bold text-white">
-                  2. Tier Specification Comparison
+                  {copy.comparisonStepTitle}
                 </h3>
                 <p className="text-xs text-[#C2D1CF] mt-0.5">
-                  Comparing BariGhor's internal craftsmanship tiers across four engineering benchmarks
+                  {copy.comparisonStepDesc}
                 </p>
               </div>
 
@@ -396,7 +387,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                   </thead>
                   <tbody className="divide-y divide-[#144842]">
                     <tr>
-                      <td className="p-4 text-xs font-semibold text-[#D4A373]">Indicative Price</td>
+                      <td className="p-4 text-xs font-semibold text-[#D4A373]">{copy.benchmarkLabels.price}</td>
                       {packages.map((pkg) => (
                         <td
                           key={pkg.id}
@@ -411,7 +402,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-4 text-xs font-semibold text-[#D4A373]">Comfort & Acoustic</td>
+                      <td className="p-4 text-xs font-semibold text-[#D4A373]">{copy.benchmarkLabels.comfort}</td>
                       {packages.map((pkg) => (
                         <td
                           key={pkg.id}
@@ -426,7 +417,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-4 text-xs font-semibold text-[#D4A373]">Architectural Design</td>
+                      <td className="p-4 text-xs font-semibold text-[#D4A373]">{copy.benchmarkLabels.design}</td>
                       {packages.map((pkg) => (
                         <td
                           key={pkg.id}
@@ -441,7 +432,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                       ))}
                     </tr>
                     <tr>
-                      <td className="p-4 text-xs font-semibold text-[#D4A373]">Material Grade</td>
+                      <td className="p-4 text-xs font-semibold text-[#D4A373]">{copy.benchmarkLabels.materialQuality}</td>
                       {packages.map((pkg) => (
                         <td
                           key={pkg.id}
@@ -522,10 +513,10 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
               <div className="flex items-baseline justify-between border-b border-[#1A544E] pb-3">
                 <div>
                   <h3 className="font-display text-xl font-bold text-white">
-                    3. Custom Add-Ons & Enhancements
+                    {copy.addOnStepTitle}
                   </h3>
                   <p className="text-xs text-[#C2D1CF] mt-0.5">
-                    Handpicked upgrades matched specifically to this {category.replace("_", " ")}
+                    {copy.addOnStepDesc(category)}
                   </p>
                 </div>
                 <span className="text-xs font-mono text-[#D4A373]">
@@ -537,13 +528,14 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                 {availableAddOns.map((addon) => {
                   const isChecked = selectedAddOnIds.includes(addon.id);
                   const inputId = `${compId}-addon-${addon.id}`;
+                  const specId = `${inputId}-spec`;
                   const addOnCost = calculateAddOnCost(addon, property.sqft);
 
                   return (
                     <label
                       key={addon.id}
                       htmlFor={inputId}
-                      className={`group relative flex items-start gap-3.5 rounded-sm p-4 border transition-all duration-fast cursor-pointer ${
+                      className={`group relative flex items-start gap-3.5 rounded-sm p-4 border transition-all duration-fast cursor-pointer outline-none focus-within:ring-2 focus-within:ring-[#E5B869] ${
                         isChecked
                           ? "bg-[#0E4944] border-[#E5B869] shadow-md shadow-black/20"
                           : "bg-[#082E2B]/80 border-[#164D47] hover:border-[#236860] hover:bg-[#0C3B37]"
@@ -556,11 +548,12 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                           type="checkbox"
                           checked={isChecked}
                           onChange={() => handleToggleAddOn(addon.id)}
+                          aria-describedby={specId}
                           className="size-4 rounded-xs border-[#236860] bg-[#062422] text-[#0A3632] accent-[#E5B869] focus-visible:ring-2 focus-visible:ring-[#E5B869] focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A3632] cursor-pointer"
                         />
                       </div>
 
-                      {/* Thumbnail with lazy loading */}
+                      {/* Thumbnail with lazy loading and explicit dimensions */}
                       <div className="relative size-14 shrink-0 overflow-hidden rounded-xs border border-[#164D47] bg-[#062422]">
                         <img
                           src={addon.thumbnail}
@@ -586,7 +579,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                           </p>
                         )}
 
-                        <p className="mt-1 text-xs text-[#A9BEBC] leading-relaxed line-clamp-2">
+                        <p id={specId} className="mt-1 text-xs text-[#A9BEBC] leading-relaxed line-clamp-2">
                           {addon.keySpec}
                         </p>
 
@@ -623,15 +616,25 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
               <div className="flex items-center justify-between border-b border-[#164D47] pb-4">
                 <div>
                   <span className="text-[10px] font-bold uppercase tracking-widest text-[#E5B869]">
-                    Cost Estimation Matrix
+                    {commonCopy.costMatrixTitle}
                   </span>
                   <h4 className="font-display text-xl font-bold text-white">
-                    Live Configuration
+                    {commonCopy.liveConfigTitle}
                   </h4>
                 </div>
                 <span className="rounded-full bg-[#124B45] px-2.5 py-1 text-xs font-mono text-[#E5B869]">
                   {property.sqft} sq ft
                 </span>
+              </div>
+
+              {/* Accessible Live Region for Screen Readers (Announces settled totals politely) */}
+              <div
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+                className="sr-only"
+              >
+                {copy.estimatedCostTitle}: ₹{combinedServiceTotal.toLocaleString("en-IN")}, {commonCopy.disclaimer}
               </div>
 
               {/* Line items with tweened figures */}
@@ -662,7 +665,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                     </p>
                     <p className="text-[11px] text-[#A9BEBC]">
                       {selectedAddOns.length === 0
-                        ? "No optional add-ons selected"
+                        ? commonCopy.noAddOnsSelected
                         : selectedAddOns.map((a) => a.title.split(" ")[0]).join(", ")}
                     </p>
                   </div>
@@ -677,14 +680,13 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                 {/* Divider */}
                 <div className="border-t border-[#164D47] pt-4" />
 
-                {/* Combined Estimated Services Cost with aria-live */}
+                {/* Combined Estimated Services Cost */}
                 <div
-                  aria-live="polite"
-                  aria-atomic="true"
+                  aria-hidden="true"
                   className="rounded-xs bg-[#0E4944] p-3.5 border border-[#236860]"
                 >
                   <p className="text-[11px] font-bold uppercase tracking-wider text-[#E5B869]">
-                    Estimated {isConstruction ? "Construction" : "Interiors"} Cost
+                    {copy.estimatedCostTitle}
                   </p>
                   <div className="mt-1 flex items-baseline justify-between">
                     <span className="font-display text-2xl font-bold text-white sm:text-3xl">
@@ -695,7 +697,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                     </span>
                   </div>
                   <p className="mt-1 text-[11px] italic text-[#C2D1CF]">
-                    {INDICATIVE_PRICE_DISCLAIMER}
+                    {commonCopy.disclaimer}
                   </p>
                 </div>
 
@@ -704,18 +706,18 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                   <div className="flex items-baseline justify-between">
                     <div>
                       <p className="text-[11px] font-semibold uppercase tracking-wider text-[#A9BEBC]">
-                        Property Base Price
+                        {commonCopy.propertyPriceTitle}
                       </p>
                       <p className="text-xs font-bold text-white mt-0.5">
                         {property.price}
                       </p>
                     </div>
                     <span className="text-[11px] font-mono text-[#C2D1CF]">
-                      Separate Financing
+                      {commonCopy.separateFinancingBadge}
                     </span>
                   </div>
                   <p className="mt-1 text-[10px] text-[#A9BEBC] leading-tight">
-                    Shown separately — buyers finance property acquisition and execution packages through distinct bank loan / capital tranches.
+                    {commonCopy.separateFinancingNote}
                   </p>
                 </div>
               </div>
@@ -730,7 +732,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                   className="w-full bg-[#25D366] hover:bg-[#1DA851] text-white font-bold py-3.5 px-4 rounded-xs text-sm shadow-md transition-all duration-fast flex items-center justify-center gap-2 cursor-pointer focus-visible:ring-2 focus-visible:ring-white"
                 >
                   <MessageCircle className="size-4 shrink-0 fill-white" />
-                  <span>Enquire with my selection</span>
+                  <span>{commonCopy.primaryCtaLabel}</span>
                 </Button>
 
                 {/* SECONDARY CTA (Outline) */}
@@ -740,7 +742,7 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
                   rel="noopener noreferrer"
                   className="w-full flex items-center justify-center gap-2 rounded-xs border border-[#236860] bg-transparent hover:bg-[#0E4944] py-2.5 px-4 text-xs font-semibold text-[#F9F7F1] transition-colors focus-visible:ring-2 focus-visible:ring-[#E5B869]"
                 >
-                  <span>Enquire about the property only</span>
+                  <span>{commonCopy.secondaryCtaLabel}</span>
                 </a>
               </div>
 
@@ -748,11 +750,11 @@ export function PropertyConfigurator({ property }: PropertyConfiguratorProps) {
               <div className="mt-5 border-t border-[#164D47] pt-4 space-y-2">
                 <div className="flex items-center gap-2 text-[11px] text-[#C2D1CF]">
                   <ShieldCheck className="size-3.5 text-[#25D366] shrink-0" />
-                  <span>One integrated warranty backed by BariGhor</span>
+                  <span>{commonCopy.warrantyBadge}</span>
                 </div>
                 <div className="flex items-center gap-2 text-[11px] text-[#C2D1CF]">
                   <Layers className="size-3.5 text-[#E5B869] shrink-0" />
-                  <span>Selection saved automatically to your browser</span>
+                  <span>{commonCopy.autosaveBadge}</span>
                 </div>
               </div>
             </div>

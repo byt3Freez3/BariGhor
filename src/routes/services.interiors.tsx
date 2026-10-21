@@ -346,6 +346,8 @@ function InteriorsServicePage() {
                     src={proj.image}
                     alt={proj.title}
                     loading="lazy"
+                    width={600}
+                    height={450}
                     className="size-full object-cover"
                   />
                 </div>
