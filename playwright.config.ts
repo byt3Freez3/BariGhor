@@ -19,7 +19,7 @@ export default defineConfig({
     },
   ],
   webServer: {
-    command: "cmd.exe /c npm run dev",
+    command: "cmd.exe /c npx vite dev --port 5173",
     url: "http://localhost:5173",
     reuseExistingServer: true,
     timeout: 60 * 1000,

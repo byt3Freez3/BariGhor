@@ -348,3 +348,11 @@ input[type="range"]:active::-moz-range-thumb {
   transform: scale(1.15);
 }
 
+/* Guard against subpixel horizontal overflow across all responsive viewports */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+

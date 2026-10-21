@@ -39,9 +39,8 @@ export function Brand({ inverse = false }: { inverse?: boolean }) {
       className={`group inline-flex items-center gap-2.5 ${
         inverse ? "text-hero-foreground" : "text-primary"
       }`}
-      aria-label="BariGhor home"
     >
-      <span className="grid size-9 place-items-center rounded-sm border border-current font-display text-xl font-bold leading-none transition-transform group-hover:scale-105">
+      <span aria-hidden="true" className="grid size-9 place-items-center rounded-sm border border-current font-display text-xl font-bold leading-none transition-transform group-hover:scale-105">
         ব
       </span>
       <span className="font-display text-2xl font-bold tracking-tight">BariGhor</span>
@@ -460,7 +459,7 @@ export function SiteHeader({
                     ? "border-hero-foreground/20 text-hero-foreground/80 hover:bg-hero-foreground/15"
                     : "border-border text-foreground hover:bg-muted"
               }`}
-              aria-label={`View shortlisted residences (${shortlist.length} saved)`}
+              aria-label={`Shortlist (${shortlist.length} saved)`}
             >
               <Heart
                 className={`size-3.5 transition-transform group-hover:scale-110 ${

@@ -144,7 +144,7 @@ export function buildSearchCatalog(): SearchCatalogItem[] {
 const FUSE_OPTIONS: IFuseOptions<SearchCatalogItem> = {
   includeScore: true,
   includeMatches: true,
-  threshold: 0.38, // Typo tolerance: "newtwon" -> "New Town", "alipor" -> "Alipore"
+  threshold: 0.45, // Typo tolerance: "newtwon" -> "New Town", "alipor" -> "Alipore"
   minMatchCharLength: 2,
   ignoreLocation: true,
   keys: [

@@ -265,3 +265,133 @@ describe("Motion Token System Invariants (Step 0 - Step 9)", () => {
   });
 });
 
+describe("BariGhor Architectural Services Data Model & Calculation Suite (Step 1-6)", () => {
+  it("maps property categories to correct service types", async () => {
+    const { getServiceTypeForCategory } = await import("@/data/services");
+    expect(getServiceTypeForCategory("plot")).toBe("construction");
+    expect(getServiceTypeForCategory("apartment")).toBe("interiors");
+    expect(getServiceTypeForCategory("villa")).toBe("interiors");
+    expect(getServiceTypeForCategory("independent_house")).toBe("interiors");
+    expect(getServiceTypeForCategory("commercial")).toBe("interiors");
+  });
+
+  it("retrieves distinct interior vs construction package tiers", async () => {
+    const { getServicePackages } = await import("@/data/services");
+    const interiorPkgs = getServicePackages("interiors");
+    expect(interiorPkgs.length).toBe(3);
+    const interiorTiers = interiorPkgs.map((p) => p.tier);
+    expect(interiorTiers).toEqual(["essential", "comfort", "premium"]);
+
+    const constructionPkgs = getServicePackages("construction");
+    expect(constructionPkgs.length).toBe(3);
+    const constructionTiers = constructionPkgs.map((p) => p.tier);
+    expect(constructionTiers).toEqual(["essential", "comfort", "premium"]);
+  });
+
+  it("filters add-ons accurately by serviceType and propertyCategory", async () => {
+    const { getAddOnsForService } = await import("@/data/services");
+    const apartmentAddOns = getAddOnsForService("interiors", "apartment");
+    const apartmentIds = apartmentAddOns.map((a) => a.id);
+    expect(apartmentIds).toContain("addon-modular-kitchen");
+    expect(apartmentIds).toContain("addon-custom-wardrobes");
+    // Empty plot boundary wall must NOT appear in apartment add-ons
+    expect(apartmentIds).not.toContain("addon-boundary-wall");
+
+    const plotAddOns = getAddOnsForService("construction", "plot");
+    const plotIds = plotAddOns.map((a) => a.id);
+    expect(plotIds).toContain("addon-boundary-wall");
+    expect(plotIds).toContain("addon-landscaping");
+    // Modular kitchen must NOT appear in plot add-ons
+    expect(plotIds).not.toContain("addon-modular-kitchen");
+  });
+
+  it("computes package and add-on costs accurately", async () => {
+    const { calculatePackageCost, calculateAddOnCost, getServicePackages, getAddOnsForService } =
+      await import("@/data/services");
+    const interiorPkg = getServicePackages("interiors")[0]; // essential (1250/sqft)
+    expect(calculatePackageCost(interiorPkg, 1000)).toBe(1250000);
+
+    // Fixed price add-on
+    const fixedAddOn = getAddOnsForService("interiors", "apartment").find(
+      (a) => a.priceUnit === "fixed"
+    );
+    if (fixedAddOn) {
+      expect(calculateAddOnCost(fixedAddOn, 1500)).toBe(fixedAddOn.indicativePrice);
+    }
+
+    // Per sqft add-on
+    const sqftAddOn = getAddOnsForService("interiors", "apartment").find(
+      (a) => a.priceUnit === "per_sqft"
+    );
+    if (sqftAddOn) {
+      expect(calculateAddOnCost(sqftAddOn, 1000)).toBe(sqftAddOn.indicativePrice * 1000);
+    }
+  });
+
+  it("strictly enforces mandatory indicative price disclaimers and typed copy", async () => {
+    const {
+      INDICATIVE_PRICE_DISCLAIMER,
+      INDICATIVE_PRICE_DISCLAIMER_BN,
+      getConfiguratorCopy,
+      getDiscoveryCopy,
+    } = await import("@/data/services");
+
+    expect(INDICATIVE_PRICE_DISCLAIMER).toBe("Indicative — final quote after site visit.");
+    expect(INDICATIVE_PRICE_DISCLAIMER_BN).toContain("ইন্ডিকেটিভ");
+
+    const interiorCopy = getConfiguratorCopy("interiors");
+    expect(interiorCopy.headline).toBe("Interiors by the team that built it.");
+    expect(interiorCopy.badge).toBe("Unified Interior Architecture");
+
+    const constructionCopy = getConfiguratorCopy("construction");
+    expect(constructionCopy.headline).toBe("Built by the team that planned it.");
+    expect(constructionCopy.badge).toBe("Unified Construction Suite");
+
+    const interiorDiscovery = getDiscoveryCopy("interiors");
+    expect(interiorDiscovery.teaserHeadline).toContain("Built by us");
+
+    const constructionDiscovery = getDiscoveryCopy("construction");
+    expect(constructionDiscovery.teaserHeadline).toContain("Demarcated plot");
+  });
+});
+
+describe("BariGhor Search & Fuzzy Matching Intelligence (Step 5)", () => {
+  it("fuzzy matches queries with typos ('newtwon' -> 'New Town')", async () => {
+    const { executeFuzzySearch } = await import("@/lib/search");
+    const { results } = executeFuzzySearch("newtwon");
+    expect(results.length).toBeGreaterThan(0);
+    const hasNewTown = results.some(
+      (r) =>
+        r.item.title.toLowerCase().includes("new town") ||
+        (r.item.locality && r.item.locality.toLowerCase().includes("new town"))
+    );
+    expect(hasNewTown).toBe(true);
+  });
+
+  it("ranks localities higher than descriptions due to field weights", async () => {
+    const { executeFuzzySearch } = await import("@/lib/search");
+    const { results } = executeFuzzySearch("Alipore");
+    expect(results.length).toBeGreaterThan(0);
+    // Top result should be the locality or property directly in Alipore
+    const topResult = results[0];
+    expect(topResult.item.type).toBe("locality");
+    expect(topResult.item.title).toBe("Alipore");
+  });
+
+  it("handles empty or whitespace queries safely by returning empty list", async () => {
+    const { executeFuzzySearch } = await import("@/lib/search");
+    expect(executeFuzzySearch("").results).toEqual([]);
+    expect(executeFuzzySearch("   ").results).toEqual([]);
+  });
+
+  it("manages recent searches safely without crashing when storage is unavailable", async () => {
+    const { getRecentSearches, saveRecentSearch, clearRecentSearches } = await import(
+      "@/lib/search"
+    );
+    expect(() => getRecentSearches()).not.toThrow();
+    expect(() => saveRecentSearch("Salt Lake", "loc-salt-lake")).not.toThrow();
+    expect(() => clearRecentSearches()).not.toThrow();
+  });
+});
+
+

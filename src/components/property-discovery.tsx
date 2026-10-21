@@ -8,6 +8,7 @@ import {
   INDICATIVE_PRICE_DISCLAIMER,
 } from "@/data/services";
 import { useAppStore } from "@/lib/store";
+import { Button } from "@/components/ui/button";
 
 interface PropertyDiscoveryProps {
   property: Property;
