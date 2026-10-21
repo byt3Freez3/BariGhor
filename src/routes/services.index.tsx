@@ -20,6 +20,7 @@ import {
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { BlurImage } from "@/components/blur-image";
 import { Button } from "@/components/ui/button";
+import { VideoBackdrop } from "@/components/video-backdrop";
 import { useAppStore } from "@/lib/store";
 import {
   getServicePackages,
@@ -148,13 +149,7 @@ function ServicesOverviewPage() {
 
       {/* HERO SECTION */}
       <section className="relative overflow-hidden bg-[#0A3632] text-[#F9F7F1] py-20 lg:py-28">
-        <div
-          className="absolute inset-0 opacity-[0.04] pointer-events-none"
-          style={{
-            backgroundImage: `radial-gradient(circle at 1px 1px, #FFFFFF 1px, transparent 0)`,
-            backgroundSize: "32px 32px",
-          }}
-        />
+        <VideoBackdrop />
 
         <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
           <div className="max-w-3xl">

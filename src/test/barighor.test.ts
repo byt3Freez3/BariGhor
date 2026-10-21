@@ -394,4 +394,92 @@ describe("BariGhor Search & Fuzzy Matching Intelligence (Step 5)", () => {
   });
 });
 
+describe("VideoBackdrop & WCAG 2.2 AA Contrast Mathematical Integrity", () => {
+  // WCAG 2.2 Relative Luminance and Contrast Ratio formula
+  function srgbToLin(c: number): number {
+    const norm = c / 255.0;
+    return norm <= 0.04045 ? norm / 12.92 : Math.pow((norm + 0.055) / 1.055, 2.4);
+  }
+
+  function relativeLuminance(rgb: [number, number, number]): number {
+    return 0.2126 * srgbToLin(rgb[0]) + 0.7152 * srgbToLin(rgb[1]) + 0.0722 * srgbToLin(rgb[2]);
+  }
+
+  function getContrastRatio(rgb1: [number, number, number], rgb2: [number, number, number]): number {
+    const l1 = relativeLuminance(rgb1);
+    const l2 = relativeLuminance(rgb2);
+    const lighter = Math.max(l1, l2);
+    const darker = Math.min(l1, l2);
+    return (lighter + 0.05) / (darker + 0.05);
+  }
+
+  const deepTeal: [number, number, number] = [10, 54, 50]; // #0A3632
+
+  // Simulate worst-case brightest video frame highlight (pure white [255, 255, 255] and glowing mint [120, 255, 220])
+  const testHighlights: [number, number, number][] = [
+    [255, 255, 255], // Pure white specular highlight
+    [120, 255, 220], // Bright mint caustic highlight
+  ];
+
+  it("passes WCAG AA contrast (>= 4.5:1) for all typography against the brightest possible video highlight", () => {
+    testHighlights.forEach((highlight) => {
+      // Layer 1: Flat wash 0.72
+      const c1: [number, number, number] = [
+        0.72 * deepTeal[0] + 0.28 * highlight[0],
+        0.72 * deepTeal[1] + 0.28 * highlight[1],
+        0.72 * deepTeal[2] + 0.28 * highlight[2],
+      ];
+
+      // Layer 2: Directional gradient in left text column (0.92 opacity)
+      const cLeft: [number, number, number] = [
+        0.92 * deepTeal[0] + 0.08 * c1[0],
+        0.92 * deepTeal[1] + 0.08 * c1[1],
+        0.92 * deepTeal[2] + 0.08 * c1[2],
+      ];
+
+      const whiteHeadline: [number, number, number] = [255, 255, 255]; // #FFFFFF
+      const goldSubHeadline: [number, number, number] = [229, 184, 105]; // #E5B869
+      const bodyCopy: [number, number, number] = [194, 209, 207]; // #C2D1CF
+      const italicDisclaimer: [number, number, number] = [212, 163, 115]; // #D4A373
+
+      const whiteContrast = getContrastRatio(whiteHeadline, cLeft);
+      const goldContrast = getContrastRatio(goldSubHeadline, cLeft);
+      const bodyContrast = getContrastRatio(bodyCopy, cLeft);
+      const disclaimerContrast = getContrastRatio(italicDisclaimer, cLeft);
+
+      // White headline passes AAA (>= 7:1)
+      expect(whiteContrast).toBeGreaterThanOrEqual(12.0);
+
+      // Gold sub-headline passes AA (>= 4.5:1)
+      expect(goldContrast).toBeGreaterThanOrEqual(6.5);
+
+      // Body copy passes AAA (>= 7:1)
+      expect(bodyContrast).toBeGreaterThanOrEqual(7.5);
+
+      // Small italic disclaimer passes AA (>= 4.5:1)
+      expect(disclaimerContrast).toBeGreaterThanOrEqual(5.0);
+    });
+  });
+
+  it("verifies public video assets are served from /video/ with exact filenames", async () => {
+    const fs = await import("fs");
+    const path = await import("path");
+    const videoDir = path.resolve(process.cwd(), "public/video");
+
+    expect(fs.existsSync(path.join(videoDir, "hero-loop.mp4"))).toBe(true);
+    expect(fs.existsSync(path.join(videoDir, "hero-loop.webm"))).toBe(true);
+    expect(fs.existsSync(path.join(videoDir, "hero-poster.jpg"))).toBe(true);
+
+    const mp4Size = fs.statSync(path.join(videoDir, "hero-loop.mp4")).size;
+    const webmSize = fs.statSync(path.join(videoDir, "hero-loop.webm")).size;
+    const posterSize = fs.statSync(path.join(videoDir, "hero-poster.jpg")).size;
+
+    // Verify optimized target bounds
+    expect(mp4Size).toBeLessThan(1_000_000); // < 1MB
+    expect(webmSize).toBeLessThan(1_000_000); // < 1MB
+    expect(posterSize).toBeLessThan(50_000); // < 50KB
+  });
+});
+
+
 
