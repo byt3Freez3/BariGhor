@@ -29,6 +29,7 @@ import { EmiCalculator } from "@/components/emi-calculator";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { BlurImage } from "@/components/blur-image";
+import { PropertyConfigurator } from "@/components/property-configurator";
 import { getPropertyBySlug, properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
@@ -442,6 +443,9 @@ function PropertyDetailPage() {
           </div>
         </aside>
       </section>
+
+      {/* Unified Architectural Services Configurator (Interiors / Construction) */}
+      <PropertyConfigurator property={property} />
 
       {/* Embedded EMI Calculator */}
       <section className="border-t border-border bg-secondary/30 py-16">

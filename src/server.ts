@@ -47,6 +47,24 @@ function isH3SwallowedErrorBody(body: string): boolean {
 export default {
   async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
+      const url = new URL(request.url);
+      if (url.pathname === "/api/enquiries" && request.method === "POST") {
+        try {
+          const body = await request.json();
+          // Log enquiry/search to server stdout for admin visibility
+          console.log("[BARIGHOR ADMIN LOG]:", JSON.stringify(body));
+          return new Response(JSON.stringify({ success: true, timestamp: Date.now() }), {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          });
+        } catch {
+          return new Response(JSON.stringify({ success: false, error: "Invalid JSON" }), {
+            status: 400,
+            headers: { "content-type": "application/json" },
+          });
+        }
+      }
+
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
       return await normalizeCatastrophicSsrResponse(response);
