@@ -16,6 +16,7 @@ export const MOTION_DURATIONS = {
   base: 0.25, // 250ms - toggles, accordions, card hovers, popovers
   slow: 0.4,  // 400ms - scroll reveals, shared element transitions
   page: 0.5,  // 500ms - route transitions, page cross-fades
+  route: 0.3, // 300ms - view transitions
 } as const;
 
 export const MOTION_DURATIONS_MS = {
@@ -23,6 +24,7 @@ export const MOTION_DURATIONS_MS = {
   base: 250,
   slow: 400,
   page: 500,
+  route: 300,
 } as const;
 
 export const MOTION_EASINGS = {
@@ -43,13 +45,21 @@ export const MOTION_EASINGS_CSS = {
  */
 export const STAGGER_PRESETS_MS = {
   headingGroup: 80, // Section heading + eyebrow + subhead (0ms, 80ms, 80ms)
+  sectionHeadingSubhead: 80,
   packageTier: 100, // Package tier cards (3-up): 100ms
+  packageTiers: 100,
   cardGrid: 60,     // Add-on / inclusion card grids: 60ms
+  addonsGrid: 60,
   portfolio: 120,   // Completed-project cards (2-up): 120ms
+  completedProjects: 120,
   processStep: 80,  // Process / lifecycle step cards: 80ms strictly in sequence (01, 02, 03...)
+  processSteps: 80,
   faqItem: 50,      // FAQ list items: 50ms
+  faqList: 50,
   trustItem: 80,    // Trust strip / stat items: 80ms
+  trustStrip: 80,
   footerColumn: 60, // Footer columns: 60ms
+  footerColumns: 60,
   maxCumulative: 600, // Cap so the last item never waits noticeably
 } as const;
 

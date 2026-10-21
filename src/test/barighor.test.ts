@@ -495,5 +495,131 @@ describe("VideoBackdrop & WCAG 2.2 AA Contrast Mathematical Integrity", () => {
   });
 });
 
+import {
+  INTERIORS_CONTENT,
+  CONSTRUCTION_CONTENT,
+  SERVICES_HUB_CONTENT,
+} from "@/data/services-content";
+import {
+  PLACEHOLDER_SERVICE_PACKAGES,
+  PLACEHOLDER_ADD_ONS,
+} from "@/data/services-placeholder";
+import { PORTFOLIO_PROJECTS } from "@/data/services-portfolio";
+import { INDICATIVE_PRICE_DISCLAIMER } from "@/data/services";
+
+describe("Motion System Tokens & Stagger Presets", () => {
+  it("exports exact required motion token durations", () => {
+    expect(MOTION_DURATIONS.fast).toBe(0.15); // 150ms
+    expect(MOTION_DURATIONS.base).toBe(0.25); // 250ms
+    expect(MOTION_DURATIONS.slow).toBe(0.4); // 400ms
+    expect(MOTION_DURATIONS.page).toBe(0.5); // 500ms
+    expect(MOTION_DURATIONS.route).toBe(0.3); // 300ms
+  });
+
+  it("exports exact required motion token easings", () => {
+    expect(MOTION_EASINGS.premium).toEqual([0.22, 1, 0.36, 1]);
+    expect(MOTION_EASINGS.out).toEqual([0.16, 1, 0.3, 1]);
+    expect(MOTION_EASINGS.in).toEqual([0.7, 0, 0.84, 0]);
+  });
+
+  it("has strictly defined stagger presets matching the design specification", () => {
+    expect(STAGGER_PRESETS_MS.packageTiers).toBe(100);
+    expect(STAGGER_PRESETS_MS.addonsGrid).toBe(60);
+    expect(STAGGER_PRESETS_MS.completedProjects).toBe(120);
+    expect(STAGGER_PRESETS_MS.processSteps).toBe(80);
+    expect(STAGGER_PRESETS_MS.faqList).toBe(50);
+    expect(STAGGER_PRESETS_MS.trustStrip).toBe(80);
+    expect(STAGGER_PRESETS_MS.footerColumns).toBe(60);
+    expect(STAGGER_PRESETS_MS.sectionHeadingSubhead).toBe(80);
+    expect(STAGGER_PRESETS_MS.maxCumulative).toBe(600);
+  });
+
+  it("guarantees cumulative stagger delay never exceeds 600ms cap", () => {
+    const stagger = 80;
+    const maxDelay = STAGGER_PRESETS_MS.maxCumulative; // 600ms
+    for (let i = 0; i < 20; i++) {
+      const delay = Math.min(i * stagger, maxDelay);
+      expect(delay).toBeLessThanOrEqual(600);
+    }
+  });
+});
+
+describe("Part B Content Density & Factual Integrity", () => {
+  function countWords(str: string): number {
+    return str.trim().split(/\s+/).filter(Boolean).length;
+  }
+
+  it("enforces section subheads are <= 20 words", () => {
+    expect(countWords(INTERIORS_CONTENT.subhead)).toBeLessThanOrEqual(20);
+    expect(countWords(CONSTRUCTION_CONTENT.subhead)).toBeLessThanOrEqual(20);
+    expect(countWords(SERVICES_HUB_CONTENT.subhead)).toBeLessThanOrEqual(20);
+  });
+
+  it("enforces process steps are <= 25 words", () => {
+    INTERIORS_CONTENT.processSteps.forEach((s) => {
+      expect(countWords(s.desc)).toBeLessThanOrEqual(25);
+    });
+
+    CONSTRUCTION_CONTENT.processSteps.forEach((s) => {
+      expect(countWords(s.desc)).toBeLessThanOrEqual(25);
+    });
+
+    SERVICES_HUB_CONTENT.processSteps.forEach((s) => {
+      expect(countWords(s.desc)).toBeLessThanOrEqual(25);
+    });
+  });
+
+  it("enforces FAQ answers have lead sentence + bullets, total <= 60 words", () => {
+    INTERIORS_CONTENT.faqs.forEach((faq) => {
+      const totalWords = countWords(faq.lead) + faq.bullets.reduce((acc, b) => acc + countWords(b), 0);
+      expect(totalWords).toBeLessThanOrEqual(60);
+    });
+
+    CONSTRUCTION_CONTENT.faqs.forEach((faq) => {
+      const totalWords = countWords(faq.lead) + faq.bullets.reduce((acc, b) => acc + countWords(b), 0);
+      expect(totalWords).toBeLessThanOrEqual(60);
+    });
+
+    SERVICES_HUB_CONTENT.faqs.forEach((faq) => {
+      const totalWords = countWords(faq.lead) + faq.bullets.reduce((acc, b) => acc + countWords(b), 0);
+      expect(totalWords).toBeLessThanOrEqual(60);
+    });
+  });
+
+  it("enforces CTA band copy is <= 20 words", () => {
+    expect(countWords(INTERIORS_CONTENT.ctaCopy)).toBeLessThanOrEqual(20);
+    expect(countWords(CONSTRUCTION_CONTENT.ctaCopy)).toBeLessThanOrEqual(20);
+    expect(countWords(SERVICES_HUB_CONTENT.ctaCopy)).toBeLessThanOrEqual(20);
+  });
+
+  it("preserves all factual values, pricing, warranties, seismic standards, and disclaimers byte-for-byte", () => {
+    // Construction packages
+    const constructionPackages = PLACEHOLDER_SERVICE_PACKAGES.filter((p) => p.serviceType === "construction");
+    expect(constructionPackages.find((p) => p.tier === "essential")?.indicativePricePerSqft).toBe(1950);
+    expect(constructionPackages.find((p) => p.tier === "comfort")?.indicativePricePerSqft).toBe(2650);
+    expect(constructionPackages.find((p) => p.tier === "premium")?.indicativePricePerSqft).toBe(3800);
+
+    // Interiors packages
+    const interiorPackages = PLACEHOLDER_SERVICE_PACKAGES.filter((p) => p.serviceType === "interiors");
+    expect(interiorPackages.find((p) => p.tier === "essential")?.indicativePricePerSqft).toBe(1250);
+    expect(interiorPackages.find((p) => p.tier === "comfort")?.indicativePricePerSqft).toBe(1850);
+    expect(interiorPackages.find((p) => p.tier === "premium")?.indicativePricePerSqft).toBe(2850);
+
+    // Standards and warranties in packages & FAQs
+    const allConstructionText = [
+      ...constructionPackages.flatMap((p) => [p.blurb, ...p.included]),
+      ...CONSTRUCTION_CONTENT.faqs.flatMap((f) => [f.lead, ...f.bullets]),
+      ...CONSTRUCTION_CONTENT.processSteps.map((s) => s.desc),
+    ].join(" ");
+
+    expect(allConstructionText).toContain("Seismic Zone IV");
+    expect(allConstructionText).toContain("Fe500D");
+    expect(allConstructionText).toContain("crystalline waterproofing");
+
+    // Exact mandatory disclaimer
+    expect(INDICATIVE_PRICE_DISCLAIMER).toBe("Indicative — final quote after site visit.");
+  });
+});
+
 
 

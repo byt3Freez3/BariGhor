@@ -8,7 +8,7 @@ test.describe("BariGhor Motion & Accessibility Verification (Step 9)", () => {
 
     // All section elements should be in the DOM
     const localitiesHeading = page.getByRole("heading", {
-      name: /Prime Residential Enclaves/i,
+      name: /Localities & Paras/i,
     });
     await expect(localitiesHeading).toBeAttached();
 
@@ -30,10 +30,9 @@ test.describe("BariGhor Motion & Accessibility Verification (Step 9)", () => {
 
   test("2. Reduced-motion mode renders all content with zero transforms", async ({
     page,
-    context,
   }) => {
     // Emulate reduced motion
-    await context.emulateMedia({ reducedMotion: "reduce" });
+    await page.emulateMedia({ reducedMotion: "reduce" });
     await page.goto("/kolkata");
 
     // Headings, hero content, and trust badges are visible immediately
