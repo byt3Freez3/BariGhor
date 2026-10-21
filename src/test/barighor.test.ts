@@ -207,7 +207,8 @@ import { PropertyCardSkeleton } from "@/components/property-card";
 import { AnimatedPropertyGrid } from "@/components/animated-property-grid";
 import { CountUp } from "@/components/count-up";
 import { BlurImage } from "@/components/blur-image";
-import { Reveal } from "@/components/reveal";
+import { Reveal, RevealGroup } from "@/components/reveal";
+import { STAGGER_PRESETS_MS } from "@/lib/motion";
 
 describe("Motion Token System Invariants (Step 0 - Step 9)", () => {
   it("defines strictly allowed durations with none exceeding 600ms", () => {
@@ -225,6 +226,18 @@ describe("Motion Token System Invariants (Step 0 - Step 9)", () => {
       expect(duration).toBeLessThanOrEqual(600);
       expect(duration).toBeGreaterThanOrEqual(100);
     });
+  });
+
+  it("enforces maximum stagger cap of 600ms for cumulative chains", () => {
+    expect(STAGGER_PRESETS_MS.maxCumulative).toBe(600);
+    expect(STAGGER_PRESETS_MS.headingGroup).toBe(80);
+    expect(STAGGER_PRESETS_MS.packageTier).toBe(100);
+    expect(STAGGER_PRESETS_MS.cardGrid).toBe(60);
+    expect(STAGGER_PRESETS_MS.portfolio).toBe(120);
+    expect(STAGGER_PRESETS_MS.processStep).toBe(80);
+    expect(STAGGER_PRESETS_MS.faqItem).toBe(50);
+    expect(STAGGER_PRESETS_MS.trustItem).toBe(80);
+    expect(STAGGER_PRESETS_MS.footerColumn).toBe(60);
   });
 
   it("defines strict cubic-bezier deceleration curves without spring or overshoot", () => {
@@ -262,6 +275,7 @@ describe("Motion Token System Invariants (Step 0 - Step 9)", () => {
     expect(typeof CountUp).toBe("function");
     expect(typeof BlurImage).toBe("function");
     expect(typeof Reveal).toBe("function");
+    expect(typeof RevealGroup).toBe("function");
   });
 });
 
