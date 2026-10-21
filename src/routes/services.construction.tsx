@@ -133,9 +133,9 @@ function ConstructionServicePage() {
       <SiteHeader sticky />
 
       {/* HERO */}
-      <section className="relative overflow-hidden bg-[#0A3632] text-[#F9F7F1] py-20 lg:py-28">
+      <section className="relative overflow-hidden isolate bg-[#0A3632] text-[#F9F7F1] py-20 lg:py-28">
         <VideoBackdrop />
-        <div className="relative mx-auto max-w-7xl px-5 lg:px-8">
+        <div className="relative z-10 mx-auto max-w-7xl px-5 lg:px-8">
           <div className="max-w-3xl">
             <div className="inline-flex items-center gap-2 rounded-full bg-[#124B45] border border-[#236860] px-4 py-1 text-xs font-semibold uppercase tracking-widest text-[#E5B869]">
               <Building className="size-3.5" />

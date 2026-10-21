@@ -151,7 +151,7 @@ export function VideoBackdrop({
   return (
     <div
       ref={containerRef}
-      className={`absolute inset-0 -z-10 overflow-hidden pointer-events-none select-none ${className}`}
+      className={`absolute inset-0 z-0 overflow-hidden pointer-events-none select-none ${className}`}
       aria-hidden="true"
     >
       {/* 1. Real <img> poster layer (renders behind video, maintains perfect 0 CLS) */}
@@ -196,19 +196,19 @@ export function VideoBackdrop({
       )}
 
       {/* 3. Legibility Overlays */}
-      {/* a) Flat wash: rgba(10, 54, 50, overlayOpacity) */}
+      {/* a) Base wash: preserves brand teal foundation */}
       <div
         className="absolute inset-0 pointer-events-none"
-        style={{ backgroundColor: `rgba(10, 54, 50, ${overlayOpacity})` }}
+        style={{ backgroundColor: `rgba(10, 54, 50, ${Math.min(overlayOpacity, 0.45)})` }}
         aria-hidden="true"
       />
 
-      {/* b) Directional gradient: 0.92 on left/bottom (text column) to 0.55 on right */}
+      {/* b) Directional gradient: 0.90 on left/bottom (calm text column) fading to 0.18 on right (lively motion) */}
       <div
         className="absolute inset-0 pointer-events-none"
         style={{
           background:
-            "linear-gradient(to right, rgba(10, 54, 50, 0.92) 0%, rgba(10, 54, 50, 0.82) 48%, rgba(10, 54, 50, 0.55) 100%), linear-gradient(to top, rgba(10, 54, 50, 0.92) 0%, transparent 60%)",
+            "linear-gradient(to right, rgba(10, 54, 50, 0.90) 0%, rgba(10, 54, 50, 0.72) 48%, rgba(10, 54, 50, 0.18) 100%), linear-gradient(to top, rgba(10, 54, 50, 0.85) 0%, transparent 55%)",
         }}
         aria-hidden="true"
       />
