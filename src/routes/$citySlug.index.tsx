@@ -22,7 +22,7 @@ import { Button } from "@/components/ui/button";
 import { EmiCalculator } from "@/components/emi-calculator";
 import { HeroSearch } from "@/components/hero-search";
 import { PropertyCard } from "@/components/property-card";
-import { Reveal } from "@/components/reveal";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { CountUp } from "@/components/count-up";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
@@ -341,7 +341,7 @@ function CityHomePage() {
       {/* SECTION 2: TRUST SIGNALS & CAPABILITIES BAND */}
       <section className="border-b border-border bg-card/50 py-10">
         <div className="mx-auto max-w-7xl px-5 lg:px-8 space-y-8">
-          <div className="grid gap-8 sm:grid-cols-3">
+          <RevealGroup staggerMs={80} className="grid gap-8 sm:grid-cols-3">
             {trustSignals.map((item, idx) => {
               const Icon = item.Icon;
               return (
@@ -359,7 +359,7 @@ function CityHomePage() {
                 </Reveal>
               );
             })}
-          </div>
+          </RevealGroup>
 
           {/* ONE Restrained Band: We find it, build it, and furnish it */}
           <div className="border-t border-border/60 pt-6">
@@ -466,7 +466,7 @@ function CityHomePage() {
               </p>
             </div>
 
-            <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+            <RevealGroup staggerMs={60} className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
               {BUDGET_BANDS.map((b, idx) => (
                 <Reveal key={b.slug} index={idx}>
                   <Link
@@ -489,7 +489,7 @@ function CityHomePage() {
                   </Link>
                 </Reveal>
               ))}
-            </div>
+            </RevealGroup>
           </div>
 
           {/* Sub-band B: Browse by BHK & Possession */}
@@ -502,7 +502,7 @@ function CityHomePage() {
               <h3 className="mt-1 font-display text-xl font-bold tracking-tight sm:text-2xl">
                 {language === "en" ? "Browse by BHK Configuration" : "বিএইচকে অনুযায়ী মাপ"}
               </h3>
-              <div className="mt-6 grid grid-cols-2 gap-3">
+              <RevealGroup staggerMs={60} className="mt-6 grid grid-cols-2 gap-3">
                 {BHK_BANDS.map((item, idx) => (
                   <Reveal key={item.slug} index={idx}>
                     <Link
@@ -523,7 +523,7 @@ function CityHomePage() {
                     </Link>
                   </Reveal>
                 ))}
-              </div>
+              </RevealGroup>
             </div>
 
             {/* Possession Timelines (Derived dynamically from possessionDate) */}
@@ -534,7 +534,7 @@ function CityHomePage() {
               <h3 className="mt-1 font-display text-xl font-bold tracking-tight sm:text-2xl">
                 {language === "en" ? "Browse by Possession Timeline" : "হস্তান্তর সময়সীমা"}
               </h3>
-              <div className="mt-6 space-y-3">
+              <RevealGroup staggerMs={60} className="mt-6 space-y-3">
                 {POSSESSION_BANDS.map((item, idx) => (
                   <Reveal key={item.slug} index={idx}>
                     <Link
@@ -561,7 +561,7 @@ function CityHomePage() {
                     </Link>
                   </Reveal>
                 ))}
-              </div>
+              </RevealGroup>
             </div>
           </div>
         </div>
@@ -589,7 +589,7 @@ function CityHomePage() {
               </Link>
             </div>
 
-            <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            <RevealGroup staggerMs={80} className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
               {cityLocalities.map((loc, idx) => (
                 <Reveal
                   key={loc.slug}
@@ -632,7 +632,7 @@ function CityHomePage() {
                   </div>
                 </Reveal>
               ))}
-            </div>
+            </RevealGroup>
           </div>
         </section>
       )}
@@ -755,7 +755,7 @@ function CityHomePage() {
             </Link>
           </div>
 
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup staggerMs={80} className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {journalArticles.slice(0, 3).map((article, idx) => (
               <Reveal
                 key={article.slug}
@@ -787,7 +787,7 @@ function CityHomePage() {
                 </div>
               </Reveal>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 

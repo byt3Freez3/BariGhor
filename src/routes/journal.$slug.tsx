@@ -3,6 +3,7 @@ import { ArrowLeft, CheckCircle2, Clock, Share2, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { getJournalBySlug, journalArticles } from "@/lib/data";
 import { useAppStore } from "@/lib/store";
 
@@ -146,7 +147,7 @@ function JournalDetailPage() {
         </div>
 
         {/* Key Takeaways Box */}
-        <div className="mt-12 rounded-sm border border-black/5 bg-secondary/50 p-8">
+        <Reveal as="div" className="mt-12 rounded-sm border border-black/5 bg-secondary/50 p-8">
           <h3 className="font-display text-2xl font-bold text-foreground">
             Essential Buyer Checklist
           </h3>
@@ -158,10 +159,10 @@ function JournalDetailPage() {
               </div>
             ))}
           </div>
-        </div>
+        </Reveal>
 
         {/* Author & Advisory Callout */}
-        <div className="mt-12 flex flex-col items-center justify-between gap-6 border-t border-border pt-8 sm:flex-row">
+        <Reveal as="div" delay={80} className="mt-12 flex flex-col items-center justify-between gap-6 border-t border-border pt-8 sm:flex-row">
           <div>
             <p className="font-display text-lg font-bold">
               Have legal questions on a Kolkata property?
@@ -171,18 +172,18 @@ function JournalDetailPage() {
             </p>
           </div>
           <WhatsAppAction context="journal" label="Ask Legal Advisory" size="default" />
-        </div>
+        </Reveal>
       </article>
 
       {/* Read Next Section */}
       <section className="border-t border-border bg-card/60 py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <h3 className="font-display text-2xl font-bold">More from the BariGhor Journal</h3>
-          <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup staggerMs={80} className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {journalArticles
               .filter((a) => a.slug !== article.slug)
-              .map((a) => (
-                <div key={a.slug} className="border border-border bg-card p-6">
+              .map((a, idx) => (
+                <Reveal key={a.slug} index={idx} as="div" className="border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
                   <span className="text-[11px] font-bold uppercase tracking-wider text-accent">
                     {a.category}
                   </span>
@@ -196,9 +197,9 @@ function JournalDetailPage() {
                     </Link>
                   </h4>
                   <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">{a.excerpt}</p>
-                </div>
+                </Reveal>
               ))}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 

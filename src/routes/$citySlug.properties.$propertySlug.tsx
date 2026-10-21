@@ -34,6 +34,7 @@ import { InFlowTeaser, ScrollAwareNudge, StickyDiscoveryBar } from "@/components
 import { getPropertyBySlug, properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
+import { Reveal, RevealGroup } from "@/components/reveal";
 
 export function PropertyDetailSkeleton() {
   return (
@@ -319,11 +320,11 @@ function PropertyDetailPage() {
           </div>
 
           {/* Quick Specifications Grid */}
-          <div className="grid grid-cols-2 gap-4 border-b border-border py-6 sm:grid-cols-3">
+          <RevealGroup staggerMs={60} className="grid grid-cols-2 gap-4 border-b border-border py-6 sm:grid-cols-3">
             {homeFacts.map((fact, i) => {
               const Icon = fact.Icon;
               return (
-                <div key={i} className="flex items-start gap-3">
+                <Reveal as="div" key={i} index={i} className="flex items-start gap-3">
                   <div className="grid size-9 shrink-0 place-items-center rounded-xs bg-primary/10 text-primary">
                     <Icon className="size-4 text-accent" />
                   </div>
@@ -331,13 +332,13 @@ function PropertyDetailPage() {
                     <p className="text-xs text-muted-foreground">{fact.label}</p>
                     <p className="font-semibold text-foreground text-sm">{fact.value}</p>
                   </div>
-                </div>
+                </Reveal>
               );
             })}
-          </div>
+          </RevealGroup>
 
           {/* Editorial Description */}
-          <div className="border-b border-border py-8">
+          <Reveal as="div" className="border-b border-border py-8">
             <h2 className="font-display text-2xl font-bold">The Residence Overview</h2>
             <p className="mt-4 text-base leading-relaxed text-muted-foreground">
               {property.description}
@@ -357,26 +358,28 @@ function PropertyDetailPage() {
                 ))}
               </ul>
             </div>
-          </div>
+          </Reveal>
 
           {/* Legal Due Diligence */}
           <div className="py-8">
-            <h3 className="font-display text-xl font-bold">BariGhor Verification Report</h3>
-            <div className="mt-4 grid gap-4 sm:grid-cols-2">
+            <Reveal as="div">
+              <h3 className="font-display text-xl font-bold">BariGhor Verification Report</h3>
+            </Reveal>
+            <RevealGroup staggerMs={80} className="mt-4 grid gap-4 sm:grid-cols-2">
               {legalFacts.map((fact, idx) => {
                 const Icon = fact.Icon;
                 return (
-                  <div key={idx} className="flex items-start gap-3 rounded-xs border border-border bg-card p-4">
+                  <Reveal as="div" key={idx} index={idx} className="flex items-start gap-3 rounded-xs border border-border bg-card p-4">
                     <Icon className="size-5 shrink-0 text-accent mt-0.5" />
                     <div>
                       <p className="text-xs font-semibold text-muted-foreground">{fact.label}</p>
                       <p className="font-display text-sm font-bold text-foreground mt-0.5">{fact.value}</p>
                     </div>
-                  </div>
+                  </Reveal>
                 );
               })}
-            </div>
-            <div className="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xs border border-accent/20 bg-accent/5 p-4">
+            </RevealGroup>
+            <Reveal as="div" delay={160} className="mt-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 rounded-xs border border-accent/20 bg-accent/5 p-4">
               <div>
                 <p className="text-xs font-bold uppercase tracking-wider text-accent">
                   4-Pillar Due Diligence Certified
@@ -391,13 +394,13 @@ function PropertyDetailPage() {
               >
                 Read Full Audit Standard →
               </Link>
-            </div>
+            </Reveal>
           </div>
         </div>
 
         {/* Sticky Concierge Sidebar */}
         <aside className="lg:sticky lg:top-28 h-fit">
-          <div className="rounded-xs border border-border bg-card p-6 shadow-md">
+          <Reveal as="div" className="rounded-xs border border-border bg-card p-6 shadow-md">
             <Link
               to="/about/verification"
               className="group flex items-center gap-2 hover:opacity-90"
@@ -444,7 +447,7 @@ function PropertyDetailPage() {
             <p className="mt-4 text-center text-xs text-muted-foreground">
               Direct routing to Senior {city.nameEn} Advisory
             </p>
-          </div>
+          </Reveal>
         </aside>
       </section>
 
@@ -462,7 +465,9 @@ function PropertyDetailPage() {
               Calculate EMI for {property.title}
             </h2>
           </div>
-          <EmiCalculator initialLoanLakhs={Math.round(property.priceNumericLakhs * 0.8)} compact />
+          <Reveal as="div">
+            <EmiCalculator initialLoanLakhs={Math.round(property.priceNumericLakhs * 0.8)} compact />
+          </Reveal>
         </div>
       </section>
 

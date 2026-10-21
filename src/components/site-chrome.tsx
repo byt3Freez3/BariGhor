@@ -29,6 +29,7 @@ import { useAppStore } from "@/lib/store";
 import { CitySelector } from "@/components/city-selector";
 import { CommandPalette } from "@/components/command-palette";
 import { cities, getCityBySlug } from "@/lib/regions";
+import { Reveal, RevealGroup } from "@/components/reveal";
 
 export function Brand({ inverse = false }: { inverse?: boolean }) {
   const selectedCity = useAppStore((state) => state.selectedCity);
@@ -609,8 +610,8 @@ export function SiteFooter() {
 
   return (
     <footer className="bg-primary text-primary-foreground">
-      <div className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_1fr] lg:px-8">
-        <div>
+      <RevealGroup staggerMs={60} className="mx-auto grid max-w-7xl gap-10 px-5 py-16 md:grid-cols-2 lg:grid-cols-[1.3fr_1.1fr_1fr_1fr] lg:px-8">
+        <Reveal as="div">
           <Brand inverse />
           <p className="mt-5 max-w-sm text-sm leading-6 text-primary-foreground/75">
             {language === "en"
@@ -622,10 +623,10 @@ export function SiteFooter() {
             <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">Direct Land Titles</span>
             <span className="rounded-sm bg-primary-foreground/10 px-2 py-1">Physical Site Audits</span>
           </div>
-        </div>
+        </Reveal>
 
         {/* Full Tier-Wise City Sitemap */}
-        <div>
+        <Reveal as="div">
           <div className="flex items-center justify-between">
             <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
               West Bengal City Sitemap
@@ -682,10 +683,10 @@ export function SiteFooter() {
               </div>
             </div>
           </div>
-        </div>
+        </Reveal>
 
         {/* Localities & Neighbourhoods */}
-        <div>
+        <Reveal as="div">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Neighbourhoods
           </p>
@@ -740,10 +741,10 @@ export function SiteFooter() {
               </Link>
             </li>
           </ul>
-        </div>
+        </Reveal>
 
         {/* Journal & Legal */}
-        <div>
+        <Reveal as="div">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">
             Journal & Direct Desk
           </p>
@@ -806,8 +807,8 @@ export function SiteFooter() {
               </a>
             </li>
           </ul>
-        </div>
-      </div>
+        </Reveal>
+      </RevealGroup>
 
       {/* DEEP SEO SITEMAP MATRIX: City × BHK, City × Budget, City × Locality */}
       <div className="border-t border-primary-foreground/15 bg-black/25 py-12">
@@ -821,9 +822,9 @@ export function SiteFooter() {
             </span>
           </div>
 
-          <div className="mt-8 grid gap-8 sm:grid-cols-2 md:grid-cols-4 text-xs text-primary-foreground/75">
+          <RevealGroup staggerMs={60} className="mt-8 grid gap-8 sm:grid-cols-2 md:grid-cols-4 text-xs text-primary-foreground/75">
             {/* Column 1: BHK by City */}
-            <div>
+            <Reveal as="div">
               <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
                 Popular BHK Configurations
               </p>
@@ -836,10 +837,10 @@ export function SiteFooter() {
                 <li><Link to="/$citySlug/properties" params={{ citySlug: "durgapur" }} search={{ bhk: "2 BHK" }} className="hover:text-accent">2 BHK Gated Flats in Durgapur</Link></li>
                 <li><Link to="/$citySlug/properties" params={{ citySlug: "kolkata" }} search={{ bhk: "4 BHK+" }} className="hover:text-accent">4 BHK Penthouses in South Kolkata</Link></li>
               </ul>
-            </div>
+            </Reveal>
 
             {/* Column 2: Budget Bands */}
-            <div>
+            <Reveal as="div">
               <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
                 Browse by Budget Band
               </p>
@@ -852,10 +853,10 @@ export function SiteFooter() {
                 <li><Link to="/$citySlug/properties" params={{ citySlug: "bardhaman" }} search={{ budget: "25l-50l" }} className="hover:text-accent">Bardhaman Townhouses ₹25 – 50L</Link></li>
                 <li><Link to="/$citySlug/properties" params={{ citySlug: "kalyani" }} search={{ budget: "under-25l" }} className="hover:text-accent">Kalyani Smart City Plots & Flats</Link></li>
               </ul>
-            </div>
+            </Reveal>
 
             {/* Column 3: Prime Bengal Localities */}
-            <div>
+            <Reveal as="div">
               <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
                 Prime Bengal Neighbourhoods
               </p>
@@ -868,10 +869,10 @@ export function SiteFooter() {
                 <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "siliguri", localitySlug: "sevoke-road" }} className="hover:text-accent">Sevoke Road Foothill Belt</Link></li>
                 <li><Link to="/$citySlug/localities/$localitySlug" params={{ citySlug: "durgapur", localitySlug: "city-centre" }} className="hover:text-accent">City Centre Durgapur</Link></li>
               </ul>
-            </div>
+            </Reveal>
 
             {/* Column 4: Regulatory & Statutory */}
-            <div>
+            <Reveal as="div">
               <p className="font-semibold text-primary-foreground text-sm border-b border-primary-foreground/15 pb-2">
                 Statutory & Buyer Protection
               </p>
@@ -884,8 +885,8 @@ export function SiteFooter() {
                 <li><Link to="/journal/$slug" params={{ slug: "kolkata-monsoon-drainage-guide" }} className="hover:text-accent">Monsoon High-Tide Drainage Guide</Link></li>
                 <li><Link to="/shortlist" className="hover:text-accent">Private Shortlist (Zero Login)</Link></li>
               </ul>
-            </div>
-          </div>
+            </Reveal>
+          </RevealGroup>
         </div>
       </div>
 

@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/about")({
@@ -68,7 +69,7 @@ export default function AboutPage() {
 
       <div className="mx-auto max-w-5xl px-5 py-16 lg:px-8 space-y-24">
         {/* SECTION 1: Our Story */}
-        <section id="story" className="scroll-mt-28">
+        <Reveal as="section" id="story" className="scroll-mt-28">
           <div className="flex items-center gap-3">
             <span className="grid size-9 place-items-center rounded-xs bg-primary/10 text-primary font-bold">
               01
@@ -89,26 +90,28 @@ export default function AboutPage() {
               sanction review, and legal title tracking prior to being published.
             </p>
           </div>
-        </section>
+        </Reveal>
 
         {/* SECTION 2: 4-Pillar Verification Standard */}
         <section id="verification" className="scroll-mt-28 border-t border-border pt-16">
-          <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-xs bg-accent/20 text-accent font-bold">
-              02
-            </span>
-            <h2 className="font-display text-3xl font-bold tracking-tight">
-              {language === "en"
-                ? "The 4-Pillar Physical Verification Standard"
-                : "৪-স্তরের ফিজিক্যাল ভেরিফিকেশন মানদণ্ড"}
-            </h2>
-          </div>
-          <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
-            Every home carrying the BariGhor Verified badge has satisfied all four rigorous audits below.
-          </p>
+          <Reveal as="div">
+            <div className="flex items-center gap-3">
+              <span className="grid size-9 place-items-center rounded-xs bg-accent/20 text-accent font-bold">
+                02
+              </span>
+              <h2 className="font-display text-3xl font-bold tracking-tight">
+                {language === "en"
+                  ? "The 4-Pillar Physical Verification Standard"
+                  : "৪-স্তরের ফিজিক্যাল ভেরিফিকেশন মানদণ্ড"}
+              </h2>
+            </div>
+            <p className="mt-3 text-sm text-muted-foreground max-w-2xl">
+              Every home carrying the BariGhor Verified badge has satisfied all four rigorous audits below.
+            </p>
+          </Reveal>
 
-          <div className="mt-8 grid gap-6 sm:grid-cols-2">
-            <div className="rounded-xs border border-border bg-card p-6 shadow-xs">
+          <RevealGroup staggerMs={80} className="mt-8 grid gap-6 sm:grid-cols-2">
+            <Reveal as="div" index={0} className="rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
               <div className="flex items-center gap-3">
                 <div className="grid size-10 place-items-center rounded-xs bg-primary/10 text-primary">
                   <FileCheck2 className="size-5 text-accent" />
@@ -120,9 +123,9 @@ export default function AboutPage() {
                 certificate (NEC) validation, mutation receipt verification, and scrutiny of original mother
                 deeds to ensure undisputed ownership.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="rounded-xs border border-border bg-card p-6 shadow-xs">
+            <Reveal as="div" index={1} className="rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
               <div className="flex items-center gap-3">
                 <div className="grid size-10 place-items-center rounded-xs bg-primary/10 text-primary">
                   <Building className="size-5 text-accent" />
@@ -133,9 +136,9 @@ export default function AboutPage() {
                 Verification against official building sanctioned blueprints issued by KMC, NKDA, HMC, or
                 relevant municipal bodies. Floor area ratio (FAR), setback compliance, and floor-plate alignment.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="rounded-xs border border-border bg-card p-6 shadow-xs">
+            <Reveal as="div" index={2} className="rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
               <div className="flex items-center gap-3">
                 <div className="grid size-10 place-items-center rounded-xs bg-primary/10 text-primary">
                   <ShieldCheck className="size-5 text-accent" />
@@ -146,9 +149,9 @@ export default function AboutPage() {
                 In-person engineering survey by BariGhor inspectors. Structural integrity check, road crown
                 elevation measurement, waterlogging assessment during peak rainfall, and physical cross-ventilation confirmation.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="rounded-xs border border-border bg-card p-6 shadow-xs">
+            <Reveal as="div" index={3} className="rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
               <div className="flex items-center gap-3">
                 <div className="grid size-10 place-items-center rounded-xs bg-primary/10 text-primary">
                   <Scale className="size-5 text-accent" />
@@ -159,12 +162,12 @@ export default function AboutPage() {
                 Cross-referencing active registration on rera.wb.gov.in. Verification of designated 70% project
                 escrow account routing, quarterly progress filings, and certified possession delivery timelines.
               </p>
-            </div>
-          </div>
+            </Reveal>
+          </RevealGroup>
         </section>
 
         {/* SECTION 3: WBRERA Licence */}
-        <section id="licence" className="scroll-mt-28 border-t border-border pt-16">
+        <Reveal as="section" id="licence" className="scroll-mt-28 border-t border-border pt-16">
           <div className="flex items-center gap-3">
             <span className="grid size-9 place-items-center rounded-xs bg-primary/10 text-primary font-bold">
               03
@@ -205,21 +208,23 @@ export default function AboutPage() {
               </div>
             </div>
           </div>
-        </section>
+        </Reveal>
 
         {/* SECTION 4: Accolades & Citations */}
         <section id="accolades" className="scroll-mt-28 border-t border-border pt-16">
-          <div className="flex items-center gap-3">
-            <span className="grid size-9 place-items-center rounded-xs bg-primary/10 text-primary font-bold">
-              04
-            </span>
-            <h2 className="font-display text-3xl font-bold tracking-tight">
-              {language === "en" ? "Accolades & Recognition" : "সম্মাননা ও স্বীকৃতি"}
-            </h2>
-          </div>
+          <Reveal as="div">
+            <div className="flex items-center gap-3">
+              <span className="grid size-9 place-items-center rounded-xs bg-primary/10 text-primary font-bold">
+                04
+              </span>
+              <h2 className="font-display text-3xl font-bold tracking-tight">
+                {language === "en" ? "Accolades & Recognition" : "সম্মাননা ও স্বীকৃতি"}
+              </h2>
+            </div>
+          </Reveal>
 
-          <div className="mt-6 grid gap-6 sm:grid-cols-3">
-            <div className="rounded-xs border border-border bg-card p-6">
+          <RevealGroup staggerMs={80} className="mt-6 grid gap-6 sm:grid-cols-3">
+            <Reveal as="div" index={0} className="rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
               <Award className="size-8 text-accent" />
               <h3 className="mt-4 font-display text-base font-bold">
                 Bengal Chamber of Commerce (BCC&I)
@@ -227,9 +232,9 @@ export default function AboutPage() {
               <p className="mt-2 text-xs text-muted-foreground">
                 Excellence in Consumer Real Estate Transparency & Regulatory Compliance (2025).
               </p>
-            </div>
+            </Reveal>
 
-            <div className="rounded-xs border border-border bg-card p-6">
+            <Reveal as="div" index={1} className="rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
               <Award className="size-8 text-accent" />
               <h3 className="mt-4 font-display text-base font-bold">
                 Eastern Architectural Digest
@@ -237,9 +242,9 @@ export default function AboutPage() {
               <p className="mt-2 text-xs text-muted-foreground">
                 Best Boutique Residential Publication celebrating Bengal's verandah and courtyard heritage.
               </p>
-            </div>
+            </Reveal>
 
-            <div className="rounded-xs border border-border bg-card p-6">
+            <Reveal as="div" index={2} className="rounded-xs border border-border bg-card p-6 shadow-xs transition-shadow duration-base ease-out hover:shadow-md">
               <Award className="size-8 text-accent" />
               <h3 className="mt-4 font-display text-base font-bold">
                 CREDAI Bengal Advisory Citation
@@ -247,12 +252,12 @@ export default function AboutPage() {
               <p className="mt-2 text-xs text-muted-foreground">
                 Recognized for educational efforts demystifying municipal land titles in Salt Lake and New Town.
               </p>
-            </div>
-          </div>
+            </Reveal>
+          </RevealGroup>
         </section>
 
         {/* SECTION 5: Seminars & Buyer Outreach */}
-        <section id="seminars" className="scroll-mt-28 border-t border-border pt-16">
+        <Reveal as="section" id="seminars" className="scroll-mt-28 border-t border-border pt-16">
           <div className="flex items-center gap-3">
             <span className="grid size-9 place-items-center rounded-xs bg-primary/10 text-primary font-bold">
               05
@@ -284,7 +289,7 @@ export default function AboutPage() {
               Browse Verified Homes
             </Link>
           </div>
-        </section>
+        </Reveal>
       </div>
 
       <SiteFooter />

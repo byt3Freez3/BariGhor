@@ -11,7 +11,7 @@ import {
 import { z } from "zod";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
-import { Reveal } from "@/components/reveal";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { BlurImage } from "@/components/blur-image";
 import { properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
@@ -88,7 +88,7 @@ export default function CityLocalitiesPage() {
       {/* Localities Deep-Dive Grid */}
       <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         {cityLocalities.length > 0 ? (
-          <div className="space-y-16">
+          <RevealGroup staggerMs={80} className="space-y-16">
             {cityLocalities.map((loc, idx) => {
               const locProps = properties.filter((p) => p.localitySlug === loc.slug);
               const homeCount = loc.propertyCount || locProps.length;
@@ -204,7 +204,7 @@ export default function CityLocalitiesPage() {
                 </Reveal>
               );
             })}
-          </div>
+          </RevealGroup>
         ) : (
           <div className="rounded-md border border-dashed border-border bg-card p-16 text-center">
             <Compass className="mx-auto size-12 text-accent opacity-60" />

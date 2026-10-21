@@ -4,7 +4,7 @@ import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { cities, tier3Districts } from "@/data/regions";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { Button } from "@/components/ui/button";
-import { Reveal } from "@/components/reveal";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { BlurImage } from "@/components/blur-image";
 
 export const Route = createFileRoute("/cities/")({
@@ -78,8 +78,8 @@ function CitiesIndexPage() {
           </div>
 
           {/* Statewide Price Map Metric Cards */}
-          <div className="mt-12 grid grid-cols-2 gap-4 border-t border-border pt-8 sm:grid-cols-4">
-            <div className="rounded-xs border border-border bg-card p-4">
+          <RevealGroup staggerMs={80} className="mt-12 grid grid-cols-2 gap-4 border-t border-border pt-8 sm:grid-cols-4">
+            <Reveal as="div" className="rounded-xs border border-border bg-card p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 State Portfolio
               </p>
@@ -87,8 +87,8 @@ function CitiesIndexPage() {
                 {cities.length} Cities Live
               </p>
               <p className="text-[11px] text-muted-foreground mt-0.5">Tier 1 & Tier 2 covered</p>
-            </div>
-            <div className="rounded-xs border border-border bg-card p-4">
+            </Reveal>
+            <Reveal as="div" className="rounded-xs border border-border bg-card p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 Benchmark Avg
               </p>
@@ -97,8 +97,8 @@ function CitiesIndexPage() {
                 <span className="text-xs font-normal text-muted-foreground"> / sq ft</span>
               </p>
               <p className="text-[11px] text-muted-foreground mt-0.5">Across all live corridors</p>
-            </div>
-            <div className="rounded-xs border border-border bg-card p-4">
+            </Reveal>
+            <Reveal as="div" className="rounded-xs border border-border bg-card p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 Capital Corridor
               </p>
@@ -109,8 +109,8 @@ function CitiesIndexPage() {
               <p className="text-[11px] text-muted-foreground mt-0.5">
                 {highestPriceCity.nameEn} peak band
               </p>
-            </div>
-            <div className="rounded-xs border border-border bg-card p-4">
+            </Reveal>
+            <Reveal as="div" className="rounded-xs border border-border bg-card p-4">
               <p className="text-xs text-muted-foreground uppercase tracking-wider">
                 Affordability Floor
               </p>
@@ -121,8 +121,8 @@ function CitiesIndexPage() {
               <p className="text-[11px] text-muted-foreground mt-0.5">
                 {lowestPriceCity.nameEn} accessible entry
               </p>
-            </div>
-          </div>
+            </Reveal>
+          </RevealGroup>
         </div>
       </section>
 
@@ -144,7 +144,7 @@ function CitiesIndexPage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup staggerMs={80} className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {tier1Cities.map((city, idx) => (
               <Reveal
                 key={city.slug}
@@ -210,7 +210,7 @@ function CitiesIndexPage() {
                 </div>
               </Reveal>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 
@@ -232,7 +232,7 @@ function CitiesIndexPage() {
             </p>
           </div>
 
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <RevealGroup staggerMs={60} className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {tier2Cities.map((city, idx) => (
               <Reveal
                 key={city.slug}
@@ -283,7 +283,7 @@ function CitiesIndexPage() {
                 </div>
               </Reveal>
             ))}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 

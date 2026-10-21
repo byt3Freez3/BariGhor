@@ -2,6 +2,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRight, BookOpen, Clock } from "lucide-react";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { journalArticles } from "@/lib/data";
 import { useAppStore } from "@/lib/store";
 
@@ -44,11 +45,13 @@ function JournalIndexPage() {
 
       {/* Articles Grid */}
       <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {journalArticles.map((article) => (
-            <article
+        <RevealGroup staggerMs={80} className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {journalArticles.map((article, idx) => (
+            <Reveal
               key={article.slug}
-              className="flex flex-col justify-between border border-black/5 bg-card p-8 shadow-sm transition-all hover:-translate-y-1 hover:shadow-lg"
+              index={idx}
+              as="article"
+              className="flex flex-col justify-between border border-black/5 bg-card p-8 shadow-xs transition-shadow duration-base ease-out hover:shadow-xl hover:-translate-y-1"
             >
               <div>
                 <div className="flex items-center justify-between text-xs text-muted-foreground">
@@ -80,9 +83,9 @@ function JournalIndexPage() {
                   Read full analysis <ArrowRight className="size-3.5" />
                 </Link>
               </div>
-            </article>
+            </Reveal>
           ))}
-        </div>
+        </RevealGroup>
       </section>
 
       <SiteFooter />

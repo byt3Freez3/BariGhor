@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { useReducedMotion } from "@/lib/motion";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import {
   ArrowLeft,
   Building,
@@ -222,16 +223,16 @@ export default function LocalityDetailPage() {
 
       {/* KEY METRICS BAR */}
       <section className="border-b border-border bg-card">
-        <div className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-5 py-6 sm:grid-cols-4 lg:px-8">
-          <div className="border-r border-border/60 pr-4 last:border-none">
+        <RevealGroup staggerMs={80} className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-5 py-6 sm:grid-cols-4 lg:px-8">
+          <Reveal as="div" index={0} className="border-r border-border/60 pr-4 last:border-none">
             <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
               Avg Price / Sq Ft
             </p>
             <p className="mt-1 font-display text-xl font-bold text-foreground">
               {locality.avgPriceSqFt}
             </p>
-          </div>
-          <div className="border-r border-border/60 pr-4 last:border-none">
+          </Reveal>
+          <Reveal as="div" index={1} className="border-r border-border/60 pr-4 last:border-none">
             <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
               Historical Growth
             </p>
@@ -239,30 +240,30 @@ export default function LocalityDetailPage() {
               <TrendingUp className="size-4" />
               {locality.priceTrendPercent || locality.price_trend?.yoyGrowth || "+12% YoY"}
             </p>
-          </div>
-          <div className="border-r border-border/60 pr-4 last:border-none">
+          </Reveal>
+          <Reveal as="div" index={2} className="border-r border-border/60 pr-4 last:border-none">
             <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
               Transit Rating
             </p>
             <p className="mt-1 font-display text-xl font-bold text-accent">
               {locality.connectivityScore || locality.connectivity_score || "8.8 / 10"}
             </p>
-          </div>
-          <div>
+          </Reveal>
+          <Reveal as="div" index={3}>
             <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
               Flood Risk Profile
             </p>
             <p className="mt-1 font-display text-xl font-bold text-foreground">
               {locality.floodRiskRating || "Low"}
             </p>
-          </div>
-        </div>
+          </Reveal>
+        </RevealGroup>
       </section>
 
       {/* EDITORIAL GUIDE CONTENT (Above Data) */}
       <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr]">
-          <div className="space-y-8">
+          <Reveal as="div" className="space-y-8">
             <div>
               <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
                 Architectural Appraisal
@@ -290,10 +291,10 @@ export default function LocalityDetailPage() {
                 ))}
               </ul>
             </div>
-          </div>
+          </Reveal>
 
           {/* Sidebar Info */}
-          <div className="space-y-6">
+          <Reveal as="div" delay={120} className="space-y-6">
             <div className="rounded-xs border border-border bg-card p-6 shadow-xs">
               <h3 className="font-display text-lg font-bold">Transit & Infrastructure</h3>
               <div className="mt-4 space-y-4 text-sm">
@@ -332,7 +333,7 @@ export default function LocalityDetailPage() {
                 </div>
               )}
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -353,7 +354,7 @@ export default function LocalityDetailPage() {
             </p>
           </div>
 
-          <div className="mt-8 rounded-xs border border-border bg-card p-6 shadow-xs">
+          <Reveal as="div" className="mt-8 rounded-xs border border-border bg-card p-6 shadow-xs">
             <div className="h-72 w-full">
               <ResponsiveContainer width="100%" height="100%">
                 <AreaChart data={chartData} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
@@ -417,7 +418,7 @@ export default function LocalityDetailPage() {
                 Demand Rating: <strong>{locality.price_trend?.demandRating || "High"}</strong>
               </span>
             </div>
-          </div>
+          </Reveal>
         </div>
       </section>
 
@@ -442,10 +443,12 @@ export default function LocalityDetailPage() {
             </Link>
           </div>
 
-          <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup staggerMs={80} className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {localProperties.length > 0 ? (
               localProperties.map((prop, idx) => (
-                <PropertyCard key={prop.id} property={prop} index={idx} />
+                <Reveal key={prop.id} index={idx} as="div">
+                  <PropertyCard property={prop} index={idx} />
+                </Reveal>
               ))
             ) : (
               <div className="col-span-3 rounded-md border border-dashed border-border bg-card p-12 text-center">
@@ -457,7 +460,7 @@ export default function LocalityDetailPage() {
                 </div>
               </div>
             )}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 

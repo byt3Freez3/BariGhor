@@ -19,6 +19,7 @@ import {
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { Button } from "@/components/ui/button";
+import { Reveal, RevealGroup } from "@/components/reveal";
 import { useAppStore } from "@/lib/store";
 
 export const Route = createFileRoute("/about/verification")({
@@ -180,7 +181,7 @@ export default function AboutVerificationPage() {
       </section>
 
       {/* Statutory Licensing Banner */}
-      <section className="border-b border-border bg-accent/5 py-8">
+      <Reveal as="section" className="border-b border-border bg-accent/5 py-8">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 rounded-xs border border-accent/20 bg-card p-6 shadow-xs md:flex-row">
             <div className="flex items-center gap-4">
@@ -210,11 +211,11 @@ export default function AboutVerificationPage() {
             </a>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       {/* 4 AUDIT PILLARS IN DETAIL */}
       <section id="pillars" className="mx-auto max-w-7xl px-5 py-20 lg:px-8 scroll-mt-24">
-        <div className="text-center">
+        <Reveal as="div" className="text-center">
           <p className="text-xs font-bold uppercase tracking-widest text-accent">Rigorous Due Diligence</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             How Every Property Earns the Verified Badge
@@ -222,15 +223,17 @@ export default function AboutVerificationPage() {
           <p className="mx-auto mt-3 max-w-xl text-sm text-muted-foreground">
             A property is approved for publication only when it satisfies all four pillars without exception.
           </p>
-        </div>
+        </Reveal>
 
-        <div className="mt-14 space-y-12">
-          {auditPillars.map((pillar) => {
+        <RevealGroup staggerMs={80} className="mt-14 space-y-12">
+          {auditPillars.map((pillar, idx) => {
             const Icon = pillar.icon;
             return (
-              <div
+              <Reveal
                 key={pillar.step}
-                className="grid gap-8 rounded-xs border border-border bg-card p-8 shadow-xs md:grid-cols-[0.8fr_1.2fr] lg:p-10"
+                index={idx}
+                as="article"
+                className="grid gap-8 rounded-xs border border-border bg-card p-8 shadow-xs md:grid-cols-[0.8fr_1.2fr] lg:p-10 transition-shadow duration-base ease-out hover:shadow-md"
               >
                 <div>
                   <div className="flex items-center gap-3">
@@ -263,14 +266,14 @@ export default function AboutVerificationPage() {
                     ))}
                   </ul>
                 </div>
-              </div>
+              </Reveal>
             );
           })}
-        </div>
+        </RevealGroup>
       </section>
 
       {/* FAQ / Direct Advisory CTA */}
-      <section className="border-t border-border bg-card/60 py-16 lg:py-20">
+      <Reveal as="section" className="border-t border-border bg-card/60 py-16 lg:py-20">
         <div className="mx-auto max-w-4xl px-5 text-center lg:px-8">
           <ClipboardCheck className="mx-auto size-10 text-accent" />
           <h2 className="mt-4 font-display text-3xl font-bold">Have Questions About a Property's Title?</h2>
@@ -293,7 +296,7 @@ export default function AboutVerificationPage() {
             </Button>
           </div>
         </div>
-      </section>
+      </Reveal>
 
       <SiteFooter />
     </main>
