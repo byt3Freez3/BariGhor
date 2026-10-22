@@ -138,7 +138,7 @@ export default function AboutVerificationPage() {
       </nav>
 
       {/* Hero Header */}
-      <section className="border-b border-border bg-card/70 py-16 lg:py-24">
+      <section className="band-wash-a border-b border-border py-16 lg:py-24">
         <div className="mx-auto max-w-4xl px-5 text-center lg:px-8">
           <div className="inline-flex items-center gap-2 rounded-full border border-emerald-500/30 bg-emerald-500/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-emerald-700">
             <BadgeCheck className="size-4 text-emerald-600" />
@@ -181,7 +181,7 @@ export default function AboutVerificationPage() {
       </section>
 
       {/* Statutory Licensing Banner */}
-      <Reveal as="section" className="border-b border-border bg-accent/5 py-8">
+      <Reveal as="section" className="band-wash-b border-b border-border py-8">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col items-center justify-between gap-4 rounded-xs border border-accent/20 bg-card p-6 shadow-xs md:flex-row">
             <div className="flex items-center gap-4">
@@ -214,7 +214,7 @@ export default function AboutVerificationPage() {
       </Reveal>
 
       {/* 4 AUDIT PILLARS IN DETAIL */}
-      <section id="pillars" className="mx-auto max-w-7xl px-5 py-20 lg:px-8 scroll-mt-24">
+      <section id="pillars" className="band-wash-a py-20 lg:py-28 scroll-mt-24"><div className="mx-auto max-w-7xl px-5 lg:px-8">
         <Reveal as="div" className="text-center">
           <p className="text-xs font-bold uppercase tracking-widest text-accent">Rigorous Due Diligence</p>
           <h2 className="mt-2 font-display text-3xl font-bold tracking-tight sm:text-4xl">
@@ -270,10 +270,10 @@ export default function AboutVerificationPage() {
             );
           })}
         </RevealGroup>
-      </section>
+      </div></section>
 
       {/* FAQ / Direct Advisory CTA */}
-      <Reveal as="section" className="border-t border-border bg-card/60 py-16 lg:py-20">
+      <Reveal as="section" className="band-wash-deep border-t border-border py-16 lg:py-20">
         <div className="mx-auto max-w-4xl px-5 text-center lg:px-8">
           <ClipboardCheck className="mx-auto size-10 text-accent" />
           <h2 className="mt-4 font-display text-3xl font-bold">Have Questions About a Property's Title?</h2>

@@ -296,7 +296,7 @@ function PropertyDetailPage() {
       </section>
 
       {/* CORE DETAILS & SIDEBAR */}
-      <section className="mx-auto grid max-w-7xl gap-12 px-5 py-12 lg:grid-cols-[1.5fr_0.8fr] lg:px-8">
+      <section className="band-wash-a py-12 border-b border-border"><div className="mx-auto grid max-w-7xl gap-12 px-5 lg:grid-cols-[1.5fr_0.8fr] lg:px-8">
         <div>
           {/* Header Title & Pricing */}
           <div className="flex flex-col justify-between gap-4 border-b border-border pb-8 sm:flex-row sm:items-baseline">
@@ -449,13 +449,13 @@ function PropertyDetailPage() {
             </p>
           </Reveal>
         </aside>
-      </section>
+      </div></section>
 
       {/* Unified Architectural Services Configurator (Interiors / Construction) */}
       <PropertyConfigurator property={property} />
 
       {/* Embedded EMI Calculator */}
-      <section className="border-t border-border bg-secondary/30 py-16">
+      <section className="band-wash-deep border-t border-border py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="mb-8">
             <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">

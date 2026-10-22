@@ -40,7 +40,7 @@ export default function AboutPage() {
       <SiteHeader sticky />
 
       {/* Page Hero */}
-      <section className="border-b border-border bg-card/60 py-16 lg:py-24">
+      <section className="band-wash-a border-b border-border py-16 lg:py-24">
         <div className="mx-auto max-w-4xl px-5 text-center lg:px-8">
           <p className="inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-bold uppercase tracking-widest text-accent">
             <Sparkles className="size-3.5 text-accent" />
@@ -67,7 +67,7 @@ export default function AboutPage() {
         </div>
       </section>
 
-      <div className="mx-auto max-w-5xl px-5 py-16 lg:px-8 space-y-24">
+      <section className="band-wash-deep border-t border-border py-16"><div className="mx-auto max-w-5xl px-5 lg:px-8 space-y-24">
         {/* SECTION 1: Our Story */}
         <Reveal as="section" id="story" className="scroll-mt-28">
           <div className="flex items-center gap-3">
@@ -290,7 +290,7 @@ export default function AboutPage() {
             </Link>
           </div>
         </Reveal>
-      </div>
+      </div></section>
 
       <SiteFooter />
       <WhatsAppAction floating context="general" />

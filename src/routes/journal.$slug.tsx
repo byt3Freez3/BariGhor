@@ -176,7 +176,7 @@ function JournalDetailPage() {
       </article>
 
       {/* Read Next Section */}
-      <section className="border-t border-border bg-card/60 py-16">
+      <section className="band-wash-deep border-t border-border py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <h3 className="font-display text-2xl font-bold">More from the BariGhor Journal</h3>
           <RevealGroup staggerMs={80} className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">

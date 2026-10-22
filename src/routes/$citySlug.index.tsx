@@ -339,7 +339,7 @@ function CityHomePage() {
       </section>
 
       {/* SECTION 2: TRUST SIGNALS & CAPABILITIES BAND */}
-      <section className="border-b border-border bg-card/50 py-10">
+      <section className="band-wash-a border-b border-border py-10">
         <div className="mx-auto max-w-7xl px-5 lg:px-8 space-y-8">
           <RevealGroup staggerMs={80} className="grid gap-8 sm:grid-cols-3">
             {trustSignals.map((item, idx) => {
@@ -410,7 +410,7 @@ function CityHomePage() {
       </section>
 
       {/* SECTION 3: CURATED RESIDENCES PORTFOLIO (With Live Result Count) */}
-      <section id="curated-results" className="py-20 scroll-mt-20">
+      <section id="curated-results" className="band-wash-b py-20 scroll-mt-20">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>
@@ -448,7 +448,7 @@ function CityHomePage() {
       </section>
 
       {/* SECTION 4: EDITORIAL BROWSE BANDS (Budget, BHK, Possession) */}
-      <section id="browse-collections" className="border-t border-border bg-secondary/25 py-20">
+      <section id="browse-collections" className="band-wash-a border-t border-border py-20">
         <div className="mx-auto max-w-7xl px-5 lg:px-8 space-y-16">
           {/* Sub-band A: Browse by Budget */}
           <div>
@@ -569,7 +569,7 @@ function CityHomePage() {
 
       {/* SECTION 5: NEIGHBOURHOOD INTELLIGENCE (Localities & Paras) */}
       {cityLocalities.length > 0 && (
-        <section className="border-t border-border bg-background py-20">
+        <section className="band-wash-b border-t border-border py-20">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
               <div>
@@ -639,7 +639,7 @@ function CityHomePage() {
 
       {/* SECTION 6: FEATURED RESIDENCE SPOTLIGHT */}
       {featuredProp && (
-        <section className="py-20 border-t border-border bg-secondary/20">
+        <section className="band-wash-a py-20 border-t border-border">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="grid gap-12 lg:grid-cols-2 lg:items-center">
               <div className="relative aspect-[4/3] overflow-hidden rounded-xs shadow-xl">
@@ -696,7 +696,7 @@ function CityHomePage() {
 
       {/* QUIET BAND: RECENTLY VIEWED HOMES (Stored locally, zero login required) */}
       {recentlyViewedProperties.length > 0 && (
-        <section className="border-t border-border bg-card/40 py-16">
+        <section className="band-wash-b border-t border-border py-16">
           <div className="mx-auto max-w-7xl px-5 lg:px-8">
             <div className="flex items-center justify-between">
               <div>
@@ -729,14 +729,14 @@ function CityHomePage() {
       )}
 
       {/* SECTION 7: HOME LOAN EMI CALCULATOR */}
-      <section className="border-t border-border bg-background py-20">
+      <section className="band-wash-a border-t border-border py-20">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <EmiCalculator />
         </div>
       </section>
 
       {/* SECTION 8: JOURNAL & FIELD GUIDES */}
-      <section className="border-t border-border bg-secondary/15 py-20">
+      <section className="band-wash-deep border-t border-border py-20">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>

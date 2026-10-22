@@ -28,7 +28,7 @@ function JournalIndexPage() {
       <SiteHeader sticky />
 
       {/* Header */}
-      <section className="border-b border-border bg-card/60 py-12 lg:py-16">
+      <section className="band-wash-a border-b border-border py-12 lg:py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-accent">
             Field Guides & Analysis
@@ -44,7 +44,7 @@ function JournalIndexPage() {
       </section>
 
       {/* Articles Grid */}
-      <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+      <section className="band-wash-deep border-t border-border py-16 lg:py-20"><div className="mx-auto max-w-7xl px-5 lg:px-8">
         <RevealGroup staggerMs={80} className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {journalArticles.map((article, idx) => (
             <Reveal
@@ -86,7 +86,7 @@ function JournalIndexPage() {
             </Reveal>
           ))}
         </RevealGroup>
-      </section>
+      </div></section>
 
       <SiteFooter />
       <WhatsAppAction floating context="journal" />

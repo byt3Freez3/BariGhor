@@ -200,7 +200,7 @@ function CitySearchPage() {
       <SiteHeader sticky />
 
       {/* Hero Search Header */}
-      <section className="border-b border-border bg-card/60 py-10 lg:py-14">
+      <section className="band-wash-a border-b border-border py-10 lg:py-14">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           {searchParams.note && (
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-semibold text-accent">
@@ -456,14 +456,14 @@ function CitySearchPage() {
       </section>
 
       {/* Results Grid */}
-      <section className="mx-auto max-w-7xl px-5 py-12 lg:px-8">
+      <section className="band-wash-deep border-t border-border py-12"><div className="mx-auto max-w-7xl px-5 lg:px-8">
         <AnimatedPropertyGrid
           properties={results}
           onResetFilters={handleResetFilters}
           emptyTitle="No residences found"
           emptySubtitle="Try adjusting your query or filter parameters."
         />
-      </section>
+      </div></section>
 
       <SiteFooter />
       <WhatsAppAction floating context="search" />

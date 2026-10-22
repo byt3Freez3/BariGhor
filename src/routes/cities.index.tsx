@@ -57,7 +57,7 @@ function CitiesIndexPage() {
       </nav>
 
       {/* Editorial Hero Header */}
-      <section className="border-b border-border bg-secondary/30 py-16 lg:py-24">
+      <section className="band-wash-a border-b border-border py-16 lg:py-24">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="max-w-3xl">
             <p className="text-xs font-bold uppercase tracking-[0.25em] text-accent">
@@ -127,7 +127,7 @@ function CitiesIndexPage() {
       </section>
 
       {/* TIER 1 SECTION */}
-      <section className="py-20 border-b border-border">
+      <section className="band-wash-b py-20 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-end">
             <div>
@@ -215,7 +215,7 @@ function CitiesIndexPage() {
       </section>
 
       {/* TIER 2 SECTION */}
-      <section className="py-20 border-b border-border bg-secondary/20">
+      <section className="band-wash-a py-20 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col justify-between gap-4 border-b border-border pb-6 sm:flex-row sm:items-end">
             <div>
@@ -288,7 +288,7 @@ function CitiesIndexPage() {
       </section>
 
       {/* TIER 3 STRATEGIC EXPANSION HORIZON */}
-      <section className="py-20">
+      <section className="band-wash-deep py-20">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="rounded-xs border border-dashed border-border bg-card p-8 lg:p-12 text-center">
             <Building className="mx-auto size-12 text-accent opacity-60" />

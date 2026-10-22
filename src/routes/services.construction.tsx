@@ -163,7 +163,7 @@ function ConstructionServicePage() {
       </section>
 
       {/* THREE CONSTRUCTION TIERS — Recommended settles last with deeper resting shadow (STEP A3) */}
-      <section id="tiers" className="py-20 lg:py-28 border-b border-border bg-card/60">
+      <section id="tiers" className="band-wash-a py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow={CONSTRUCTION_CONTENT.eyebrow}
@@ -251,7 +251,7 @@ function ConstructionServicePage() {
       </section>
 
       {/* ADD-ON UPGRADES (STEP A2: 60ms stagger) */}
-      <section className="py-20 lg:py-28 border-b border-border bg-background">
+      <section className="band-wash-b py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Civil Engineering Add-Ons"
@@ -304,7 +304,7 @@ function ConstructionServicePage() {
       </section>
 
       {/* PORTFOLIO SHOWCASE (STEP A2: 120ms stagger) */}
-      <section className="py-20 lg:py-28 border-b border-border bg-secondary/15">
+      <section className="band-wash-a py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Completed Plot Builds"
@@ -357,7 +357,7 @@ function ConstructionServicePage() {
       </section>
 
       {/* PROCESS TIMELINE — Strictly sequential 01 -> 05 (STEP A2) */}
-      <section className="py-20 lg:py-28 border-b border-border bg-background">
+      <section className="band-wash-b py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Engineering Roadmap"
@@ -387,7 +387,7 @@ function ConstructionServicePage() {
       </section>
 
       {/* FAQS — GPU-friendly Accordion (STEP A4) */}
-      <section className="py-20 border-b border-border bg-secondary/20">
+      <section className="band-wash-deep py-20 border-b border-border">
         <div className="mx-auto max-w-3xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Construction Engineering FAQs"

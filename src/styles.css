@@ -101,6 +101,31 @@
   --whatsapp-foreground: #ffffff;
   --glass: rgba(249, 247, 241, 0.88);
   --glass-foreground: #1e293b;
+  /* Powdery Green Wash tokens (STEP 4) */
+  --canvas-base: #FAF8F3;
+  --powder-50:   #F4F8F1;
+  --powder-100:  #EAF1E6;
+  --powder-200:  #DCE7D6;
+  --powder-300:  #C3D4BC;
+
+  --wash-a:
+    radial-gradient(ellipse 70% 120% at 97% 12%,
+      rgba(141,176,134,.20), rgba(141,176,134,0) 68%),
+    linear-gradient(103deg, #ECF3E7 0%, #FAF8F3 46%,
+      #F4F8F0 74%, #E8F0E2 100%);
+
+  --wash-b:
+    radial-gradient(ellipse 65% 115% at 4% 88%,
+      rgba(141,176,134,.22), rgba(141,176,134,0) 66%),
+    linear-gradient(258deg, #EDF3E9 0%, #FAF8F3 50%,
+      #F5F9F1 76%, #E9F1E4 100%);
+
+  --wash-deep:
+    radial-gradient(ellipse 80% 130% at 92% 78%,
+      rgba(128,166,122,.26), rgba(128,166,122,0) 70%),
+    linear-gradient(103deg, #FAF8F3 0%, #F2F8EE 48%,
+      #E4EDDE 100%);
+
 }
 
 .dark {
@@ -398,3 +423,55 @@ body {
 }
 
 
+
+/* Reusable Light Band Powdery-Green Wash System (STEP 4) */
+.band,
+.band-wash-a {
+  background-color: var(--canvas-base);
+  background-image: var(--wash-a);
+  --accent: #92400e;
+  --accent-text: #92400e;
+}
+
+.band-wash-b {
+  background-color: var(--canvas-base);
+  background-image: var(--wash-b);
+  --accent: #92400e;
+  --accent-text: #92400e;
+}
+
+.band-wash-deep {
+  background-color: var(--canvas-base);
+  background-image: var(--wash-deep);
+  --accent: #92400e;
+  --accent-text: #92400e;
+}
+
+.band:nth-of-type(even) {
+  background-image: var(--wash-b);
+}
+
+.band.band-deep,
+.band:last-of-type {
+  background-image: var(--wash-deep);
+}
+
+/* Floating cards on washed bands */
+.band .bg-card,
+.band-wash-a .bg-card,
+.band-wash-b .bg-card,
+.band-wash-deep .bg-card,
+.band-wash-a [data-card="true"],
+.band-wash-b [data-card="true"],
+.band-wash-deep [data-card="true"] {
+  background-color: rgba(255, 255, 255, 0.88);
+  border-color: rgba(154, 180, 146, 0.42);
+}
+
+.dark .band,
+.dark .band-wash-a,
+.dark .band-wash-b,
+.dark .band-wash-deep {
+  background-image: none;
+  background-color: var(--background);
+}

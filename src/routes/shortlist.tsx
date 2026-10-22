@@ -55,7 +55,7 @@ export default function ShortlistPage() {
       <SiteHeader sticky />
 
       {/* Header Banner */}
-      <section className="border-b border-border bg-card/60 py-12 lg:py-16">
+      <section className="band-wash-a border-b border-border py-12 lg:py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
             <div>
@@ -105,7 +105,7 @@ export default function ShortlistPage() {
       </section>
 
       {/* Shortlist Cards */}
-      <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+      <section className="band-wash-deep border-t border-border py-16"><div className="mx-auto max-w-7xl px-5 lg:px-8">
         {savedProperties.length > 0 ? (
           <div className="space-y-8">
             {/* Contextual Bridge: Unified Interiors */}
@@ -237,7 +237,7 @@ export default function ShortlistPage() {
             </Button>
           </div>
         )}
-      </section>
+      </div></section>
 
       <SiteFooter />
       <WhatsAppAction floating context="general" />

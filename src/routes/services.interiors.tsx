@@ -164,7 +164,7 @@ function InteriorsServicePage() {
       </section>
 
       {/* THREE PACKAGE TIERS — Recommended settles last with deeper resting shadow (STEP A3) */}
-      <section id="tiers" className="py-20 lg:py-28 border-b border-border bg-card/60">
+      <section id="tiers" className="band-wash-a py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow={INTERIORS_CONTENT.eyebrow}
@@ -252,7 +252,7 @@ function InteriorsServicePage() {
       </section>
 
       {/* ADD-ON UPGRADES (STEP A2: 60ms stagger) */}
-      <section className="py-20 lg:py-28 border-b border-border bg-background">
+      <section className="band-wash-b py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Modular Component Add-Ons"
@@ -305,7 +305,7 @@ function InteriorsServicePage() {
       </section>
 
       {/* PORTFOLIO SHOWCASE (STEP A2: 120ms stagger) */}
-      <section className="py-20 lg:py-28 border-b border-border bg-secondary/15">
+      <section className="band-wash-a py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Completed Interior Projects"
@@ -358,7 +358,7 @@ function InteriorsServicePage() {
       </section>
 
       {/* PROCESS (STEP A2: 80ms sequential stagger 01 -> 04) */}
-      <section className="py-20 lg:py-28 border-b border-border bg-background">
+      <section className="band-wash-b py-20 lg:py-28 border-b border-border">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Rigorous Handover Protocol"
@@ -388,7 +388,7 @@ function InteriorsServicePage() {
       </section>
 
       {/* FAQS — GPU-friendly Accordion (STEP A4) */}
-      <section className="py-20 border-b border-border bg-secondary/20">
+      <section className="band-wash-deep py-20 border-b border-border">
         <div className="mx-auto max-w-3xl px-5 lg:px-8">
           <SectionHeading
             eyebrow="Interior Architecture FAQs"

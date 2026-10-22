@@ -222,7 +222,7 @@ export default function LocalityDetailPage() {
       </section>
 
       {/* KEY METRICS BAR */}
-      <section className="border-b border-border bg-card">
+      <section className="band-wash-a border-b border-border">
         <RevealGroup staggerMs={80} className="mx-auto grid max-w-7xl grid-cols-2 gap-4 px-5 py-6 sm:grid-cols-4 lg:px-8">
           <Reveal as="div" index={0} className="border-r border-border/60 pr-4 last:border-none">
             <p className="text-xs text-muted-foreground uppercase tracking-wider font-semibold">
@@ -261,7 +261,7 @@ export default function LocalityDetailPage() {
       </section>
 
       {/* EDITORIAL GUIDE CONTENT (Above Data) */}
-      <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+      <section className="band-wash-b py-16 border-t border-border"><div className="mx-auto max-w-7xl px-5 lg:px-8">
         <div className="grid gap-12 lg:grid-cols-[1.6fr_1fr]">
           <Reveal as="div" className="space-y-8">
             <div>
@@ -334,11 +334,11 @@ export default function LocalityDetailPage() {
               )}
             </div>
           </Reveal>
-        </div>
+        </div></div>
       </section>
 
       {/* PRICE TREND CHART (Recharts) */}
-      <section className="border-t border-border bg-secondary/20 py-16">
+      <section className="band-wash-a border-t border-border py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
             <div>
@@ -423,7 +423,7 @@ export default function LocalityDetailPage() {
       </section>
 
       {/* HOMES IN THIS LOCALITY */}
-      <section id="neighbourhood-homes" className="border-t border-border bg-background py-16">
+      <section id="neighbourhood-homes" className="band-wash-deep border-t border-border py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-end">
             <div>

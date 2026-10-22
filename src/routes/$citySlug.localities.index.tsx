@@ -62,7 +62,7 @@ export default function CityLocalitiesPage() {
       <SiteHeader sticky />
 
       {/* Page Header */}
-      <section className="border-b border-border bg-card/60 py-12 lg:py-16">
+      <section className="band-wash-a border-b border-border py-12 lg:py-16">
         <div className="mx-auto max-w-7xl px-5 lg:px-8">
           {search.note && (
             <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-accent/30 bg-accent/10 px-4 py-1.5 text-xs font-semibold text-accent">
@@ -86,7 +86,7 @@ export default function CityLocalitiesPage() {
       </section>
 
       {/* Localities Deep-Dive Grid */}
-      <section className="mx-auto max-w-7xl px-5 py-16 lg:px-8">
+      <section className="band-wash-deep border-t border-border py-16"><div className="mx-auto max-w-7xl px-5 lg:px-8">
         {cityLocalities.length > 0 ? (
           <RevealGroup staggerMs={80} className="space-y-16">
             {cityLocalities.map((loc, idx) => {
@@ -226,7 +226,7 @@ export default function CityLocalitiesPage() {
             </div>
           </div>
         )}
-      </section>
+      </div></section>
 
       <SiteFooter />
       <WhatsAppAction floating context="locality" />
