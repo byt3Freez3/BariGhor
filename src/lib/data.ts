@@ -129,6 +129,7 @@ export interface Locality {
 }
 
 export interface JournalArticle {
+  id?: string;
   slug: string;
   title: string;
   bengaliTitle: string;
@@ -139,6 +140,7 @@ export interface JournalArticle {
   excerpt: string;
   content: string[];
   keyTakeaways: string[];
+  coverImage?: string;
 }
 
 export const imagery = {
@@ -1565,6 +1567,7 @@ export const featuredProperty = properties[0];
 
 export const journalArticles: JournalArticle[] = [
   {
+    id: "art-1",
     slug: "freehold-leasehold-kolkata",
     title: "Freehold, Leasehold, or Co-operative Share in Kolkata?",
     bengaliTitle: "ফ্রিহোল্ড, লিজহোল্ড না সমবায় শেয়ার?",
@@ -1572,6 +1575,7 @@ export const journalArticles: JournalArticle[] = [
     readTime: "6 min read",
     date: "September 2026",
     author: "BariGhor Advisory Desk",
+    coverImage: aliporeImage,
     excerpt:
       "In Bengal, title structure shapes your long-term ownership, mortgage ease, and resale value just as much as square footage. Here is the plain-language guide.",
     content: [
@@ -1587,6 +1591,7 @@ export const journalArticles: JournalArticle[] = [
     ],
   },
   {
+    id: "art-2",
     slug: "understanding-wbrera",
     title: "Understanding WBRERA: The Bengal Buyer's Checklist",
     bengaliTitle: "WBRERA এবং ক্রেতার সুরক্ষা নির্দেশিকা",
@@ -1594,6 +1599,7 @@ export const journalArticles: JournalArticle[] = [
     readTime: "5 min read",
     date: "September 2026",
     author: "Siddhartha Sen, Legal Advisor",
+    coverImage: heroImage,
     excerpt:
       "How West Bengal Real Estate Regulatory Authority protects home buyers, and what 4 numbers you must check before writing a token cheque.",
     content: [
@@ -1608,6 +1614,7 @@ export const journalArticles: JournalArticle[] = [
     ],
   },
   {
+    id: "art-3",
     slug: "kolkata-monsoon-drainage-guide",
     title: "An Honest Monsoon & Drainage Assessment for New Town & Salt Lake",
     bengaliTitle: "বর্ষায় জলনিকাশী ব্যবস্থা: নিউ টাউন ও সল্টলেক",
@@ -1615,6 +1622,7 @@ export const journalArticles: JournalArticle[] = [
     readTime: "7 min read",
     date: "September 2026",
     author: "BariGhor Field Research",
+    coverImage: saltLakeImage,
     excerpt:
       "Why street elevation and canal connectivity matter more than pin codes during Kolkata's heaviest July downpours.",
     content: [
@@ -1629,8 +1637,8 @@ export const journalArticles: JournalArticle[] = [
       "Check our neighbourhood flood risk tag on every BariGhor listing.",
     ],
   },
-,
   {
+    id: "art-4",
     slug: "kolkata-monsoon-proof-interiors-guide",
     title: "The Kolkata Homeowner's Guide to Monsoon-Proof Interiors & Marine Ply",
     bengaliTitle: "বর্ষায় সুরক্ষিত ইন্টেরিয়র: মেরিন প্লাই ও আর্কিটেকচারাল ফিনিশ",
@@ -1638,6 +1646,7 @@ export const journalArticles: JournalArticle[] = [
     readTime: "6 min read",
     date: "October 2026",
     author: "BariGhor Interior Studio",
+    coverImage: newTownImage,
     excerpt:
       "Why standard commercial plywood delaminates during Bengal's 95% humidity months, and what specifications to demand for kitchens and wardrobes.",
     content: [
@@ -1652,6 +1661,7 @@ export const journalArticles: JournalArticle[] = [
     ],
   },
   {
+    id: "art-5",
     slug: "seismic-zone-iv-bengal-soil-construction",
     title: "Seismic Zone IV & Alluvial Soil: Engineering Freehold Plot Homes",
     bengaliTitle: "সিসমিক জোন ৪ ও পাইলিং: বাংলায় নিরাপদ বাড়ি নির্মাণ",
@@ -1659,6 +1669,7 @@ export const journalArticles: JournalArticle[] = [
     readTime: "8 min read",
     date: "October 2026",
     author: "BariGhor Civil Engineering Division",
+    coverImage: saltLakeImage,
     excerpt:
       "What every plot buyer in New Town and Salt Lake must demand before laying foundations on Bengal's deep alluvial clay delta.",
     content: [
