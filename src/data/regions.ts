@@ -33,7 +33,7 @@ export const cities: City[] = [
     avgPricePerSqft: 14500,
     blurbEn: "The cultural and residential heart of Bengal. From heritage Alipore to dynamic EM Bypass.",
     blurbBn: "বাংলার সাংস্কৃতিক ও আবাসিক প্রাণকেন্দ্র। ঐতিহ্যবাহী আলিপুর থেকে ইএম বাইপাস।",
-    localities: localities.filter((l) => l.citySlug === "kolkata"),
+    localities: localities.filter((l) => l.citySlug === "kolkata" || l.slug === "new-town"),
   },
   {
     slug: "howrah",

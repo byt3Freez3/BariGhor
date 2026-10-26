@@ -437,13 +437,13 @@ function CityHomePage() {
             </Link>
           </div>
 
-          <div className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <RevealGroup staggerMs={80} className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {(filteredList.length > 0 ? filteredList : cityProperties)
               .slice(0, 6)
               .map((property, index) => (
                 <PropertyCard key={property.id} property={property} index={index} />
               ))}
-          </div>
+          </RevealGroup>
         </div>
       </section>
 
@@ -590,7 +590,7 @@ function CityHomePage() {
             </div>
 
             <RevealGroup staggerMs={80} className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-              {cityLocalities.map((loc, idx) => (
+              {cityLocalities.slice(0, 6).map((loc, idx) => (
                 <Reveal
                   key={loc.slug}
                   index={idx}
