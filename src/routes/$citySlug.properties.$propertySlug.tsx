@@ -35,6 +35,7 @@ import { getPropertyBySlug, properties } from "@/lib/data";
 import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
 import { Reveal, RevealGroup } from "@/components/reveal";
+import { AvailabilityChip, formatAvailabilityDate, getSoldNotificationMessage } from "@/components/availability-chip";
 
 export function PropertyDetailSkeleton() {
   return (
@@ -155,6 +156,7 @@ function PropertyDetailPage() {
   const { city, property } = Route.useLoaderData();
   const { language, isShortlisted, toggleShortlist, addRecentlyViewed } = useAppStore();
   const saved = isShortlisted(property.id);
+  const isSold = property.availability === "sold";
   const gallery = property.gallery_images || property.galleryImages || [property.image_url];
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [activeTab, setActiveTab] = useState<"overview" | "floorplan" | "specs">("overview");
@@ -228,12 +230,23 @@ function PropertyDetailPage() {
               width={1200}
               height={600}
               isHero={activeImageIndex === 0}
-              style={{ viewTransitionName: `prop-img-${property.slug}` }}
-              className="size-full object-cover transition-transform duration-base ease-out"
+              style={{
+                viewTransitionName: `prop-img-${property.slug}`,
+                filter: isSold ? "saturate(0.4)" : undefined,
+              }}
+              className={`size-full object-cover transition-transform duration-base ease-out ${
+                isSold ? "saturate-[0.4]" : ""
+              }`}
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/30 pointer-events-none" />
 
-            <div className="absolute left-4 top-4 flex flex-wrap gap-2">
+            <div className="absolute left-4 top-4 flex flex-wrap items-center gap-2">
+              <AvailabilityChip
+                availability={property.availability}
+                unitsTotal={property.unitsTotal}
+                unitsRemaining={property.unitsRemaining}
+                size="md"
+              />
               <Link
                 to="/about/verification"
                 className="inline-flex items-center gap-1.5 rounded-xs bg-primary/95 px-3 py-1.5 text-xs font-bold uppercase tracking-wider text-primary-foreground shadow-md backdrop-blur-xs transition-colors hover:bg-primary"
@@ -316,6 +329,16 @@ function PropertyDetailPage() {
               <p className="text-xs text-muted-foreground">
                 ₹{property.pricePerSqFt?.toLocaleString("en-IN")} / sq ft built-up
               </p>
+              <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:justify-end">
+                <AvailabilityChip
+                  availability={property.availability}
+                  unitsTotal={property.unitsTotal}
+                  unitsRemaining={property.unitsRemaining}
+                />
+                <span className="text-[11px] text-muted-foreground">
+                  Status updated {formatAvailabilityDate(property.availabilityUpdatedAt)}
+                </span>
+              </div>
             </div>
           </div>
 
@@ -417,14 +440,25 @@ function PropertyDetailPage() {
             </p>
 
             <div className="mt-6 space-y-3">
-              <a
-                href={`https://wa.me/919073599355?text=Hi%20BariGhor%2C%20I%20am%20interested%20in%20${encodeURIComponent(property.title)}%20(${property.price})%20in%20${encodeURIComponent(property.locality)}.%20Reference%3A%20${property.id}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex w-full items-center justify-center gap-2 rounded-xs bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#128C7E]"
-              >
-                Inquire on WhatsApp
-              </a>
+              {isSold ? (
+                <a
+                  href={`https://wa.me/919073599355?text=${encodeURIComponent(getSoldNotificationMessage(property))}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 rounded-xs border-2 border-accent bg-accent/15 px-4 py-3 text-sm font-bold text-accent shadow-xs transition-colors hover:bg-accent/25"
+                >
+                  Notify me about similar homes
+                </a>
+              ) : (
+                <a
+                  href={`https://wa.me/919073599355?text=Hi%20BariGhor%2C%20I%20am%20interested%20in%20${encodeURIComponent(property.title)}%20(${property.price})%20in%20${encodeURIComponent(property.locality)}.%20Reference%3A%20${property.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex w-full items-center justify-center gap-2 rounded-xs bg-[#25D366] px-4 py-3 text-sm font-semibold text-white shadow-xs transition-colors hover:bg-[#128C7E]"
+                >
+                  Inquire on WhatsApp
+                </a>
+              )}
 
               <a
                 href="tel:+919073599355"

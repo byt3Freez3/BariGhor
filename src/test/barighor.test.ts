@@ -200,6 +200,79 @@ describe("Property Inventory Data Invariants", () => {
   });
 });
 
+import {
+  getSoldNotificationMessage,
+  formatAvailabilityDate,
+  getBudgetBandLabel,
+} from "@/components/availability-chip";
+
+describe("Step 2: Availability Status & Inventory Lifecycle Invariants", () => {
+  const validStatuses = ["available", "under_offer", "token_received", "sold"];
+
+  it("every property has a strictly valid availability enum and ISO update date", () => {
+    properties.forEach((p: Property) => {
+      expect(validStatuses).toContain(p.availability);
+      expect(p.availabilityUpdatedAt).toMatch(/^\d{4}-\d{2}-\d{2}/);
+    });
+  });
+
+  it("multi-unit projects supply both unitsRemaining and unitsTotal", () => {
+    const multiUnitProps = properties.filter((p) => typeof p.unitsRemaining === "number");
+    expect(multiUnitProps.length).toBeGreaterThan(0);
+    multiUnitProps.forEach((p) => {
+      expect(p.unitsTotal).toBeDefined();
+      expect(p.unitsTotal!).toBeGreaterThanOrEqual(p.unitsRemaining!);
+    });
+  });
+
+  it("filterProperties respects hideSold flag (defaulting behavior test)", () => {
+    const allKolkata = filterProperties({ citySlug: "kolkata", hideSold: false });
+    const soldKolkata = allKolkata.filter((p) => p.availability === "sold");
+    expect(soldKolkata.length).toBeGreaterThan(0);
+
+    const activeOnlyKolkata = filterProperties({ citySlug: "kolkata", hideSold: true });
+    expect(activeOnlyKolkata.every((p) => p.availability !== "sold")).toBe(true);
+    expect(activeOnlyKolkata.length).toBe(allKolkata.length - soldKolkata.length);
+  });
+
+  it("sold properties remain retrievable by direct slug (SEO / history preservation)", () => {
+    const soldProp = properties.find((p) => p.availability === "sold");
+    expect(soldProp).toBeDefined();
+    if (soldProp) {
+      const found = properties.find((p) => p.slug === soldProp.slug);
+      expect(found).toBeDefined();
+      expect(found?.availability).toBe("sold");
+    }
+  });
+
+  it("generates contextual WhatsApp sold notification message with locality and budget band", () => {
+    const soldProp = properties.find((p) => p.availability === "sold");
+    expect(soldProp).toBeDefined();
+    if (soldProp) {
+      const msg = getSoldNotificationMessage(soldProp);
+      expect(msg).toContain(soldProp.title);
+      expect(msg).toContain(soldProp.locality);
+      expect(msg).toContain("Please notify me about similar homes");
+      expect(msg).toContain(soldProp.price);
+      expect(msg).toMatch(/band/i);
+    }
+  });
+
+  it("formats ISO availability dates into localized human readable strings", () => {
+    expect(formatAvailabilityDate("2026-10-15")).toMatch(/15\s+(Oct|October)\s+2026/);
+    expect(formatAvailabilityDate("invalid")).toBe("invalid");
+  });
+
+  it("computes budget bands accurately across price thresholds", () => {
+    expect(getBudgetBandLabel(20)).toBe("Under ₹25 Lakh");
+    expect(getBudgetBandLabel(25)).toBe("₹25 – 50 Lakh");
+    expect(getBudgetBandLabel(45)).toBe("₹25 – 50 Lakh");
+    expect(getBudgetBandLabel(85)).toBe("₹50 Lakh – 1.0 Cr");
+    expect(getBudgetBandLabel(150)).toBe("₹1.0 – 3.0 Cr");
+    expect(getBudgetBandLabel(350)).toBe("₹3.0 Cr & Above");
+  });
+});
+
 import fs from "node:fs";
 import path from "node:path";
 import { MOTION_DURATIONS, MOTION_DURATIONS_MS, MOTION_EASINGS } from "@/lib/motion";

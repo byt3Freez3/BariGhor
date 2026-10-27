@@ -57,6 +57,25 @@ export const SEED_PLACEHOLDERS: PlaceholderItem[] = [
       "Added to expand Curated Kolkata Residences grid from 4 to 6 cards. Tagged with verified: false (Audit Pending).",
   },
   {
+    id: "prop-20",
+    type: "property",
+    titleOrName: "Rajarhat Orchid Heights",
+    slug: "rajarhat-orchid-heights",
+    city: "Kolkata",
+    status: "placeholder_pending_client_audit",
+    requiredClientInputs: [
+      "Official sanctioned project name & marketing title",
+      "Valid WBRERA project registration number (currently WBRERA/PLACEHOLDER/PENDING-AUDIT)",
+      "Accurate verified pricing (₹ Lakhs) and ₹/sq ft transaction basis",
+      "Actual carpet area and built-up area schedule",
+      "Architectural photography (exterior, retail frontage, unit interiors)",
+      "Developer entity name and title lineage",
+      "Floor plan SVG / architectural line drawing",
+    ],
+    notes:
+      "Added to ensure Curated Kolkata Residences maintains 6 active non-sold cards when hideSold filter is active. Tagged with verified: false (Audit Pending).",
+  },
+  {
     id: "loc-ballygunge",
     type: "locality",
     titleOrName: "Ballygunge",

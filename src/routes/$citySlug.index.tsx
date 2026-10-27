@@ -256,6 +256,7 @@ function CityHomePage() {
       bhk,
       listingType,
       propertyType,
+      hideSold: true,
     });
   }, [city.slug, locality, budget, bhk, listingType, propertyType]);
 

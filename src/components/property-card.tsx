@@ -7,12 +7,14 @@ import { WhatsAppAction } from "@/components/whatsapp-action";
 import { useAppStore } from "@/lib/store";
 import { MOTION_DURATIONS, MOTION_EASINGS, useReducedMotion } from "@/lib/motion";
 import { BlurImage } from "@/components/blur-image";
+import { AvailabilityChip, getSoldNotificationMessage } from "@/components/availability-chip";
 
 export function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const prefersReduced = useReducedMotion();
   const citySlug = property.citySlug || (property.localitySlug === "new-town" ? "new-town" : "kolkata");
   const { isShortlisted, toggleShortlist } = useAppStore();
   const saved = isShortlisted(property.id);
+  const isSold = property.availability === "sold";
 
   return (
     <motion.article
@@ -38,7 +40,9 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
         layout: { duration: 0.3, ease: MOTION_EASINGS.premium },
       }}
       whileHover={prefersReduced ? undefined : { y: -4 }}
-      className="group flex flex-col overflow-hidden rounded-xs border border-black/5 bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl"
+      className={`group flex flex-col overflow-hidden rounded-xs border border-black/5 bg-card shadow-xs transition-shadow duration-base ease-out hover:shadow-xl ${
+        isSold ? "opacity-95" : ""
+      }`}
     >
       <div className="relative aspect-[16/10] overflow-hidden bg-muted">
         <BlurImage
@@ -46,28 +50,39 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
           alt={property.title}
           width={800}
           height={500}
-          style={{ viewTransitionName: `prop-img-${property.slug}` }}
-          className="size-full object-cover transition-transform duration-base ease-out group-hover:scale-[1.03]"
+          style={{
+            viewTransitionName: `prop-img-${property.slug}`,
+            filter: isSold ? "saturate(0.4)" : undefined,
+          }}
+          className={`size-full object-cover transition-transform duration-base ease-out group-hover:scale-[1.03] ${
+            isSold ? "saturate-[0.4]" : ""
+          }`}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 transition-opacity duration-base ease-out group-hover:opacity-100 pointer-events-none" />
 
-        <div className="absolute left-3 top-3 flex flex-wrap gap-2">
+        <div className="absolute left-3 top-3 right-12 flex flex-wrap items-center gap-1.5">
+          <AvailabilityChip
+            availability={property.availability}
+            unitsTotal={property.unitsTotal}
+            unitsRemaining={property.unitsRemaining}
+            size="sm"
+          />
           {property.verified !== false ? (
             <Link
               to="/about/verification"
               onClick={(e) => e.stopPropagation()}
-              className="inline-flex items-center gap-1 rounded-xs bg-primary/95 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-primary-foreground backdrop-blur-xs transition-colors hover:bg-primary"
+              className="inline-flex items-center gap-1 rounded-xs bg-primary/95 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-primary-foreground backdrop-blur-xs transition-colors hover:bg-primary"
               title="Verified by BariGhor: Click to read our 4-pillar audit report"
             >
               <BadgeCheck className="size-3 text-emerald-400" />
               WBRERA Verified
             </Link>
           ) : (
-            <span className="inline-flex items-center gap-1 rounded-xs bg-amber-800/90 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wider text-white backdrop-blur-xs">
+            <span className="inline-flex items-center gap-1 rounded-xs bg-amber-800/90 px-2 py-0.5 text-[11px] font-bold uppercase tracking-wider text-white backdrop-blur-xs">
               Audit Pending
             </span>
           )}
-          <span className="rounded-xs bg-card/90 px-2.5 py-1 text-[11px] font-semibold text-foreground backdrop-blur-xs">
+          <span className="rounded-xs bg-card/90 px-2 py-0.5 text-[11px] font-semibold text-foreground backdrop-blur-xs">
             {property.tenure_type || property.tenure}
           </span>
         </div>
@@ -142,19 +157,29 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
           {property.description}
         </p>
 
-        <div className="mt-6 flex items-center gap-2 pt-2">
+        <div className="mt-6 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-2">
           <Button asChild variant="outline" size="sm" className="flex-1">
             <Link to="/$citySlug/properties/$propertySlug" params={{ citySlug, propertySlug: property.slug }}>
               Details
             </Link>
           </Button>
-          <WhatsAppAction
-            context="property"
-            propertyTitle={property.title}
-            variant="accent"
-            size="sm"
-            label="Enquire"
-          />
+          {isSold ? (
+            <WhatsAppAction
+              customMessage={getSoldNotificationMessage(property)}
+              variant="outline"
+              size="sm"
+              className="border-accent/40 text-accent hover:bg-accent/10 text-xs font-semibold"
+              label="Notify me about similar homes"
+            />
+          ) : (
+            <WhatsAppAction
+              context="property"
+              propertyTitle={property.title}
+              variant="accent"
+              size="sm"
+              label="Enquire"
+            />
+          )}
         </div>
       </div>
     </motion.article>

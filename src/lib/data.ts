@@ -21,6 +21,8 @@ export type PropertyCategory =
 
 export type PossessionStatus = "Ready to move" | "Possession 2027" | "Possession 2028+";
 
+export type PropertyAvailability = "available" | "under_offer" | "token_received" | "sold";
+
 export interface Property {
   id: string;
   slug: string;
@@ -37,6 +39,10 @@ export interface Property {
   sqft: number;
   pricePerSqFt: number;
   status: string;
+  availability: PropertyAvailability;
+  availabilityUpdatedAt: string; // ISO date string YYYY-MM-DD
+  unitsTotal?: number;
+  unitsRemaining?: number;
   reraProjectNo: string;
   developer: string;
   tenure_type: "Freehold" | "Leasehold" | "Co-operative Share";
@@ -717,6 +723,10 @@ export const localities: Locality[] = [
 export const properties: Property[] = [
   {
     id: "prop-1",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-15",
+    unitsTotal: 24,
+    unitsRemaining: 4,
     slug: "the-verandah-residences",
     title: "The Verandah Residences",
     bengaliTitle: "দ্য ভেরান্দা রেসিডেন্সেস",
@@ -777,6 +787,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-2",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-20",
     slug: "the-saltlake-manor",
     title: "The Salt Lake Manor",
     bengaliTitle: "সল্ট লেক ম্যানর",
@@ -836,6 +848,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-3",
+    availability: "token_received",
+    availabilityUpdatedAt: "2026-10-22",
     slug: "alipore-palms-penthouse",
     title: "Alipore Palms Penthouse",
     bengaliTitle: "আলিপুর পামস পেন্টহাউস",
@@ -895,6 +909,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-4",
+    availability: "under_offer",
+    availabilityUpdatedAt: "2026-10-18",
     slug: "ecopark-greens-villa",
     title: "Eco Park Greens Garden Villa",
     bengaliTitle: "ইকোপার্ক গ্রিন্স ভিলা",
@@ -953,6 +969,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-5",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-12",
     slug: "baisakhi-terraces-saltlake",
     title: "Baisakhi Terraces",
     bengaliTitle: "বৈশাখী টেরেস",
@@ -1011,6 +1029,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-6",
+    availability: "sold",
+    availabilityUpdatedAt: "2026-10-10",
     slug: "queens-court-manor-alipore",
     title: "Queens Court Manor",
     bengaliTitle: "কুইনস কোর্ট ম্যানর",
@@ -1069,6 +1089,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-7",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-14",
     slug: "canopy-greens-rajarhat",
     title: "Canopy Greens Residence",
     bengaliTitle: "ক্যানোপি গ্রিন্স",
@@ -1127,6 +1149,10 @@ export const properties: Property[] = [
   },
   {
     id: "prop-8",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-19",
+    unitsTotal: 18,
+    unitsRemaining: 5,
     slug: "horizon-heights-action-area-3",
     title: "Horizon Heights Sky Residences",
     bengaliTitle: "হরাইজন হাইটস",
@@ -1185,6 +1211,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-9",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-21",
     slug: "the-grand-hooghly-residences",
     title: "The Grand Hooghly Residences",
     bengaliTitle: "দ্য গ্র্যান্ড হুগলি রেসিডেন্সেস",
@@ -1243,6 +1271,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-10",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-08",
     slug: "habra-green-meadows",
     title: "Habra Green Meadows",
     bengaliTitle: "হাবড়া গ্রিন মেডোজ",
@@ -1301,6 +1331,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-11",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-11",
     slug: "asansol-greenfield-studio",
     title: "Asansol Greenfield Studio",
     bengaliTitle: "আসানসোল গ্রিনফিল্ড স্টুডিও",
@@ -1359,6 +1391,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-12",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-16",
     slug: "durgapur-steel-city-residency",
     title: "Durgapur Steel City Residency",
     bengaliTitle: "দুর্গাপুর স্টিল সিটি রেসিডেন্সি",
@@ -1417,6 +1451,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-13",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-09",
     slug: "bardhaman-heritage-enclave",
     title: "Bardhaman Heritage Enclave",
     bengaliTitle: "বর্ধমান হেরিটেজ এনক্লেভ",
@@ -1475,6 +1511,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-14",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-17",
     slug: "sector-v-tech-square-suite",
     title: "Sector V Tech Square Suite",
     bengaliTitle: "সেক্টর ফাইভ টেক স্কয়ার স্যুট",
@@ -1533,6 +1571,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-15",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-19",
     slug: "new-town-aa3-villa-plot",
     title: "New Town AA-III Freehold Villa Plot",
     bengaliTitle: "নিউ টাউন ভিলা প্লট",
@@ -1591,6 +1631,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-16",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-15",
     slug: "siliguri-tea-hills-sanctuary",
     title: "Siliguri Tea Hills Sanctuary",
     bengaliTitle: "শিলিগুড়ি টি হিলস স্যাঙ্কচুয়ারি",
@@ -1649,6 +1691,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-17",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-23",
     slug: "eco-park-skyline-rental-suite",
     title: "Eco Park Skyline Rental Suite",
     bengaliTitle: "ইকোপার্ক স্কাইলাইন রেন্টাল স্যুট",
@@ -1707,6 +1751,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-18",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-24",
     slug: "ballygunge-circular-court",
     title: "Ballygunge Circular Court",
     bengaliTitle: "বালিগঞ্জ সার্কুলার কোর্ট",
@@ -1765,6 +1811,8 @@ export const properties: Property[] = [
   },
   {
     id: "prop-19",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-24",
     slug: "tollygunge-greens-enclave",
     title: "Tollygunge Greens Enclave",
     bengaliTitle: "টালিগঞ্জ গ্রিন্স এনক্লেভ",
@@ -1814,6 +1862,66 @@ export const properties: Property[] = [
     floor: "9th of 16 Floors",
     facing: "East Facing (Morning Sunshine & Golf View)",
     possessionDate: "October 2027",
+    isFeatured: false,
+    listingType: "buy",
+    propertyType: "Apartment",
+    propertyCategory: "apartment",
+    verified: false,
+    verifiedDate: "Pending Audit",
+  },
+  {
+    id: "prop-20",
+    slug: "rajarhat-orchid-heights",
+    title: "Rajarhat Orchid Heights",
+    bengaliTitle: "রাজারহাট অর্কিড হাইটস",
+    citySlug: "kolkata",
+    locality: "Rajarhat",
+    localitySlug: "rajarhat",
+    locationDetails: "Rajarhat Expressway Corridor, Near City Centre 2",
+    price: formatINR(98),
+    priceNumericLakhs: 98,
+    bhk: "3 BHK",
+    bhkCount: 3,
+    sqft: 1420,
+    pricePerSqFt: 6901,
+    status: "Under Construction · Possession 2027",
+    availability: "available",
+    availabilityUpdatedAt: "2026-10-24",
+    reraProjectNo: "WBRERA/PLACEHOLDER/PENDING-AUDIT",
+    developer: "Eastern Bengal Infra (Placeholder)",
+    tenure_type: "Freehold",
+    tenure: "Freehold",
+    approval: "NKDA Sanctioned (Verification Pending)",
+    metro: "1.1 km from City Centre 2 Metro",
+    floodRisk: "Low",
+    image_url: newTownImage,
+    gallery_images: [newTownImage, heroImage, saltLakeImage],
+    galleryImages: [newTownImage, heroImage, saltLakeImage],
+    floor_plan_url: "/assets/floorplans/rajarhat-3bhk.svg",
+    floorPlanSpecs: {
+      carpetAreaSqFt: 1140,
+      balconyAreaSqFt: 120,
+      livingDiningSqFt: "21'0\" x 13'0\"",
+      masterBedroomSqFt: "14'6\" x 12'0\"",
+      kitchenSqFt: "10'0\" x 7'6\"",
+    },
+    description:
+      "[PLACEHOLDER ENTRY - CLIENT TO SUPPLY VERIFIED COPY & PHOTOGRAPHY] A thoughtfully designed 3 BHK high-rise residence situated near City Centre 2 in Rajarhat. Offering excellent airport corridor proximity, contemporary clubhouse amenities, and high rental yield potential.",
+    highlights: [
+      "[PLACEHOLDER] 10-minute commute to Netaji Subhash Chandra Bose Airport",
+      "[PLACEHOLDER] Walkable reach to City Centre 2 and shopping promenades",
+      "[PLACEHOLDER] 80% carpet-to-built-up layout efficiency",
+      "[PLACEHOLDER] Audit in progress with West Bengal RERA Registry",
+    ],
+    amenities: [
+      "Clubhouse with badminton court and gymnasium",
+      "Landscaped podium garden with children play park",
+      "24/7 security with RFID gate barrier",
+      "High-speed automatic dual passenger elevators",
+    ],
+    floor: "7th of 14 Floors",
+    facing: "North-East Facing",
+    possessionDate: "December 2027",
     isFeatured: false,
     listingType: "buy",
     propertyType: "Apartment",
@@ -1977,6 +2085,7 @@ export function filterProperties({
   propertyType,
   possession,
   verifiedOnly,
+  hideSold,
 }: {
   citySlug?: string;
   locality?: string;
@@ -1988,8 +2097,14 @@ export function filterProperties({
   propertyType?: string;
   possession?: string;
   verifiedOnly?: boolean;
+  hideSold?: boolean;
 }): Property[] {
   return properties.filter((p) => {
+    // Availability check (Hide sold)
+    if (hideSold && p.availability === "sold") {
+      return false;
+    }
+
     // City check
     if (citySlug && citySlug !== "all") {
       const pCity = p.citySlug || (p.localitySlug === "new-town" ? "new-town" : "kolkata");

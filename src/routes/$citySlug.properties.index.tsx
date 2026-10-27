@@ -30,6 +30,7 @@ const propertiesSearchSchema = z.object({
   bhk: z.string().optional(),
   possession: z.string().optional(),
   verifiedOnly: z.boolean().optional(),
+  hideSold: z.boolean().optional(),
 });
 
 type PropertiesSearchParams = z.infer<typeof propertiesSearchSchema>;
@@ -164,6 +165,8 @@ function CityPropertiesIndexPage() {
     });
   }, [city.slug]);
 
+  const hideSold = search.hideSold !== false;
+
   const filteredProperties = useMemo(() => {
     return filterProperties({
       citySlug: city.slug,
@@ -174,8 +177,9 @@ function CityPropertiesIndexPage() {
       propertyType: activeType,
       possession: activePossession,
       verifiedOnly: Boolean(search.verifiedOnly),
+      hideSold,
     });
-  }, [city.slug, activeLocality, activeBudget, activeBhk, activeListing, activeType, activePossession, search.verifiedOnly]);
+  }, [city.slug, activeLocality, activeBudget, activeBhk, activeListing, activeType, activePossession, search.verifiedOnly, hideSold]);
 
   const hasActiveFilters =
     activeListing !== "all" ||
@@ -184,7 +188,8 @@ function CityPropertiesIndexPage() {
     activeBudget !== "all" ||
     activeBhk !== "all" ||
     activePossession !== "all" ||
-    Boolean(search.verifiedOnly);
+    Boolean(search.verifiedOnly) ||
+    search.hideSold === false;
 
   return (
     <main className="min-h-screen bg-background text-foreground">
@@ -383,6 +388,26 @@ function CityPropertiesIndexPage() {
                       />
                     </label>
                   </div>
+
+                  {/* Hide Sold Toggle */}
+                  <div className="pt-2">
+                    <label className="flex items-center justify-between cursor-pointer rounded-xs border border-border bg-card p-3">
+                      <span className="text-xs font-semibold text-foreground">
+                        Hide Sold Homes
+                      </span>
+                      <input
+                        type="checkbox"
+                        checked={localFilters.hideSold !== false}
+                        onChange={(e) =>
+                          setLocalFilters((prev) => ({
+                            ...prev,
+                            hideSold: e.target.checked ? undefined : false,
+                          }))
+                        }
+                        className="size-4 accent-[#A16207] rounded-xs cursor-pointer"
+                      />
+                    </label>
+                  </div>
                 </div>
 
                 <div className="sticky bottom-0 mt-8 border-t border-border bg-background pt-4 pb-2 flex gap-3">
@@ -506,6 +531,23 @@ function CityPropertiesIndexPage() {
               <span className="flex items-center gap-1 font-semibold text-foreground">
                 <BadgeCheck className="size-3.5 text-emerald-600" />
                 Verified Only
+              </span>
+            </label>
+
+            {/* Hide Sold Toggle (ON by default) */}
+            <label className="inline-flex items-center gap-1.5 cursor-pointer rounded-xs border border-border bg-card px-3 py-1.5 font-medium hover:border-accent select-none transition-colors">
+              <input
+                type="checkbox"
+                checked={hideSold}
+                onChange={(e) =>
+                  handleDesktopFilterChange({
+                    hideSold: e.target.checked ? undefined : false,
+                  })
+                }
+                className="size-3.5 accent-[#A16207] rounded-xs cursor-pointer"
+              />
+              <span className="font-semibold text-foreground">
+                Hide sold
               </span>
             </label>
 
