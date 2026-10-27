@@ -273,6 +273,164 @@ describe("Step 2: Availability Status & Inventory Lifecycle Invariants", () => {
   });
 });
 
+import {
+  LOCALITY_BENCHMARKS,
+  getBenchmarkForLocality,
+  computePriceBenchmarkComparison,
+  computeMarketAggregate,
+  isBenchmarkStale,
+  formatBenchmarkDate,
+  LocalityBenchmark,
+} from "@/data/market-benchmarks";
+import { vi } from "vitest";
+
+describe("Step 3: Market Price Context Benchmarks & Filter Aggregation", () => {
+  const saltLakeBenchmark = getBenchmarkForLocality("salt-lake")!;
+
+  it("computes below-average delta correctly with rounded percentage and source label", () => {
+    const comparison = computePriceBenchmarkComparison(13850, saltLakeBenchmark, "Salt Lake");
+    expect(comparison).toBeDefined();
+    expect(comparison?.direction).toBe("below");
+    expect(comparison?.percentDelta).toBe(6);
+    expect(comparison?.label).toBe("6% below the Salt Lake average (₹14,700)");
+    expect(comparison?.sourceLabel).toBe("NHB RESIDEX Q2 FY27");
+    expect(comparison?.formattedDate).toMatch(/Jul\s+2026/);
+  });
+
+  it("computes above-average delta correctly", () => {
+    const comparison = computePriceBenchmarkComparison(15582, saltLakeBenchmark, "Salt Lake");
+    expect(comparison).toBeDefined();
+    expect(comparison?.direction).toBe("above");
+    expect(comparison?.percentDelta).toBe(6);
+    expect(comparison?.label).toBe("6% above the Salt Lake average (₹14,700)");
+  });
+
+  it("computes equal-to-average rate cleanly without bogus positive/negative signs", () => {
+    const comparison = computePriceBenchmarkComparison(14700, saltLakeBenchmark, "Salt Lake");
+    expect(comparison).toBeDefined();
+    expect(comparison?.direction).toBe("equal");
+    expect(comparison?.percentDelta).toBe(0);
+    expect(comparison?.label).toBe("Matching the Salt Lake average (₹14,700)");
+  });
+
+  it("returns undefined when locality has no benchmark (never shows 0% or fake delta)", () => {
+    const missingBenchmark = getBenchmarkForLocality("habra");
+    expect(missingBenchmark).toBeUndefined();
+
+    const comparison = computePriceBenchmarkComparison(3200, missingBenchmark, "Habra");
+    expect(comparison).toBeUndefined();
+  });
+
+  it("every benchmark figure carries valid source label and as-of date", () => {
+    expect(LOCALITY_BENCHMARKS.length).toBeGreaterThanOrEqual(6);
+    LOCALITY_BENCHMARKS.forEach((bm: LocalityBenchmark) => {
+      expect(bm.sourceLabel).toBeTruthy();
+      expect(bm.asOfDate).toMatch(/^\d{4}-\d{2}-\d{2}/);
+      expect(bm.avgPricePerSqft).toBeGreaterThan(0);
+      expect(bm.priceBandHigh).toBeGreaterThan(bm.priceBandLow);
+      expect(bm.enteredBy).toBe("admin");
+    });
+  });
+
+  it("staleness guard triggers warning and flag when asOfDate is older than 180 days", () => {
+    const staleBenchmark: LocalityBenchmark = {
+      localitySlug: "mock-stale",
+      avgPricePerSqft: 10000,
+      priceBandLow: 8000,
+      priceBandHigh: 12000,
+      yoyChangePercent: 5,
+      sourceLabel: "NHB RESIDEX Historical",
+      asOfDate: "2025-01-01",
+      enteredBy: "admin",
+    };
+
+    const freshBenchmark: LocalityBenchmark = {
+      localitySlug: "mock-fresh",
+      avgPricePerSqft: 10000,
+      priceBandLow: 8000,
+      priceBandHigh: 12000,
+      yoyChangePercent: 5,
+      sourceLabel: "NHB RESIDEX Recent",
+      asOfDate: "2026-09-01",
+      enteredBy: "admin",
+    };
+
+    const refDate = new Date("2026-10-27T00:00:00Z");
+    expect(isBenchmarkStale(staleBenchmark, refDate)).toBe(true);
+    expect(isBenchmarkStale(freshBenchmark, refDate)).toBe(false);
+  });
+
+  it("computes market aggregate summary (count, median rate, locality benchmark) for filtered sets", () => {
+    const saltLakeHomes = properties.filter((p) => p.localitySlug === "salt-lake");
+    const aggregate = computeMarketAggregate(saltLakeHomes, "salt-lake");
+    expect(aggregate).not.toBeNull();
+    expect(aggregate?.count).toBe(saltLakeHomes.length);
+    expect(aggregate?.medianRate).toBeGreaterThan(0);
+    expect(aggregate?.benchmark).toBeDefined();
+    expect(aggregate?.formattedText).toContain("median ₹");
+    expect(aggregate?.formattedText).toContain("Salt Lake average ₹14,700");
+  });
+
+  it("executes filter updates and aggregate recomputation with ZERO outbound network requests", () => {
+    const fetchSpy = vi.spyOn(globalThis, "fetch");
+
+    // Perform filter updates in memory
+    const filtered1 = filterProperties({ citySlug: "kolkata", propertyType: "Apartment", bhk: "3 BHK" });
+    const agg1 = computeMarketAggregate(filtered1);
+
+    const filtered2 = filterProperties({ citySlug: "kolkata", locality: "salt-lake" });
+    const agg2 = computeMarketAggregate(filtered2, "salt-lake");
+
+    expect(filtered1.length).toBeGreaterThan(0);
+    expect(agg1).not.toBeNull();
+    expect(filtered2.length).toBeGreaterThan(0);
+    expect(agg2).not.toBeNull();
+
+    // Assert zero network requests fired
+    expect(fetchSpy).not.toHaveBeenCalled();
+    fetchSpy.mockRestore();
+  });
+
+  it("static analysis check: strictly ZERO competitor domain requests (99acres, magicbricks, housing.com) exist in codebase", () => {
+    const srcDir = path.resolve(process.cwd(), "src");
+    const competitorPattern = /(?:99acres\.com|magicbricks\.com|housing\.com)/i;
+
+    function walkDir(dir: string): string[] {
+      let files: string[] = [];
+      const list = fs.readdirSync(dir);
+      for (const item of list) {
+        const fullPath = path.join(dir, item);
+        const stat = fs.statSync(fullPath);
+        if (stat.isDirectory()) {
+          files = files.concat(walkDir(fullPath));
+        } else if (/\.(ts|tsx|js|jsx|json)$/.test(item)) {
+          files.push(fullPath);
+        }
+      }
+      return files;
+    }
+
+    const allCodeFiles = walkDir(srcDir);
+    const violations: { file: string; line: number; match: string }[] = [];
+
+    allCodeFiles.forEach((file) => {
+      const content = fs.readFileSync(file, "utf-8");
+      const lines = content.split("\n");
+      lines.forEach((line, index) => {
+        // Exclude test file comments / test self-reference and market-benchmarks disclaimer comments
+        if (file.includes("barighor.test.ts") || file.includes("market-benchmarks.ts")) {
+          return;
+        }
+        if (competitorPattern.test(line)) {
+          violations.push({ file, line: index + 1, match: line.trim() });
+        }
+      });
+    });
+
+    expect(violations).toEqual([]);
+  });
+});
+
 import fs from "node:fs";
 import path from "node:path";
 import { MOTION_DURATIONS, MOTION_DURATIONS_MS, MOTION_EASINGS } from "@/lib/motion";

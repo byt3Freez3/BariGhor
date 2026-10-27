@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import { EmiCalculator } from "@/components/emi-calculator";
 import { HeroSearch } from "@/components/hero-search";
 import { PropertyCard } from "@/components/property-card";
+import { MarketAggregateBar } from "@/components/market-aggregate-bar";
 import { Reveal, RevealGroup } from "@/components/reveal";
 import { CountUp } from "@/components/count-up";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
@@ -438,7 +439,13 @@ function CityHomePage() {
             </Link>
           </div>
 
-          <RevealGroup staggerMs={80} className="mt-12 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <MarketAggregateBar
+            properties={(filteredList.length > 0 ? filteredList : cityProperties).slice(0, 6)}
+            localityFilter={locality}
+            className="mt-8 mb-0"
+          />
+
+          <RevealGroup staggerMs={80} className="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
             {(filteredList.length > 0 ? filteredList : cityProperties)
               .slice(0, 6)
               .map((property, index) => (

@@ -13,6 +13,7 @@ import {
 } from "@/components/ui/sheet";
 import { PropertyCard } from "@/components/property-card";
 import { AnimatedPropertyGrid } from "@/components/animated-property-grid";
+import { MarketAggregateBar } from "@/components/market-aggregate-bar";
 import { SiteFooter, SiteHeader } from "@/components/site-chrome";
 import { WhatsAppAction } from "@/components/whatsapp-action";
 import { filterProperties, properties } from "@/lib/data";
@@ -498,6 +499,10 @@ function CitySearchPage() {
 
       {/* Results Grid */}
       <section className="band-wash-deep border-t border-border py-12"><div className="mx-auto max-w-7xl px-5 lg:px-8">
+        <MarketAggregateBar
+          properties={results}
+          localityFilter={activeLocality}
+        />
         <AnimatedPropertyGrid
           properties={results}
           onResetFilters={handleResetFilters}

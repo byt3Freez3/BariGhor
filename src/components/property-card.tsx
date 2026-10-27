@@ -8,6 +8,7 @@ import { useAppStore } from "@/lib/store";
 import { MOTION_DURATIONS, MOTION_EASINGS, useReducedMotion } from "@/lib/motion";
 import { BlurImage } from "@/components/blur-image";
 import { AvailabilityChip, getSoldNotificationMessage } from "@/components/availability-chip";
+import { MarketPriceBenchmark } from "@/components/market-price-benchmark";
 
 export function PropertyCard({ property, index = 0 }: { property: Property; index?: number }) {
   const prefersReduced = useReducedMotion();
@@ -137,6 +138,19 @@ export function PropertyCard({ property, index = 0 }: { property: Property; inde
             </span>
           )}
         </h3>
+
+        {/* Price & Market Price Context */}
+        <div className="mt-3 flex flex-wrap items-baseline justify-between gap-2 border-t border-border/50 pt-3">
+          <span className="font-display text-xl font-bold text-foreground">
+            {property.price}
+          </span>
+          <MarketPriceBenchmark
+            pricePerSqFt={property.pricePerSqFt}
+            localitySlug={property.localitySlug}
+            localityName={property.locality}
+            variant="card"
+          />
+        </div>
 
         <div className="mt-4 grid grid-cols-3 gap-2 border-y border-border py-3 text-xs text-muted-foreground">
           <div className="flex items-center gap-1.5">

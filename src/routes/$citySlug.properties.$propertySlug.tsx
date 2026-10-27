@@ -36,6 +36,7 @@ import { getCityBySlug } from "@/lib/regions";
 import { useAppStore } from "@/lib/store";
 import { Reveal, RevealGroup } from "@/components/reveal";
 import { AvailabilityChip, formatAvailabilityDate, getSoldNotificationMessage } from "@/components/availability-chip";
+import { MarketPriceBenchmark } from "@/components/market-price-benchmark";
 
 export function PropertyDetailSkeleton() {
   return (
@@ -326,9 +327,13 @@ function PropertyDetailPage() {
             </div>
             <div className="text-left sm:text-right">
               <p className="font-display text-3xl font-bold text-primary">{property.price}</p>
-              <p className="text-xs text-muted-foreground">
-                ₹{property.pricePerSqFt?.toLocaleString("en-IN")} / sq ft built-up
-              </p>
+              <MarketPriceBenchmark
+                pricePerSqFt={property.pricePerSqFt}
+                localitySlug={property.localitySlug}
+                localityName={property.locality}
+                variant="detail"
+                className="items-start sm:items-end"
+              />
               <div className="mt-2.5 flex flex-wrap items-center gap-2 sm:justify-end">
                 <AvailabilityChip
                   availability={property.availability}
